@@ -126,7 +126,7 @@
             <button type="submit">Registrarse</button>
 
             <!-- Enlace para iniciar sesión -->
-            <a href="{{ route('login') }}">¿Ya tienes una cuenta papu? Inicia sesión</a>
+            <a href="{{ route('login') }}">¿Ya tienes una cuenta? Inicia sesión Nuevamente</a>
         </form>
     </div>
 </body>
