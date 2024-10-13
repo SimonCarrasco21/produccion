@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Enlace a Bootstrap y Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -24,43 +27,44 @@
 
         .login-container {
             background-color: #ffffff;
-            padding: 60px;
+            padding: 80px;
             border-radius: 30px;
-            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2); 
-            width: 450px; 
+            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2); 
+            width: 550px; /* Cambiado a 550px */
             text-align: center;
-            animation: slideIn 1s ease;
+            animation: zoomIn 0.7s ease;
+            transition: transform 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-70px); }
-            to { transform: translateY(0); }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
         }
 
         .login-container h1 {
-            font-size: 32px;
+            font-size: 48px;
+            font-weight: 700;
             color: #2E3B55;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .login-container p {
-            font-size: 18px;
+            font-size: 20px;
             color: #495867;
             margin-bottom: 30px;
         }
 
         .login-container input {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-sizing: border-box; /* Asegura que el padding no altere el ancho total */
-}
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
 
         .login-container input:focus {
             outline: none;
@@ -70,18 +74,16 @@
         }
 
         .login-container button {
-    width: 100%; /* Asegura que el botón tenga el mismo ancho que los inputs */
-    padding: 15px;
-    margin-top: 10px; /* Ajusta el espacio entre el input y el botón */
-    border-radius: 10px;
-    font-size: 18px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s, transform 0.3s;
-}
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 24px;
+            width: 100%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
 
         .login-container button:hover {
             background-color: #45a049;
@@ -91,7 +93,7 @@
         .login-container a {
             display: block;
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 18px;
             color: #4CAF50;
             text-decoration: none;
             transition: color 0.3s;
@@ -102,18 +104,18 @@
             color: #45a049;
         }
 
-        .error-message {
-            color: #bd0808;
-            font-size: 14px;
+        .error-message, .success-message {
+            font-size: 18px;
             margin-bottom: 20px;
-            display: none; 
+            display: none;
+        }
+
+        .error-message {
+            color: #ff4d4d;
         }
 
         .success-message {
             color: #0b351c;
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: none;
         }
     </style>
 </head>
@@ -124,25 +126,29 @@
 
         <!-- Mensaje de error para contraseña incorrecta -->
         <div class="error-message" id="error-message">
-            Contraseña incorrecta, inténtalo de nuevo.
+            <i class="bi bi-exclamation-triangle"></i> Contraseña incorrecta o Usuario no Registrado,inténtalo de nuevo.
         </div>
 
         <!-- Mensaje de éxito si la contraseña es correcta -->
         <div class="success-message" id="success-message">
-            Inicio de sesión exitoso.
+            <i class="bi bi-check-circle"></i> Inicio de sesión exitoso.
         </div>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <!-- Campo de usuario -->
-            <input type="text" id="email" name="email" placeholder="Correo Electrónico o Usuario" required autofocus>
+            <div class="mb-3">
+                <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electrónico o Usuario" required autofocus>
+            </div>
 
             <!-- Campo de contraseña -->
-            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+            <div class="mb-3">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
+            </div>
 
             <!-- Botón para iniciar sesión -->
-            <button type="submit">Iniciar sesión</button>
+            <button type="submit" class="btn btn-success w-100">Iniciar sesión</button>
 
             <!-- Enlace para recuperar contraseña y registrarse -->
             <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
@@ -151,20 +157,23 @@
     </div>
 
     <script>
-        // Simulación de mostrar el mensaje de error
         const errorMessage = document.getElementById('error-message');
         const successMessage = document.getElementById('success-message');
         @if ($errors->any())
             errorMessage.style.display = 'block';
         @endif
 
-        // Simulación de mostrar mensaje de éxito (puedes adaptarlo a tu lógica de Laravel)
         @if (session('status'))
             successMessage.style.display = 'block';
         @endif
     </script>
+
+    <!-- Bootstrap JS y Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
 
 
 

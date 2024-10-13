@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
+    <!-- Bootstrap y Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -27,26 +31,22 @@
             padding: 60px;
             border-radius: 30px;
             box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2); 
-            width: 450px; 
+            width: 550px;
             text-align: center;
-            animation: slideIn 1s ease;
+            animation: zoomIn 0.7s ease;
+            transition: transform 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-70px); }
-            to { transform: translateY(0); }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
         }
 
         .container h1 {
-            font-size: 32px;
+            font-size: 40px;
+            font-weight: bold;
             color: #2E3B55;
-            margin-bottom: 15px;
-        }
-
-        .container p {
-            font-size: 18px;
-            color: #495867;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .container input {
@@ -54,12 +54,11 @@
             padding: 15px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 15px;
             background-color: #f9f9f9;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
             font-size: 16px;
             transition: all 0.3s ease;
-            box-sizing: border-box;
         }
 
         .container input:focus {
@@ -70,15 +69,13 @@
         }
 
         .container button {
-            width: 100%; 
-            padding: 15px;
-            margin-top: 10px; 
-            border-radius: 10px;
-            font-size: 18px;
             background-color: #4CAF50;
             color: white;
+            padding: 15px;
             border: none;
-            cursor: pointer;
+            border-radius: 15px;
+            font-size: 20px;
+            width: 100%;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
             transition: background-color 0.3s, transform 0.3s;
         }
@@ -105,7 +102,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Registrarse</h1>
+        <h1><i class="bi bi-pencil-square"></i> Registrarse</h1>
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
@@ -123,11 +120,15 @@
             <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirmar Contraseña" required>
 
             <!-- Botón para registrarse -->
-            <button type="submit">Registrarse</button>
+            <button type="submit"><i class="bi bi-person-plus-fill"></i> Registrate</button>
 
             <!-- Enlace para iniciar sesión -->
-            <a href="{{ route('login') }}">¿Ya tienes una cuenta? Inicia sesión</a>
+            <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i> ¿Ya tienes una cuenta? Inicia sesión</a>
         </form>
     </div>
+
+    <!-- Bootstrap JS y Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
