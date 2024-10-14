@@ -142,3 +142,252 @@ body {
     background-color: #218838;
     transform: translateY(-2px);
 }
+
+/* Estilos para la tabla de "Últimos registros de ventas" */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para el catálogo de productos */
+.product-catalog {
+    padding: 20px;
+    text-align: center;
+    background-color: #d4f5d3;
+    border-radius: 10px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.product-category {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 150px;
+    transition: transform 0.3s ease;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-category:hover {
+    transform: translateY(-5px);
+}
+
+.product-category i {
+    font-size: 3rem;
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.product-category p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilos para la tabla */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para el catálogo de productos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    justify-items: center;
+}
+
+.product-category {
+    background-color: #4CAF50;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    width: 180px;
+    transition: transform 0.3s ease;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-category:hover {
+    transform: translateY(-5px);
+}
+
+.product-category i {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.product-category p {
+    margin: 0;
+    font-size: 18px;
+    color: white;
+}
+
+/* Centrando el título de las secciones */
+.text-center {
+    text-align: center;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #000;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.navbar-left h2 {
+    margin: 0;
+    font-size: 24px;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+}
+
+.navbar-right ul li a, .navbar-right ul li button {
+    color: white;
+    font-size: 18px;
+    padding: 12px 25px;
+    background-color: #4CAF50;
+    border-radius: 12px;
+}
+
+/* Estilos para las tablas */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para el catálogo de productos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.product-category {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    width: 150px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-category:hover {
+    transform: translateY(-5px);
+}
+
+.product-category i {
+    font-size: 3rem;
+    color: #4CAF50;
+}
+
+.product-category p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Fondo general */
+body {
+    background-color: #d4f5d3;
+}
+
+/* Centrando el título de las secciones */
+.text-center {
+    text-align: center;
+}
