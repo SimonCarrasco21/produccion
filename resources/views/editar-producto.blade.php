@@ -35,7 +35,7 @@
         <input type="number" name="stock" id="stock" value="{{ $producto->stock }}" required>
     </div>
     <div>
-        <button type="submit">Actualizar Producto</button>
+        <button type="submit">Actualizar el Producto</button>
     </div>
 </form>
 
