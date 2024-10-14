@@ -36,6 +36,9 @@
     <div>
         <button type="submit">Agregar Producto</button>
     </div>
+    <div>
+        <button type="submit">Hola </button>
+    </div>
 </form>
 
 <!-- Tabla para mostrar los productos -->
