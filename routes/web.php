@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\PaginaController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
@@ -21,6 +22,14 @@ Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->n
 Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
 Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+
+
+
+Route::get('/agregar-producto', [PaginaController::class, 'mostrarPagina'])->name('agregar-producto');
+Route::post('/guardar-producto', [PaginaController::class, 'guardarProducto'])->name('guardarProducto');
+Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');
+Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
+Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
 
 // Incluir las rutas de autenticación generadas por Breeze
 require __DIR__.'/auth.php';
