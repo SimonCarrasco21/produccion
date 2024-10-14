@@ -121,7 +121,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>Hola</h1>
+        <h1>Login</h1>
         <p>Inicia sesión en tu cuenta</p>
 
         <!-- Mensaje de error para contraseña incorrecta -->
