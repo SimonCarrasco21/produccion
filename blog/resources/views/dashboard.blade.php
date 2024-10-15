@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}"> <!-- Enlace al CSS separado -->
 </head>
 <body>
@@ -31,7 +32,7 @@
                 <li><a href="#"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
                 <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
-                <li><a href="#"><i class="bi bi-box"></i> Inventario</a></li>
+                <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
                 <li><button class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</button></li>
             </ul>
         </div>
@@ -104,55 +105,55 @@
     <div class="product-grid">
         <a href="{{ route('productos.categoria', ['id' => 1]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_grocery_store</span>
+                <i class="fa-solid fa-cheese"></i>
                 <p>Lácteos</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 2]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">spa</span>
+                <i class="fa-solid fa-seedling"></i>
                 <p>Granos</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 3]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cleaning_services</span>
+                <i class="fa-solid fa-soap"></i>
                 <p>Productos de Limpieza</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 4]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cookie</span>
+                <i class="fa-solid fa-cookie"></i>
                 <p>Galletas</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 5]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_cafe</span>
+                <i class="fa-solid fa-bottle-water"></i>
                 <p>Bebidas</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 6]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">bakery_dining</span>
+                <i class="fa-solid fa-bread-slice"></i>
                 <p>Panadería</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 7]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">shopping_basket</span>
+                <i class="fa-solid fa-apple-alt"></i>
                 <p>Frutas y Verduras</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 8]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">set_meal</span>
+                <i class="fa-solid fa-drumstick-bite"></i>
                 <p>Embutidos</p>
             </div>
         </a>
         <a href="{{ route('productos.categoria', ['id' => 9]) }}">
             <div class="product-category">
-                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">medical_services</span>
+                <i class="fa-solid fa-hand-sparkles"></i>
                 <p>Productos de Aseo Personal</p>
             </div>
         </a>
@@ -205,6 +206,14 @@
 
      <!-- Estilos personalizados -->
      <style>
+
+        .text-center{
+            
+        margin-top: 30px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+        
         .btn-ver-mas {
             background-color: #4CAF50;
             color: white;
@@ -225,6 +234,61 @@
             outline: none;
             box-shadow: 0 0 0 0.2rem rgba(72, 173, 67, 0.5);
         }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-category {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+        }
+
+        .product-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-category i {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .product-category p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .product-category {
+                height: auto;
+                padding: 15px;
+            }
+
+            .product-category i {
+                font-size: 2rem;
+            }
+
+            .product-category p {
+                font-size: 16px;
+            }
+        }
     </style>
+  
 </body>
 </html>

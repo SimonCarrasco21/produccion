@@ -32,9 +32,8 @@
         <ul>
             <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li> <!-- Botón de Dashboard -->
             <li><a href="#"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
-            <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
             <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
-            <li><a href="#"><i class="bi bi-box"></i> Inventario</a></li>
+            <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
             <li><button class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</button></li>
         </ul>
     </div>

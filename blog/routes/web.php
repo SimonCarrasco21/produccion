@@ -18,7 +18,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/productos/categoria/{id}', [PaginaController::class, 'mostrarProductosPorCategoria'])->name('productos.categoria');
-
+Route::get('/inventario', [DashboardController::class, 'mostrarInventario'])->name('inventario');
+Route::post('/eliminar-productos-seleccionados', [PaginaController::class, 'eliminarProductosSeleccionados'])->name('eliminarProductosSeleccionados');
 
 // Rutas de restablecimiento de contraseña
 Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
