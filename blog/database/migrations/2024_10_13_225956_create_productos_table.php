@@ -17,7 +17,12 @@ return new class extends Migration
             $table->text('descripcion');
             $table->decimal('precio', 8, 2);
             $table->integer('stock');
+            $table->unsignedBigInteger('categoria_id');  // Nueva columna para la categoría
+            $table->date('fecha_vencimiento')->nullable();  // Nueva columna para la fecha de vencimiento (puede ser nula)
             $table->timestamps();
+
+            // Definir la relación con la tabla 'categorias'
+            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('cascade');
         });
     }
 
@@ -29,3 +34,4 @@ return new class extends Migration
         Schema::dropIfExists('productos');
     }
 };
+

@@ -56,74 +56,138 @@
         </table>
     </div>
 
-    <!-- Sección de productos agregados -->
-    <div class="container mt-4">
-        <h2 class="text-center">Productos Agregados</h2>
-        <table class="table table-striped">
-            <thead>
+   <!-- Sección de productos agregados -->
+<div class="container mt-4">
+    <h2 class="text-center">Productos Agregados</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Producto</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th>Fecha de Elaboración</th>
+                <th>Fecha de Vencimiento</th>
+            </tr>
+        </thead>
+        <tbody id="product-list">
+            @foreach($productos as $producto)
                 <tr>
-                    <th>ID Producto</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Categoría</th>
-                    <th>Fecha de Elaboración</th>
-                    <th>Fecha de Vencimiento</th>
+                    <td>{{ $producto->id }}</td>
+                    <td>{{ $producto->nombre }}</td>
+                    <td>{{ $producto->descripcion }}</td>
+                    <td>{{ number_format($producto->precio, 2) }} $</td>
+                    <td>{{ $producto->stock }}</td>
+                    <td>{{ $producto->categoria->nombre }}</td>
+                    <td>{{ $producto->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $producto->fecha_vencimiento }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                <!-- Aquí se llenarán los datos desde la base de datos -->
-            </tbody>
-        </table>
-    </div>
+            @endforeach
+        </tbody>
+    </table>
+
+     <!-- Botón "Ver más" -->
+     @if($productos->hasMorePages())
+     <div class="text-center mt-4">
+         <button id="load-more" class="btn-ver-mas">Ver más</button>
+     </div>
+ @endif
+</div>
+
+
 
 <!-- Catálogo de Productos -->
 <div class="container mt-4">
     <h2 class="text-center">Catálogo de Productos</h2>
     <div class="product-grid">
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_grocery_store</span>
-            <p>Lácteos</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">spa</span>
-            <p>Granos</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cleaning_services</span>
-            <p>Productos de Limpieza</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cookie</span>
-            <p>Galletas</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_cafe</span>
-            <p>Bebidas</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">bakery_dining</span>
-            <p>Panadería</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">shopping_basket</span>
-            <p>Frutas y Verduras</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">set_meal</span>
-            <p>Embutidos</p>
-        </div>
-        <div class="product-category">
-            <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">medical_services</span>
-            <p>Productos de Aseo Personal</p>
-        </div>
+        <a href="{{ route('productos.categoria', ['id' => 1]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_grocery_store</span>
+                <p>Lácteos</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 2]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">spa</span>
+                <p>Granos</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 3]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cleaning_services</span>
+                <p>Productos de Limpieza</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 4]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">cookie</span>
+                <p>Galletas</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 5]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">local_cafe</span>
+                <p>Bebidas</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 6]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">bakery_dining</span>
+                <p>Panadería</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 7]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">shopping_basket</span>
+                <p>Frutas y Verduras</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 8]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">set_meal</span>
+                <p>Embutidos</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 9]) }}">
+            <div class="product-category">
+                <span class="material-icons" style="font-size: 3rem; color: #4CAF50;">medical_services</span>
+                <p>Productos de Aseo Personal</p>
+            </div>
+        </a>
     </div>
 </div>
 
 
 
 
+<!-- Aquí va tu código JavaScript (PASO 3) -->
+<script>
+    let currentPage = 1;
+
+    document.getElementById('load-more').addEventListener('click', function() {
+        currentPage++; // Aumentar la página actual
+        fetchMoreProducts(currentPage);
+    });
+
+    function fetchMoreProducts(page) {
+        fetch(`{{ url('/dashboard?page=') }}${page}`)
+        .then(response => response.text())
+        .then(data => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+            const newProducts = doc.getElementById('product-list').innerHTML;
+            document.getElementById('product-list').insertAdjacentHTML('beforeend', newProducts);
+            
+            // Si ya no hay más páginas, ocultar el botón "Ver más"
+            if (!doc.querySelector('#load-more')) {
+                document.getElementById('load-more').style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error al cargar más productos:', error));
+    }
+</script>
 
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>
@@ -138,5 +202,29 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
+
+     <!-- Estilos personalizados -->
+     <style>
+        .btn-ver-mas {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 12px;
+            border: none;
+            font-size: 18px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-ver-mas:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-ver-mas:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(72, 173, 67, 0.5);
+        }
+    </style>
 </body>
 </html>

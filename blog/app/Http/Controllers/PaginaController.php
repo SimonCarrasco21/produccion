@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use App\Models\Categoria; // Aseguramos que el modelo de Categoria esté incluido
 
 class PaginaController extends Controller
 {
     public function mostrarPagina()
     {
         $productos = Producto::all(); // Obtener todos los productos
-        return view('agregar-producto', compact('productos'));
+        $categorias = Categoria::all(); // Obtener todas las categorías para el formulario
+        return view('agregar-producto', compact('productos', 'categorias'));
     }
 
     public function guardarProducto(Request $request)
@@ -21,6 +23,8 @@ class PaginaController extends Controller
             'descripcion' => 'required|string',
             'precio' => 'required|numeric',
             'stock' => 'required|integer',
+            'categoria_id' => 'required|exists:categorias,id', // Asegurar que la categoría existe
+            'fecha_vencimiento' => 'nullable|date', // La fecha de vencimiento es opcional
         ]);
 
         // Guardar los datos en la base de datos
@@ -29,11 +33,24 @@ class PaginaController extends Controller
             'descripcion' => $request->descripcion,
             'precio' => $request->precio,
             'stock' => $request->stock,
+            'categoria_id' => $request->categoria_id, // Relación con la categoría seleccionada
+            'fecha_vencimiento' => $request->fecha_vencimiento,
         ]);
 
         // Redireccionar después de guardar
         return redirect('/agregar-producto')->with('success', 'Producto agregado correctamente.');
     }
+
+
+    public function mostrarProductosPorCategoria($id)
+{
+    $categoria = Categoria::findOrFail($id); // Busca la categoría por ID
+    $productos = Producto::where('categoria_id', $id)->get(); // Busca productos que pertenezcan a esta categoría
+    return view('productos-por-categoria', compact('categoria', 'productos'));
+}
+
+
+
 
     public function eliminarProducto($id)
     {
@@ -46,7 +63,8 @@ class PaginaController extends Controller
     public function editarProducto($id)
     {
         $producto = Producto::findOrFail($id);
-        return view('editar-producto', compact('producto'));
+        $categorias = Categoria::all(); // Para mostrar las categorías disponibles al editar
+        return view('editar-producto', compact('producto', 'categorias'));
     }
 
     public function actualizarProducto(Request $request, $id)
@@ -57,6 +75,8 @@ class PaginaController extends Controller
             'descripcion' => 'required|string',
             'precio' => 'required|numeric',
             'stock' => 'required|integer',
+            'categoria_id' => 'required|exists:categorias,id', // Validar que la categoría existe
+            'fecha_vencimiento' => 'nullable|date',
         ]);
 
         // Buscar el producto y actualizarlo
@@ -66,6 +86,8 @@ class PaginaController extends Controller
             'descripcion' => $request->descripcion,
             'precio' => $request->precio,
             'stock' => $request->stock,
+            'categoria_id' => $request->categoria_id, // Actualizar la categoría seleccionada
+            'fecha_vencimiento' => $request->fecha_vencimiento,
         ]);
 
         // Redireccionar después de actualizar

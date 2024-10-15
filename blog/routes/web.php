@@ -4,18 +4,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\PaginaController;
+use App\Http\Controllers\DashboardController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
     return redirect('/login');  
 });
 
-// Rutas de autenticación y sesión de usuario
+
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');  // Página principal después de iniciar sesión
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'mostrarDashboard'])->name('dashboard');
 });
+
+Route::get('/productos/categoria/{id}', [PaginaController::class, 'mostrarProductosPorCategoria'])->name('productos.categoria');
+
 
 // Rutas de restablecimiento de contraseña
 Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
