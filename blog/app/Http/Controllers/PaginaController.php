@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Producto;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\DB;
+
 
 class PaginaController extends Controller
 {
+
+
+
+
+
     public function mostrarPagina()
     {
         $productos = Producto::all();
@@ -76,6 +83,7 @@ class PaginaController extends Controller
         $categorias = Categoria::all();
         return view('editar-producto', compact('producto', 'categorias'));
     }
+
 
     public function actualizarProducto(Request $request, $id)
     {

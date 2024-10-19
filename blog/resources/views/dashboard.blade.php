@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}"> <!-- Enlace al CSS separado -->
 </head>
+
 <body>
     <nav class="navbar">
         <div class="navbar-left">
@@ -18,10 +20,12 @@
             <div class="dropdown">
                 <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
                 <div class="dropdown-content" id="dropdown-menu" style="display: none;">
-                    <a href="#"><i class="bi bi-eye"></i> Ver Perfil</a>
+                    <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
+                    <!-- Enlace a la vista del perfil -->
                     <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
                         @csrf
-                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</button>
+                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
                     </form>
                 </div>
             </div>
@@ -30,13 +34,15 @@
         <div class="navbar-right">
             <ul>
                 <li><a href="#"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
-                <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
+                <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
+                </li>
                 <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
                 <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
                 <li><button class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</button></li>
             </ul>
         </div>
     </nav>
+
 
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
@@ -57,138 +63,138 @@
         </table>
     </div>
 
-   <!-- Sección de productos agregados -->
-<div class="container mt-4">
-    <h2 class="text-center">Productos Agregados</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID Producto</th>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Categoría</th>
-                <th>Fecha de Elaboración</th>
-                <th>Fecha de Vencimiento</th>
-            </tr>
-        </thead>
-        <tbody id="product-list">
-            @foreach($productos as $producto)
+    <!-- Sección de productos agregados -->
+    <div class="container mt-4">
+        <h2 class="text-center">Productos Agregados</h2>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>{{ $producto->id }}</td>
-                    <td>{{ $producto->nombre }}</td>
-                    <td>{{ $producto->descripcion }}</td>
-                    <td>{{ number_format($producto->precio, 2) }} $</td>
-                    <td>{{ $producto->stock }}</td>
-                    <td>{{ $producto->categoria->nombre }}</td>
-                    <td>{{ $producto->created_at->format('d-m-Y') }}</td>
-                    <td>{{ $producto->fecha_vencimiento }}</td>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Fecha de Elaboración</th>
+                    <th>Fecha de Vencimiento</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="product-list">
+                @foreach ($productos as $producto)
+                    <tr>
+                        <td>{{ $producto->id }}</td>
+                        <td>{{ $producto->nombre }}</td>
+                        <td>{{ $producto->descripcion }}</td>
+                        <td>{{ number_format($producto->precio, 2) }} $</td>
+                        <td>{{ $producto->stock }}</td>
+                        <td>{{ $producto->categoria->nombre }}</td>
+                        <td>{{ $producto->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $producto->fecha_vencimiento }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-     <!-- Botón "Ver más" -->
-     @if($productos->hasMorePages())
-     <div class="text-center mt-4">
-         <button id="load-more" class="btn-ver-mas">Ver más</button>
-     </div>
- @endif
-</div>
-
-
-
-<!-- Catálogo de Productos -->
-<div class="container mt-4">
-    <h2 class="text-center">Catálogo de Productos</h2>
-    <div class="product-grid">
-        <a href="{{ route('productos.categoria', ['id' => 1]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-cheese"></i>
-                <p>Lácteos</p>
+        <!-- Botón "Ver más" -->
+        @if ($productos->hasMorePages())
+            <div class="text-center mt-4">
+                <button id="load-more" class="btn-ver-mas">Ver más</button>
             </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 2]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-seedling"></i>
-                <p>Granos</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 3]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-soap"></i>
-                <p>Productos de Limpieza</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 4]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-cookie"></i>
-                <p>Galletas</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 5]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-bottle-water"></i>
-                <p>Bebidas</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 6]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-bread-slice"></i>
-                <p>Panadería</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 7]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-apple-alt"></i>
-                <p>Frutas y Verduras</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 8]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-drumstick-bite"></i>
-                <p>Embutidos</p>
-            </div>
-        </a>
-        <a href="{{ route('productos.categoria', ['id' => 9]) }}">
-            <div class="product-category">
-                <i class="fa-solid fa-hand-sparkles"></i>
-                <p>Productos de Aseo Personal</p>
-            </div>
-        </a>
+        @endif
     </div>
-</div>
+
+
+
+    <!-- Catálogo de Productos -->
+    <div class="container mt-4">
+        <h2 class="text-center">Catálogo de Productos</h2>
+        <div class="product-grid">
+            <a href="{{ route('productos.categoria', ['id' => 1]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-cheese"></i>
+                    <p>Lácteos</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 2]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-seedling"></i>
+                    <p>Granos</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 3]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-soap"></i>
+                    <p>Productos de Limpieza</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 4]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-cookie"></i>
+                    <p>Galletas</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 5]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-bottle-water"></i>
+                    <p>Bebidas</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 6]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-bread-slice"></i>
+                    <p>Panadería</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 7]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-apple-alt"></i>
+                    <p>Frutas y Verduras</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 8]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-drumstick-bite"></i>
+                    <p>Embutidos</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 9]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                    <p>Productos de Aseo Personal</p>
+                </div>
+            </a>
+        </div>
+    </div>
 
 
 
 
-<!-- Aquí va tu código JavaScript (PASO 3) -->
-<script>
-    let currentPage = 1;
+    <!-- Aquí va tu código JavaScript (PASO 3) -->
+    <script>
+        let currentPage = 1;
 
-    document.getElementById('load-more').addEventListener('click', function() {
-        currentPage++; // Aumentar la página actual
-        fetchMoreProducts(currentPage);
-    });
+        document.getElementById('load-more').addEventListener('click', function() {
+            currentPage++; // Aumentar la página actual
+            fetchMoreProducts(currentPage);
+        });
 
-    function fetchMoreProducts(page) {
-        fetch(`{{ url('/dashboard?page=') }}${page}`)
-        .then(response => response.text())
-        .then(data => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(data, 'text/html');
-            const newProducts = doc.getElementById('product-list').innerHTML;
-            document.getElementById('product-list').insertAdjacentHTML('beforeend', newProducts);
-            
-            // Si ya no hay más páginas, ocultar el botón "Ver más"
-            if (!doc.querySelector('#load-more')) {
-                document.getElementById('load-more').style.display = 'none';
-            }
-        })
-        .catch(error => console.error('Error al cargar más productos:', error));
-    }
-</script>
+        function fetchMoreProducts(page) {
+            fetch(`{{ url('/dashboard?page=') }}${page}`)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const newProducts = doc.getElementById('product-list').innerHTML;
+                    document.getElementById('product-list').insertAdjacentHTML('beforeend', newProducts);
+
+                    // Si ya no hay más páginas, ocultar el botón "Ver más"
+                    if (!doc.querySelector('#load-more')) {
+                        document.getElementById('load-more').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error al cargar más productos:', error));
+        }
+    </script>
 
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>
@@ -198,22 +204,21 @@
 
         const dropdownBtn = document.querySelector('.dropdown-btn');
         const dropdownMenu = document.querySelector('#dropdown-menu');
-        
+
         dropdownBtn.addEventListener('click', function() {
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
 
-     <!-- Estilos personalizados -->
-     <style>
+    <!-- Estilos personalizados -->
+    <style>
+        .text-center {
 
-        .text-center{
-            
-        margin-top: 30px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-        
+            margin-top: 30px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
         .btn-ver-mas {
             background-color: #4CAF50;
             color: white;
@@ -234,7 +239,7 @@
             outline: none;
             box-shadow: 0 0 0 0.2rem rgba(72, 173, 67, 0.5);
         }
-        
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -289,6 +294,52 @@
             }
         }
     </style>
-  
+
 </body>
+<!-- Pie de página -->
+<footer class="bg-light text-center text-lg-start mt-5">
+    <div class="container p-4">
+        <!-- Enlaces rápidos -->
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Enlaces Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="{{ route('dashboard') }}" class="text-dark">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('inventario') }}" class="text-dark">Inventario</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('agregar-producto') }}" class="text-dark">Agregar Producto</a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-dark">Historial de Ventas</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Contáctanos</h5>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i> Dirección: Melipilla,Ortusa 250<br>
+                    <i class="fas fa-phone"></i> Teléfono: +56 9 1334 5618<br>
+                    <i class="fas fa-envelope"></i> Correo: Si.carrasco@duocuc.cl
+                </p>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Sobre Nosotros</h5>
+                <p>
+                    Este es una aplicacion dedicada a proporcionar la mejor experiencia de gestión de inventarios para
+                    pequeños y medianos negocios. Nuestro objetivo es facilitar la administración de tus productos de
+                    manera simple y eficiente.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </html>

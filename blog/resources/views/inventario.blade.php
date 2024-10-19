@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-   
 </head>
+
 <body>
     <!-- Barra de navegación -->
     <nav class="navbar mb-4">
@@ -18,10 +19,11 @@
             <div class="dropdown">
                 <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
                 <div class="dropdown-content" id="dropdown-menu" style="display: none;">
-                    <a href="#"><i class="bi bi-eye"></i> Ver Perfil</a>
+                    <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
                     <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
                         @csrf
-                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</button>
+                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
                     </form>
                 </div>
             </div>
@@ -40,17 +42,21 @@
     <div class="container">
         <h2 class="text-center">Inventario de Productos</h2>
         <div class="action-buttons">
-            <a href="{{ route('agregar-producto') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
-            <button type="submit" form="formEliminarSeleccionados" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Eliminar Seleccionados</button>
+            <a href="{{ route('agregar-producto') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Agregar
+                Producto</a>
+            <button type="submit" form="formEliminarSeleccionados" class="btn btn-danger"
+                onclick="return confirm('¿Estás seguro de que deseas eliminar los productos seleccionados?');">
+                <i class="bi bi-trash-fill"></i> Eliminar Seleccionados
+            </button>
         </div>
-        
+
         <div class="mb-3">
             <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar producto por nombre...">
         </div>
 
-        <div class="table-container">
-            <form id="formEliminarSeleccionados" action="{{ route('eliminarProductosSeleccionados') }}" method="POST">
-                @csrf
+        <form id="formEliminarSeleccionados" action="{{ route('eliminarProductosSeleccionados') }}" method="POST">
+            @csrf
+            <div class="table-container">
                 <table class="table table-striped shadow rounded">
                     <thead class="table-success">
                         <tr>
@@ -66,9 +72,10 @@
                         </tr>
                     </thead>
                     <tbody id="tablaProductos">
-                        @foreach($productos as $producto)
+                        @foreach ($productos as $producto)
                             <tr>
-                                <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}" class="checkboxProducto"></td>
+                                <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}"
+                                        class="checkboxProducto"></td>
                                 <td>{{ $producto->id }}</td>
                                 <td>{{ $producto->nombre }}</td>
                                 <td>{{ $producto->descripcion }}</td>
@@ -77,14 +84,15 @@
                                 <td>{{ $producto->categoria->nombre }}</td>
                                 <td>{{ $producto->fecha_vencimiento }}</td>
                                 <td>
-                                    <a href="{{ route('editarProducto', $producto->id) }}" class="btn btn-warning">Editar</a>
+                                    <a href="{{ route('editarProducto', $producto->id) }}"
+                                        class="btn btn-warning">Editar</a>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 
     <!-- Script para búsqueda y selección de productos -->
@@ -115,6 +123,7 @@
         });
     </script>
 </body>
+
 </html>
 <style>
     .action-buttons {

@@ -5,28 +5,24 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\PaginaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
-    return redirect('/login');  
+    return redirect('/login');
 });
-
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'mostrarDashboard'])->name('dashboard');
+    Route::get('/perfil', [ProfileController::class, 'show'])->name('perfil');
+    Route::post('/perfil', [ProfileController::class, 'updateProfile'])->name('perfil.update');
+    Route::post('/perfil/cambiar-contrasena', [ProfileController::class, 'updatePassword'])->name('perfil.cambiar-contrasena');
 });
 
 Route::get('/productos/categoria/{id}', [PaginaController::class, 'mostrarProductosPorCategoria'])->name('productos.categoria');
 Route::get('/inventario', [DashboardController::class, 'mostrarInventario'])->name('inventario');
 Route::post('/eliminar-productos-seleccionados', [PaginaController::class, 'eliminarProductosSeleccionados'])->name('eliminarProductosSeleccionados');
-
-// Rutas de restablecimiento de contraseña
-Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-
+Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
 
 
 Route::get('/agregar-producto', [PaginaController::class, 'mostrarPagina'])->name('agregar-producto');
@@ -35,9 +31,11 @@ Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProd
 Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
 Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
 
+// Rutas de restablecimiento de contraseña
+Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+
 // Incluir las rutas de autenticación generadas por Breeze
-require __DIR__.'/auth.php';
-
-
-
-
+require __DIR__ . '/auth.php';
