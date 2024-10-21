@@ -112,7 +112,7 @@
     <div class="navbar-right">
         <ul>
             <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
-            <li><a href="#"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+            <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
             <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
             <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
             <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
@@ -259,7 +259,7 @@
             <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
                 <h5 class="text-uppercase">Sobre Nosotros</h5>
                 <p>
-                    Este es una aplicacion dedicada a proporcionar la mejor experiencia de gestión de inventarios para
+                    Esta es una aplicacion dedicada a proporcionar la mejor experiencia de gestión de inventarios para
                     pequeños y medianos negocios. Nuestro objetivo es facilitar la administración de tus productos de
                     manera simple y eficiente.
                 </p>

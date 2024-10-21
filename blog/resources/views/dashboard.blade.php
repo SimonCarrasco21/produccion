@@ -33,7 +33,7 @@
 
         <div class="navbar-right">
             <ul>
-                <li><a href="#"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
                 </li>
                 <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
@@ -42,7 +42,6 @@
             </ul>
         </div>
     </nav>
-
 
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
@@ -62,7 +61,6 @@
             </tbody>
         </table>
     </div>
-
     <!-- Sección de productos agregados -->
     <div class="container mt-4">
         <h2 class="text-center">Productos Agregados</h2>
@@ -102,9 +100,6 @@
             </div>
         @endif
     </div>
-
-
-
     <!-- Catálogo de Productos -->
     <div class="container mt-4">
         <h2 class="text-center">Catálogo de Productos</h2>
@@ -163,13 +158,18 @@
                     <p>Productos de Aseo Personal</p>
                 </div>
             </a>
+            <a href="{{ route('productos.categoria', ['id' => 10]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-paw"></i>
+                    <p>Productos para Mascotas</p>
+                </div>
+            </a>
         </div>
     </div>
 
 
 
-
-    <!-- Aquí va tu código JavaScript (PASO 3) -->
+    <!-- Aquí va el código JavaScript-->
     <script>
         let currentPage = 1;
 
@@ -209,11 +209,150 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
-
     <!-- Estilos personalizados -->
     <style>
-        .text-center {
+        body {
+            background-color: #d4edda;
+            /* Fondo verde claro */
+        }
 
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Añadir sombra para efecto de elevación */
+        }
+
+        .navbar {
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: normal;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left h2 i {
+            margin-right: 10px;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-right ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar-right ul li a,
+        .navbar-right ul li button {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            border-radius: 12px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+            border: none;
+        }
+
+        .navbar-right ul li a:hover,
+        .navbar-right ul li button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            margin-top: 5px;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            color: #000;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background-color: #e9ecef;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer .col {
+            text-align: left;
+        }
+
+        .footer a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #4CAF50;
+        }
+
+        .text-center {
             margin-top: 30px;
             font-weight: bold;
             margin-bottom: 30px;
@@ -294,7 +433,7 @@
             }
         }
     </style>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <!-- Pie de página -->
 <footer class="bg-light text-center text-lg-start mt-5">

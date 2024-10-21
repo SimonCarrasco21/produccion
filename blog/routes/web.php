@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\PaginaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FiadoController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
@@ -30,6 +31,14 @@ Route::post('/guardar-producto', [PaginaController::class, 'guardarProducto'])->
 Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');
 Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
 Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
+
+
+
+Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
+Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
+Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
+
+
 
 // Rutas de restablecimiento de contraseña
 Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
