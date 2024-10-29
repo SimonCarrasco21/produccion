@@ -7,6 +7,8 @@ use App\Http\Controllers\PaginaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FiadoController;
+use App\Http\Controllers\PaymentController;
+
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
@@ -48,3 +50,9 @@ Route::post('reset-password', [NewPasswordController::class, 'store'])->name('pa
 
 // Incluir las rutas de autenticación generadas por Breeze
 require __DIR__ . '/auth.php';
+
+
+
+
+Route::post('/pago/pos', [PaymentController::class, 'payWithPOS'])->name('payments.pay.pos');
+Route::get('/pago', [PaymentController::class, 'mostrarVistaPago'])->name('pagina.pago');

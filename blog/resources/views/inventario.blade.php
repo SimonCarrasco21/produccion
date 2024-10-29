@@ -33,7 +33,8 @@
                 <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
                 <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
                 <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
-                <li><button class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</button></li>
+                <li><a href="{{ route('pagina.pago') }}" class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</a>
+                </li>
             </ul>
         </div>
     </nav>
