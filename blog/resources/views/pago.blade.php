@@ -11,6 +11,16 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        #tablaSeleccionados {
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+
+        #tablaSeleccionados td {
+            overflow-wrap: break-word;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,7 +53,6 @@
                 </li>
                 <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
                 <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
-
             </ul>
         </div>
     </nav>
@@ -101,7 +110,7 @@
                         <h3>Productos Seleccionados</h3>
                     </div>
                     <div class="card-body">
-                        <table class="table" id="tablaSeleccionados">
+                        <table class="table table-responsive" id="tablaSeleccionados">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
@@ -206,6 +215,10 @@
 
             if (producto) {
                 const diferencia = nuevaCantidad - producto.cantidad;
+                if (diferencia > stockActual) {
+                    alert('Stock insuficiente');
+                    return;
+                }
                 producto.cantidad = nuevaCantidad;
                 stockElement.textContent = stockActual - diferencia;
             }
@@ -232,6 +245,12 @@
         function completarCompra() {
             if (confirm("¿Se realizó la compra?")) {
                 mostrarMensaje("Compra realizada exitosamente", "alert-success");
+                productosSeleccionados.forEach(p => {
+                    const stockElement = document.querySelector(
+                        `#tablaProductos tbody tr[data-id="${p.id}"] .stock`);
+                    const stockActual = parseInt(stockElement.textContent);
+                    stockElement.textContent = stockActual - p.cantidad;
+                });
                 productosSeleccionados = [];
                 document.querySelector('#tablaSeleccionados tbody').innerHTML = '';
                 recalcularTotal();

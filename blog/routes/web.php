@@ -7,8 +7,7 @@ use App\Http\Controllers\PaginaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FiadoController;
-use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\PagoPosController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
@@ -27,20 +26,15 @@ Route::get('/inventario', [DashboardController::class, 'mostrarInventario'])->na
 Route::post('/eliminar-productos-seleccionados', [PaginaController::class, 'eliminarProductosSeleccionados'])->name('eliminarProductosSeleccionados');
 Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
 
-
 Route::get('/agregar-producto', [PaginaController::class, 'mostrarPagina'])->name('agregar-producto');
 Route::post('/guardar-producto', [PaginaController::class, 'guardarProducto'])->name('guardarProducto');
 Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');
 Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
 Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
 
-
-
 Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
 Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
 Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
-
-
 
 // Rutas de restablecimiento de contraseña
 Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
@@ -53,6 +47,6 @@ require __DIR__ . '/auth.php';
 
 
 
-
-Route::post('/pago/pos', [PaymentController::class, 'payWithPOS'])->name('payments.pay.pos');
-Route::get('/pago', [PaymentController::class, 'mostrarVistaPago'])->name('pagina.pago');
+// Ruta para procesar el pago con POS
+Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');
+Route::post('/pago-pos', [PagoPosController::class, 'procesarPagoPos'])->name('payments.pay.pos');
