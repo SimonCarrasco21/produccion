@@ -132,11 +132,40 @@
                             <button type="submit" class="btn btn-primary w-100 mb-2">Pagar con POS</button>
                         </form>
 
-                        <button class="btn btn-success w-100" onclick="completarCompra()">Pagar en Efectivo</button>
+                        <button class="btn btn-success w-100" onclick="pagarEfectivo()">Pagar en Efectivo</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Agregar tabla de registro de ventas -->
+        <h2 class="text-center my-4">Registro de Ventas</h2>
+        <table class="table table-striped" id="tablaVentas">
+            <thead>
+                <tr>
+                    <th>Referencia</th>
+                    <th>Estado</th>
+                    <th>Monto</th>
+                    <th>Productos</th>
+                    <th>Método de Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($ventas as $venta)
+                    <tr>
+                        <td>{{ $venta->external_reference }}</td>
+                        <td>{{ $venta->status }}</td>
+                        <td>{{ $venta->amount }}</td>
+                        <td>
+                            @foreach (json_decode($venta->productos) as $producto)
+                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
+                            @endforeach
+                        </td>
+                        <td>{{ $venta->metodo_pago }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -242,21 +271,45 @@
             }
         }
 
-        function completarCompra() {
-            if (confirm("¿Se realizó la compra?")) {
-                mostrarMensaje("Compra realizada exitosamente", "alert-success");
-                productosSeleccionados.forEach(p => {
-                    const stockElement = document.querySelector(
-                        `#tablaProductos tbody tr[data-id="${p.id}"] .stock`);
-                    const stockActual = parseInt(stockElement.textContent);
-                    stockElement.textContent = stockActual - p.cantidad;
-                });
-                productosSeleccionados = [];
-                document.querySelector('#tablaSeleccionados tbody').innerHTML = '';
-                recalcularTotal();
-            } else {
-                mostrarMensaje("Compra cancelada", "alert-danger");
-            }
+        function pagarEfectivo() {
+            const data = {
+                productosSeleccionados: JSON.stringify(productosSeleccionados),
+                metodo_pago: 'Efectivo',
+                total: total
+            };
+
+            fetch('{{ route('pago.efectivo') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        agregarFilaTablaVentas(data.data, 'Efectivo');
+                        mostrarMensaje(data.message, 'alert-success');
+                        productosSeleccionados = [];
+                        document.querySelector('#tablaSeleccionados tbody').innerHTML = '';
+                        recalcularTotal();
+                    } else {
+                        mostrarMensaje(data.error, 'alert-danger');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function agregarFilaTablaVentas(data, metodoPago) {
+            const tablaVentas = document.getElementById('tablaVentas').getElementsByTagName('tbody')[0];
+            const fila = tablaVentas.insertRow();
+
+            fila.insertCell(0).textContent = data.external_reference;
+            fila.insertCell(1).textContent = data.status;
+            fila.insertCell(2).textContent = `$${data.amount.toFixed(2)}`;
+            fila.insertCell(3).textContent = data.productos.map(p => `${p.nombre} (x${p.cantidad})`).join(', ');
+            fila.insertCell(4).textContent = metodoPago;
         }
 
         function mostrarMensaje(mensaje, clase) {

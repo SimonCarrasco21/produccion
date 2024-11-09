@@ -40,3 +40,5 @@ require __DIR__ . '/auth.php';
 // Ruta para procesar el pago con POS
 Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');
 Route::post('/pago-pos', [PagoPosController::class, 'procesarPagoPos'])->name('payments.pay.pos');
+Route::post('/procesar-datos', [PagoPosController::class, 'procesarDatos']);
+Route::post('/pago-efectivo', [PagoPosController::class, 'pagarEnEfectivo'])->name('pago.efectivo');
