@@ -23,9 +23,9 @@ class PagoPosController extends Controller
         // Obtener el monto total de los productos seleccionados del JSON enviado por la vista
         $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
-        // Validar que los productos seleccionados no sean nulos
-        if (is_null($productosSeleccionados)) {
-            return response()->json(['success' => false, 'error' => 'Productos seleccionados no válidos']);
+        // Validar que los productos seleccionados no sean nulos o estén vacíos
+        if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
+            return response()->json(['success' => false, 'error' => 'No se seleccionaron productos para el pago']);
         }
 
         $total = 0;
@@ -83,9 +83,9 @@ class PagoPosController extends Controller
         // Obtener el monto total de los productos seleccionados del JSON enviado por la vista
         $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
-        // Validar que los productos seleccionados no sean nulos
-        if (is_null($productosSeleccionados)) {
-            return response()->json(['success' => false, 'error' => 'Productos seleccionados no válidos']);
+        // Validar que los productos seleccionados no sean nulos o estén vacíos
+        if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
+            return response()->json(['success' => false, 'error' => 'No se seleccionaron productos para el pago']);
         }
 
         $total = 0;

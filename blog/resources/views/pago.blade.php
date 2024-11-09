@@ -272,33 +272,37 @@
         }
 
         function pagarEfectivo() {
-            const data = {
-                productosSeleccionados: JSON.stringify(productosSeleccionados),
-                metodo_pago: 'Efectivo',
-                total: total
-            };
+            if (confirm("¿Se realizó la venta en efectivo?")) {
+                const data = {
+                    productosSeleccionados: JSON.stringify(productosSeleccionados),
+                    metodo_pago: 'Efectivo',
+                    total: total
+                };
 
-            fetch('{{ route('pago.efectivo') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        agregarFilaTablaVentas(data.data, 'Efectivo');
-                        mostrarMensaje(data.message, 'alert-success');
-                        productosSeleccionados = [];
-                        document.querySelector('#tablaSeleccionados tbody').innerHTML = '';
-                        recalcularTotal();
-                    } else {
-                        mostrarMensaje(data.error, 'alert-danger');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                fetch('{{ route('pago.efectivo') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            agregarFilaTablaVentas(data.data, 'Efectivo');
+                            mostrarMensaje(data.message, 'alert-success');
+                            productosSeleccionados = [];
+                            document.querySelector('#tablaSeleccionados tbody').innerHTML = '';
+                            recalcularTotal();
+                        } else {
+                            mostrarMensaje(data.error, 'alert-danger');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                mostrarMensaje("La venta ha sido cancelada", "alert-danger");
+            }
         }
 
         function agregarFilaTablaVentas(data, metodoPago) {
