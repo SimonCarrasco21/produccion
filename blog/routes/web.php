@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\PaginaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -36,16 +34,8 @@ Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
 Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
 Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
 
-// Rutas de restablecimiento de contraseña
-Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-
 // Incluir las rutas de autenticación generadas por Breeze
 require __DIR__ . '/auth.php';
-
-
 
 // Ruta para procesar el pago con POS
 Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');
