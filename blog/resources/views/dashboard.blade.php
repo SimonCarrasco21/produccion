@@ -45,83 +45,6 @@
             </ul>
         </div>
     </nav>
-
-    <!-- Sección de últimos registros de ventas -->
-    <div class="container mt-4">
-        <h2 class="text-center">Últimos Registros de Ventas</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Referencia</th>
-                    <th>Estado</th>
-                    <th>Monto</th>
-                    <th>Productos</th>
-                    <th>Método de Pago</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($ventas as $venta)
-                    <tr>
-                        <td>{{ $venta->external_reference }}</td>
-                        <td>{{ $venta->status }}</td>
-                        <td>{{ $venta->amount }}</td>
-                        <td>
-                            @foreach (json_decode($venta->productos) as $producto)
-                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
-                            @endforeach
-                        </td>
-                        <td>{{ $venta->metodo_pago }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center">No hay registros de ventas para mostrar.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-
-
-    <!-- Sección de productos agregados -->
-    <div class="container mt-4">
-        <h2 class="text-center">Productos Agregados</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID Producto</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Categoría</th>
-                    <th>Fecha de Elaboración</th>
-                    <th>Fecha de Vencimiento</th>
-                </tr>
-            </thead>
-            <tbody id="product-list">
-                @foreach ($productos as $producto)
-                    <tr>
-                        <td>{{ $producto->id }}</td>
-                        <td>{{ $producto->nombre }}</td>
-                        <td>{{ $producto->descripcion }}</td>
-                        <td>{{ number_format($producto->precio, 2) }} $</td>
-                        <td>{{ $producto->stock }}</td>
-                        <td>{{ $producto->categoria->nombre }}</td>
-                        <td>{{ $producto->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $producto->fecha_vencimiento }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <!-- Botón "Ver más" -->
-        @if ($productos->hasMorePages())
-            <div class="text-center mt-4">
-                <button id="load-more" class="btn-ver-mas">Ver más</button>
-            </div>
-        @endif
-    </div>
     <!-- Catálogo de Productos -->
     <div class="container mt-4">
         <h2 class="text-center">Catálogo de Productos</h2>
@@ -186,38 +109,192 @@
                     <p>Productos para Mascotas</p>
                 </div>
             </a>
+            <a href="{{ route('productos.categoria', ['id' => 11]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-snowflake"></i>
+                    <p>Congelados</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 12]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-box"></i>
+                    <p>Envasados</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 14]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-home"></i>
+                    <p>Productos para el Hogar</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 15]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-drumstick-bite"></i>
+                    <p>Carnes</p>
+                </div>
+            </a>
+            <a href="{{ route('productos.categoria', ['id' => 13]) }}">
+                <div class="product-category">
+                    <i class="fa-solid fa-ellipsis-h"></i>
+                    <p>Otros</p>
+                </div>
+            </a>
         </div>
     </div>
+    <!-- Sección de últimos registros de ventas -->
+    <div class="container mt-4">
+        <h2 class="text-center">Últimos Registros de Ventas</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Código de Venta</th>
+                    <th>Monto</th>
+                    <th>Productos</th>
+                    <th>Método de Pago</th>
+                </tr>
+            </thead>
+            <tbody id="ventas-list">
+                @forelse ($ventas as $venta)
+                    <tr>
+                        <td>{{ $venta->external_reference }}</td>
+                        <td>{{ $venta->amount }}</td>
+                        <td>
+                            @foreach (json_decode($venta->productos) as $producto)
+                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
+                            @endforeach
+                        </td>
+                        <td>{{ $venta->metodo_pago }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No hay registros de ventas para mostrar.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
 
+        <!-- Botón "Ver Más" para Ventas se agregará por JavaScript -->
+        <div id="ventas-load-more-container" class="text-center mt-4"></div>
+    </div>
+    <!-- Sección de productos agregados -->
+    <div class="container mt-4">
+        <h2 class="text-center">Productos Agregados</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Fecha de Elaboración</th>
+                    <th>Fecha de Vencimiento</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+                @foreach ($productos as $producto)
+                    <tr>
+                        <td>{{ $producto->id }}</td>
+                        <td>{{ $producto->nombre }}</td>
+                        <td>{{ $producto->descripcion }}</td>
+                        <td>{{ number_format($producto->precio, 2) }} $</td>
+                        <td>{{ $producto->stock }}</td>
+                        <td>{{ $producto->categoria->nombre }}</td>
+                        <td>{{ $producto->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $producto->fecha_vencimiento }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-
+        <!-- Botón "Ver Más" para Productos se agregará por JavaScript -->
+        <div id="product-load-more-container" class="text-center mt-4"></div>
+    </div>
     <!-- Aquí va el código JavaScript-->
     <script>
-        let currentPage = 1;
+        let currentPageProductos = 1; // Página actual para productos
+        let currentPageVentas = 1; // Página actual para ventas
+        const initialRows = 5; // Número de filas iniciales a mostrar en ambas tablas
 
-        document.getElementById('load-more').addEventListener('click', function() {
-            currentPage++; // Aumentar la página actual
-            fetchMoreProducts(currentPage);
-        });
+        // Función para crear y agregar el botón "Ver Más" / "Ver Menos"
+        function createLoadMoreButton(containerId, buttonId, type) {
+            const container = document.getElementById(containerId);
+            let button = document.getElementById(buttonId);
 
-        function fetchMoreProducts(page) {
-            fetch(`{{ url('/dashboard?page=') }}${page}`)
+            if (!button) {
+                button = document.createElement('button');
+                button.id = buttonId;
+                button.className = 'btn-ver-mas';
+                button.innerText = "Ver Más";
+                container.appendChild(button);
+
+                // Agregar el evento de clic
+                button.addEventListener('click', function() {
+                    if (button.innerText === "Ver Más") {
+                        if (type === 'productos') {
+                            currentPageProductos++;
+                            fetchMoreData('productos', currentPageProductos);
+                        } else {
+                            currentPageVentas++;
+                            fetchMoreData('ventas', currentPageVentas);
+                        }
+                    } else {
+                        const listId = type === 'productos' ? 'product-list' : 'ventas-list';
+                        collapseTable(listId, buttonId);
+                    }
+                });
+            }
+        }
+
+        // Llamar a la función para crear botones en ambos contenedores
+        createLoadMoreButton('product-load-more-container', 'load-more', 'productos');
+        createLoadMoreButton('ventas-load-more-container', 'load-more-ventas', 'ventas');
+
+        // Función para cargar más datos en la tabla de productos o ventas
+        function fetchMoreData(type, page) {
+            const url = type === 'productos' ?
+                `{{ url('/dashboard?page=') }}${page}` :
+                `{{ url('/dashboard?page=') }}${page}&type=ventas`;
+
+            const listId = type === 'productos' ? 'product-list' : 'ventas-list';
+            const loadMoreBtnId = type === 'productos' ? 'load-more' : 'load-more-ventas';
+
+            fetch(url)
                 .then(response => response.text())
                 .then(data => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
-                    const newProducts = doc.getElementById('product-list').innerHTML;
-                    document.getElementById('product-list').insertAdjacentHTML('beforeend', newProducts);
 
-                    // Si ya no hay más páginas, ocultar el botón "Ver más"
-                    if (!doc.querySelector('#load-more')) {
-                        document.getElementById('load-more').style.display = 'none';
-                    }
+                    // Extraer las nuevas filas de la respuesta y añadirlas al final de la tabla correspondiente
+                    const newRows = doc.getElementById(listId).innerHTML;
+                    document.getElementById(listId).insertAdjacentHTML('beforeend', newRows);
+
+                    // Cambiar el texto del botón a "Ver Menos" cuando se cargan más filas
+                    document.getElementById(loadMoreBtnId).innerText = "Ver Menos";
                 })
-                .catch(error => console.error('Error al cargar más productos:', error));
+                .catch(error => console.error(`Error al cargar más ${type}:`, error));
+        }
+
+        // Función para contraer la tabla y volver a las filas iniciales
+        function collapseTable(listId, loadMoreBtnId) {
+            const list = document.getElementById(listId);
+            const rows = Array.from(list.getElementsByTagName('tr'));
+
+            // Mantener solo las filas iniciales y eliminar las adicionales
+            rows.slice(initialRows).forEach(row => row.remove());
+
+            // Restablecer el botón a "Ver Más"
+            document.getElementById(loadMoreBtnId).innerText = "Ver Más";
+
+            // Reiniciar el contador de páginas según la tabla
+            if (listId === 'product-list') {
+                currentPageProductos = 1;
+            } else {
+                currentPageVentas = 1;
+            }
         }
     </script>
-
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>
         function confirmLogout() {

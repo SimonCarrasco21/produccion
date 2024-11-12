@@ -11,15 +11,15 @@ class DashboardController extends Controller
 {
     public function mostrarDashboard()
     {
-        // Obtener solo los productos del usuario autenticado, 8 por página
+        // Obtener solo los productos del usuario autenticado, 5 por página
         $productos = Producto::with('categoria')
             ->where('user_id', Auth::id())
-            ->paginate(8);
+            ->paginate(5);
 
-        // Obtener solo las ventas del usuario autenticado
+        // Obtener solo las ventas del usuario autenticado, 5 por página
         $ventas = DB::table('ventas')
             ->where('user_id', Auth::id())
-            ->get();
+            ->paginate(5);
 
         return view('dashboard', compact('productos', 'ventas'));
     }

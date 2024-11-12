@@ -28,9 +28,25 @@
         <div class="navbar-left">
             <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
             <div class="dropdown">
-                <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
-                    <i class="bi bi-person-circle"></i> Perfil
-                </button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
+                        <i class="bi bi-person-circle"></i> Perfil
+                    </button>
+                    <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver
+                                Perfil</a>
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}"
+                                onsubmit="return confirm('¿Estás seguro de que deseas cerrar sesión?');">
+                                @csrf
+                                <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i>
+                                    Cerrar
+                                    Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
                 <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
                     </li>
@@ -329,6 +345,26 @@
         }
 
         document.getElementById('productosForm').addEventListener('submit', enviarProductos);
+    </script>
+
+
+    <script>
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-btn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === 'block') {
+                        openDropdown.style.display = 'none';
+                    }
+                }
+            }
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
