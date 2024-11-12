@@ -16,5 +16,12 @@ class Fiado extends Model
         'cantidad',
         'precio',
         'fecha_compra',
+        'user_id' // Añadido para asociar el registro al usuario
     ];
+
+    // Relación con el usuario
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

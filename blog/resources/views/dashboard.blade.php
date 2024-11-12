@@ -52,18 +52,37 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID Venta</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Fecha</th>
+                    <th>Referencia</th>
+                    <th>Estado</th>
+                    <th>Monto</th>
+                    <th>Productos</th>
+                    <th>Método de Pago</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Aquí se llenarán los datos desde la base de datos -->
+                @forelse ($ventas as $venta)
+                    <tr>
+                        <td>{{ $venta->external_reference }}</td>
+                        <td>{{ $venta->status }}</td>
+                        <td>{{ $venta->amount }}</td>
+                        <td>
+                            @foreach (json_decode($venta->productos) as $producto)
+                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
+                            @endforeach
+                        </td>
+                        <td>{{ $venta->metodo_pago }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center">No hay registros de ventas para mostrar.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+
+
+
     <!-- Sección de productos agregados -->
     <div class="container mt-4">
         <h2 class="text-center">Productos Agregados</h2>

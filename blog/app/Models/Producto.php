@@ -16,12 +16,19 @@ class Producto extends Model
         'precio',
         'stock',
         'categoria_id',  // Relación con la tabla de categorías
-        'fecha_vencimiento' // Fecha de vencimiento
+        'fecha_vencimiento', // Fecha de vencimiento
+        'user_id' // Relación con el usuario
     ];
 
     // Relación con la categoría
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
+    }
+
+    // Relación con el usuario
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

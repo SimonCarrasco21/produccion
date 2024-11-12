@@ -6,39 +6,39 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Producto;
-use Illuminate\Support\Facades\DB; // Añadido para utilizar la clase DB
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PagoPosController extends Controller
 {
     public function mostrarVistaPago()
     {
+        // Obtener todos los productos (categoría compartida entre usuarios)
         $productos = Producto::with('categoria')->get();
-        $ventas = DB::table('ventas')->get(); // Obtener todas las ventas desde la base de datos
+        // Obtener solo las ventas del usuario autenticado
+        $ventas = DB::table('ventas')->where('user_id', Auth::id())->get();
 
-        return view('pago', compact('productos', 'ventas')); // Pasar ventas a la vista
+        return view('pago', compact('productos', 'ventas'));
     }
 
     public function procesarPagoPos(Request $request)
     {
-        // Obtener el monto total de los productos seleccionados del JSON enviado por la vista
+        // Obtener el monto total de los productos seleccionados
         $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
-        // Validar que los productos seleccionados no sean nulos o estén vacíos
         if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
             return response()->json(['success' => false, 'error' => 'No se seleccionaron productos para el pago']);
         }
 
         $total = 0;
         foreach ($productosSeleccionados as $producto) {
-            // Validar que el precio y la cantidad sean valores numéricos
             if (!isset($producto['precio']) || !is_numeric($producto['precio']) || !isset($producto['cantidad']) || !is_numeric($producto['cantidad'])) {
                 return response()->json(['success' => false, 'error' => 'Datos de producto no válidos']);
             }
             $total += $producto['precio'] * $producto['cantidad'];
         }
 
-        // Simulación del pago si no existe un POS físico
-        $isSimulation = true; // Cambia a false para producción con un POS real
+        $isSimulation = true; // Cambiar a false para un POS real en producción
 
         if ($isSimulation) {
             // Actualizar el stock de los productos en la base de datos
@@ -54,13 +54,14 @@ class PagoPosController extends Controller
             $externalReference = uniqid();
             $status = 'approved';
 
-            // Guardar los datos de la venta en la tabla `ventas`
+            // Guardar los datos de la venta en la tabla `ventas`, asociado al usuario autenticado
             DB::table('ventas')->insert([
                 'external_reference' => $externalReference,
                 'status' => $status,
                 'amount' => $total,
                 'productos' => json_encode($productosSeleccionados),
                 'metodo_pago' => 'POS',
+                'user_id' => Auth::id(), // Asocia la venta al usuario autenticado
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -80,17 +81,14 @@ class PagoPosController extends Controller
 
     public function pagarEnEfectivo(Request $request)
     {
-        // Obtener el monto total de los productos seleccionados del JSON enviado por la vista
         $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
-        // Validar que los productos seleccionados no sean nulos o estén vacíos
         if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
             return response()->json(['success' => false, 'error' => 'No se seleccionaron productos para el pago']);
         }
 
         $total = 0;
         foreach ($productosSeleccionados as $producto) {
-            // Validar que el precio y la cantidad sean valores numéricos
             if (!isset($producto['precio']) || !is_numeric($producto['precio']) || !isset($producto['cantidad']) || !is_numeric($producto['cantidad'])) {
                 return response()->json(['success' => false, 'error' => 'Datos de producto no válidos']);
             }
@@ -110,13 +108,14 @@ class PagoPosController extends Controller
         $externalReference = uniqid();
         $status = 'approved';
 
-        // Guardar los datos de la venta en la tabla `ventas`
+        // Guardar los datos de la venta en la tabla `ventas`, asociado al usuario autenticado
         DB::table('ventas')->insert([
             'external_reference' => $externalReference,
             'status' => $status,
             'amount' => $total,
             'productos' => json_encode($productosSeleccionados),
             'metodo_pago' => 'Efectivo',
+            'user_id' => Auth::id(), // Asocia la venta al usuario autenticado
             'created_at' => now(),
             'updated_at' => now()
         ]);
