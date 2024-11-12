@@ -81,6 +81,14 @@
             margin: 0.4rem 0;
         }
 
+        .profile-picture img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        
         ul {
             padding: 0;
             list-style-type: none;
@@ -92,41 +100,17 @@
     </style>
 </head>
 
-<nav class="navbar">
-    <div class="navbar-left">
-        <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
-        <div class="dropdown">
-            <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
-            <div class="dropdown-content" id="dropdown-menu" style="display: none;">
-                <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
-                <!-- Enlace a la vista del perfil -->
-                <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
-                    @csrf
-                    <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar
-                        Sesión</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="navbar-right">
-        <ul>
-            <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
-            <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
-            <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
-            <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
-            <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
-            <li><a href="{{ route('pagina.pago') }}" class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
 <body>
     <div class="container">
         <div class="card-profile">
-            <div class="profile-info">
+            <div class="profile-info text-center">
                 <h2>Perfil de Usuario</h2>
+
+                <!-- Mostrar la foto de perfil o una predeterminada -->
+                <div class="profile-picture">
+                    <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}" alt="Foto de Perfil">
+                </div>
+
                 <p><strong>Nombre:</strong> {{ $user->name }}</p>
                 <p><strong>Correo Electrónico:</strong> {{ $user->email }}</p>
                 <p><strong>Fecha de Creación:</strong> {{ $user->created_at->format('d-m-Y') }}</p>
@@ -136,7 +120,7 @@
 
             <div class="edit-section mt-4" id="editProfileSection">
                 <h4>Editar Información del Perfil</h4>
-                <form action="{{ route('perfil.update') }}" method="POST">
+                <form action="{{ route('perfil.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre:</label>
@@ -147,6 +131,10 @@
                         <label for="email" class="form-label">Correo Electrónico:</label>
                         <input type="email" name="email" id="email" class="form-control"
                             value="{{ $user->email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Foto de Perfil:</label>
+                        <input type="file" name="profile_picture" id="profile_picture" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </form>
@@ -191,15 +179,15 @@
         function toggleEditSection() {
             const editSection = document.getElementById('editProfileSection');
             const passwordSection = document.getElementById('changePasswordSection');
-            passwordSection.classList.remove('show'); // Ocultar la sección de cambiar contraseña
-            editSection.classList.toggle('show'); // Mostrar/ocultar la sección de edición de perfil
+            passwordSection.classList.remove('show');
+            editSection.classList.toggle('show');
         }
 
         function togglePasswordSection() {
             const editSection = document.getElementById('editProfileSection');
             const passwordSection = document.getElementById('changePasswordSection');
-            editSection.classList.remove('show'); // Ocultar la sección de edición de perfil
-            passwordSection.classList.toggle('show'); // Mostrar/ocultar la sección de cambiar contraseña
+            editSection.classList.remove('show');
+            passwordSection.classList.toggle('show');
         }
 
         function validatePassword() {
@@ -214,59 +202,6 @@
         function confirmLogout() {
             return confirm('¿Estás seguro de que quieres cerrar sesión?');
         }
-
-        const dropdownBtn = document.querySelector('.dropdown-btn');
-        const dropdownMenu = document.querySelector('#dropdown-menu');
-
-        dropdownBtn.addEventListener('click', function() {
-            dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
-        });
     </script>
 </body>
-<!-- Pie de página -->
-<footer class="bg-light text-center text-lg-start mt-5">
-    <div class="container p-4">
-        <!-- Enlaces rápidos -->
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Enlaces Rápidos</h5>
-                <ul class="list-unstyled">
-                    <li>
-                        <a href="{{ route('dashboard') }}" class="text-dark">Inicio</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('inventario') }}" class="text-dark">Inventario</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('agregar-producto') }}" class="text-dark">Agregar Producto</a>
-                    </li>
-                    <li>
-                        <a href="#" class="text-dark">Historial de Ventas</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Información de contacto -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Contáctanos</h5>
-                <p>
-                    <i class="fas fa-map-marker-alt"></i> Dirección: Melipilla,Ortusa 250<br>
-                    <i class="fas fa-phone"></i> Teléfono: +56 9 1334 5618<br>
-                    <i class="fas fa-envelope"></i> Correo: Si.carrasco@duocuc.cl
-                </p>
-            </div>
-
-            <!-- Información adicional -->
-            <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Sobre Nosotros</h5>
-                <p>
-                    Esta es una aplicacion dedicada a proporcionar la mejor experiencia de gestión de inventarios para
-                    pequeños y medianos negocios. Nuestro objetivo es facilitar la administración de tus productos de
-                    manera simple y eficiente.
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
-
 </html>
