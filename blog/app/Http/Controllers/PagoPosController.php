@@ -31,11 +31,31 @@ class PagoPosController extends Controller
         }
 
         $total = 0;
+        $productosParaVenta = [];
+
         foreach ($productosSeleccionados as $producto) {
-            if (!isset($producto['precio']) || !is_numeric($producto['precio']) || !isset($producto['cantidad']) || !is_numeric($producto['cantidad'])) {
+            if (!isset($producto['precio']) || !is_numeric($producto['precio'])) {
                 return response()->json(['success' => false, 'error' => 'Datos de producto no válidos']);
             }
+
+            // Asegurarse de que siempre haya una cantidad asignada
+            $producto['cantidad'] = $producto['cantidad'] ?? 1;
+
+            // Calcular el total
             $total += $producto['precio'] * $producto['cantidad'];
+
+            // Cambiar 'nombre' por 'descripcion'
+            $productoModel = Producto::find($producto['id']);
+            if ($productoModel) {
+                $productosParaVenta[] = [
+                    'id' => $producto['id'],
+                    'descripcion' => $productoModel->descripcion,
+                    'precio' => $producto['precio'],
+                    'cantidad' => $producto['cantidad']
+                ];
+            } else {
+                return response()->json(['success' => false, 'error' => 'Producto no encontrado']);
+            }
         }
 
         $isSimulation = true; // Cambiar a false para un POS real en producción
@@ -54,15 +74,15 @@ class PagoPosController extends Controller
             $externalReference = uniqid();
             $status = 'approved';
 
-            // Guardar los datos de la venta en la tabla `ventas`, asociado al usuario autenticado
+            // Guardar los datos de la venta en la tabla `ventas`
             DB::table('ventas')->insert([
                 'external_reference' => $externalReference,
                 'status' => $status,
                 'amount' => $total,
-                'productos' => json_encode($productosSeleccionados),
+                'productos' => json_encode($productosParaVenta),
                 'metodo_pago' => 'POS',
                 'user_id' => Auth::id(), // Asocia la venta al usuario autenticado
-                'created_at' => now(),
+                'created_at' => now()->setTimezone('America/Santiago'), // Guardar la fecha y hora actual (Zona Horaria Chile)
                 'updated_at' => now()
             ]);
 
@@ -73,7 +93,8 @@ class PagoPosController extends Controller
                     'external_reference' => $externalReference,
                     'status' => $status,
                     'amount' => $total,
-                    'productos' => $productosSeleccionados,
+                    'fecha' => now()->setTimezone('America/Santiago')->format('Y-m-d H:i:s'), // Incluir la fecha y hora actual en el JSON de respuesta
+                    'productos' => $productosParaVenta,
                 ]
             ])->header('Content-Type', 'application/json');
         }
@@ -88,11 +109,31 @@ class PagoPosController extends Controller
         }
 
         $total = 0;
+        $productosParaVenta = [];
+
         foreach ($productosSeleccionados as $producto) {
-            if (!isset($producto['precio']) || !is_numeric($producto['precio']) || !isset($producto['cantidad']) || !is_numeric($producto['cantidad'])) {
+            if (!isset($producto['precio']) || !is_numeric($producto['precio'])) {
                 return response()->json(['success' => false, 'error' => 'Datos de producto no válidos']);
             }
+
+            // Asegurarse de que siempre haya una cantidad asignada
+            $producto['cantidad'] = $producto['cantidad'] ?? 1;
+
+            // Calcular el total
             $total += $producto['precio'] * $producto['cantidad'];
+
+            // Cambiar 'nombre' por 'descripcion'
+            $productoModel = Producto::find($producto['id']);
+            if ($productoModel) {
+                $productosParaVenta[] = [
+                    'id' => $producto['id'],
+                    'descripcion' => $productoModel->descripcion,
+                    'precio' => $producto['precio'],
+                    'cantidad' => $producto['cantidad']
+                ];
+            } else {
+                return response()->json(['success' => false, 'error' => 'Producto no encontrado']);
+            }
         }
 
         // Actualizar el stock de los productos en la base de datos
@@ -108,15 +149,15 @@ class PagoPosController extends Controller
         $externalReference = uniqid();
         $status = 'approved';
 
-        // Guardar los datos de la venta en la tabla `ventas`, asociado al usuario autenticado
+        // Guardar los datos de la venta en la tabla `ventas`
         DB::table('ventas')->insert([
             'external_reference' => $externalReference,
             'status' => $status,
             'amount' => $total,
-            'productos' => json_encode($productosSeleccionados),
+            'productos' => json_encode($productosParaVenta),
             'metodo_pago' => 'Efectivo',
             'user_id' => Auth::id(), // Asocia la venta al usuario autenticado
-            'created_at' => now(),
+            'created_at' => now()->setTimezone('America/Santiago'), // Guardar la fecha y hora actual (Zona Horaria Chile)
             'updated_at' => now()
         ]);
 
@@ -127,7 +168,8 @@ class PagoPosController extends Controller
                 'external_reference' => $externalReference,
                 'status' => $status,
                 'amount' => $total,
-                'productos' => $productosSeleccionados,
+                'fecha' => now()->setTimezone('America/Santiago')->format('Y-m-d H:i:s'), // Incluir la fecha y hora actual en el JSON de respuesta
+                'productos' => $productosParaVenta,
             ]
         ])->header('Content-Type', 'application/json');
     }

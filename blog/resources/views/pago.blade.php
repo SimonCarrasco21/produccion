@@ -8,7 +8,6 @@
     <!-- Enlace a Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
@@ -28,25 +27,9 @@
         <div class="navbar-left">
             <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
             <div class="dropdown">
-                <div class="dropdown">
-                    <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
-                        <i class="bi bi-person-circle"></i> Perfil
-                    </button>
-                    <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver
-                                Perfil</a>
-                        </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}"
-                                onsubmit="return confirm('¿Estás seguro de que deseas cerrar sesión?');">
-                                @csrf
-                                <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i>
-                                    Cerrar
-                                    Sesión</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
+                    <i class="bi bi-person-circle"></i> Perfil
+                </button>
                 <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
                     </li>
@@ -84,18 +67,18 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3>Productos Disponibles</h3>
                         <input type="text" id="buscarProducto" class="form-control w-50"
-                            placeholder="Buscar por nombre, descripcion o categoria...">
+                            placeholder="Buscar por nombre, descripción o categoría...">
                     </div>
                     <div class="card-body">
                         <table class="table table-responsive" id="tablaProductos">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
-                                    <th>Descripcion</th>
-                                    <th>Categoria</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
                                     <th>Precio</th>
                                     <th>Stock</th>
-                                    <th>Accion</th>
+                                    <th>Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,7 +91,7 @@
                                         <td class="stock">{{ $producto->stock }}</td>
                                         <td>
                                             <button class="btn btn-success btn-agregar" data-id="{{ $producto->id }}"
-                                                data-nombre="{{ $producto->nombre }}"
+                                                data-descripcion="{{ $producto->descripcion }}"
                                                 data-precio="{{ $producto->precio }}"
                                                 data-stock="{{ $producto->stock }}">Agregar</button>
                                         </td>
@@ -132,7 +115,7 @@
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
-                                    <th>Accion</th>
+                                    <th>Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -154,7 +137,7 @@
             </div>
         </div>
 
-        <!-- Agregar tabla de registro de ventas -->
+        <!-- Tabla de Registro de Ventas -->
         <h2 class="text-center my-4">Registro de Ventas</h2>
         <table class="table table-striped" id="tablaVentas">
             <thead>
@@ -164,6 +147,7 @@
                     <th>Monto</th>
                     <th>Productos</th>
                     <th>Método de Pago</th>
+                    <th>Fecha de Compra</th>
                 </tr>
             </thead>
             <tbody>
@@ -174,10 +158,11 @@
                         <td>{{ $venta->amount }}</td>
                         <td>
                             @foreach (json_decode($venta->productos) as $producto)
-                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
+                                {{ $producto->descripcion }} (x{{ $producto->cantidad ?? 1 }}) <br>
                             @endforeach
                         </td>
                         <td>{{ $venta->metodo_pago }}</td>
+                        <td>{{ $venta->created_at }}</td> <!-- Muestra la fecha de compra -->
                     </tr>
                 @endforeach
             </tbody>
@@ -188,21 +173,24 @@
         let total = 0;
         let productosSeleccionados = [];
 
+        // Filtro de búsqueda de productos en tiempo real
         document.getElementById('buscarProducto').addEventListener('keyup', function() {
             const filtro = this.value.toLowerCase();
             document.querySelectorAll('#tablaProductos tbody tr').forEach(row => {
                 const nombre = row.cells[0].textContent.toLowerCase();
                 const descripcion = row.cells[1].textContent.toLowerCase();
                 const categoria = row.cells[2].textContent.toLowerCase();
+
                 row.style.display = nombre.includes(filtro) || descripcion.includes(filtro) || categoria
                     .includes(filtro) ? '' : 'none';
             });
         });
 
+        // Evento para agregar productos seleccionados al carrito
         document.querySelectorAll('.btn-agregar').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.dataset.id;
-                const nombre = this.dataset.nombre;
+                const descripcion = this.dataset.descripcion;
                 const precio = parseFloat(this.dataset.precio);
                 const stockElement = this.closest('tr').querySelector('.stock');
                 let stock = parseInt(stockElement.textContent);
@@ -218,11 +206,11 @@
                 } else {
                     productosSeleccionados.push({
                         id: id,
-                        nombre: nombre,
+                        descripcion: descripcion,
                         precio: precio,
                         cantidad: 1
                     });
-                    agregarFilaSeleccionados(id, nombre, precio);
+                    agregarFilaSeleccionados(id, descripcion, precio);
                 }
                 stock -= 1;
                 stockElement.textContent = stock;
@@ -230,12 +218,12 @@
             });
         });
 
-        function agregarFilaSeleccionados(id, nombre, precio) {
+        function agregarFilaSeleccionados(id, descripcion, precio) {
             const tablaSeleccionados = document.querySelector('#tablaSeleccionados tbody');
             const fila = document.createElement('tr');
             fila.setAttribute('data-id', id);
             fila.innerHTML = `
-                <td>${nombre}</td>
+                <td>${descripcion}</td>
                 <td>${precio}</td>
                 <td><input type="number" min="1" class="form-control cantidad-input" value="1"></td>
                 <td><button class="btn btn-danger btn-eliminar">Eliminar</button></td>
@@ -328,8 +316,10 @@
             fila.insertCell(0).textContent = data.external_reference;
             fila.insertCell(1).textContent = data.status;
             fila.insertCell(2).textContent = `$${data.amount.toFixed(2)}`;
-            fila.insertCell(3).textContent = data.productos.map(p => `${p.nombre} (x${p.cantidad})`).join(', ');
+            const productosDescripcion = data.productos.map(p => `${p.descripcion} (x${p.cantidad})`).join(', ');
+            fila.insertCell(3).textContent = productosDescripcion;
             fila.insertCell(4).textContent = metodoPago;
+            fila.insertCell(5).textContent = data.fecha;
         }
 
         function mostrarMensaje(mensaje, clase) {
@@ -339,7 +329,6 @@
             mensajeCompra.classList.remove('d-none');
         }
 
-        // Guardar productos seleccionados en JSON
         function enviarProductos() {
             document.getElementById('productosSeleccionados').value = JSON.stringify(productosSeleccionados);
         }
@@ -347,7 +336,7 @@
         document.getElementById('productosForm').addEventListener('submit', enviarProductos);
     </script>
 
-
+    <!-- Dropdown Script -->
     <script>
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');

@@ -160,7 +160,7 @@
                         <td>{{ $venta->amount }}</td>
                         <td>
                             @foreach (json_decode($venta->productos) as $producto)
-                                {{ $producto->nombre }} (x{{ $producto->cantidad }}) <br>
+                                {{ $producto->descripcion }} (x{{ $producto->cantidad ?? 1 }}) <br>
                             @endforeach
                         </td>
                         <td>{{ $venta->metodo_pago }}</td>
@@ -176,6 +176,8 @@
         <!-- Botón "Ver Más" para Ventas se agregará por JavaScript -->
         <div id="ventas-load-more-container" class="text-center mt-4"></div>
     </div>
+
+
     <!-- Sección de productos agregados -->
     <div class="container mt-4">
         <h2 class="text-center">Productos Agregados</h2>
@@ -188,8 +190,8 @@
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Categoría</th>
-                    <th>Fecha de Elaboración</th>
-                    <th>Fecha de Vencimiento</th>
+                    <th>Fecha de Agregado</th>
+                    <th>Fecha de Vencimiento del producto</th>
                 </tr>
             </thead>
             <tbody id="product-list">
