@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FiadoController;
 use App\Http\Controllers\PagoPosController;
+use App\Http\Controllers\VentaRegistroController;
 
 // Redirigir la raíz del sitio al login
 Route::get('/', function () {
@@ -42,3 +43,10 @@ Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagin
 Route::post('/pago-pos', [PagoPosController::class, 'procesarPagoPos'])->name('payments.pay.pos');
 Route::post('/procesar-datos', [PagoPosController::class, 'procesarDatos']);
 Route::post('/pago-efectivo', [PagoPosController::class, 'pagarEnEfectivo'])->name('pago.efectivo');
+
+Route::get('/registro-ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('registro-ventas');
+Route::get('/ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('ventas.historial');
+Route::post('/ventas/imprimir', [VentaRegistroController::class, 'generarPdfVentas'])->name('ventas.imprimir');
+Route::post('/ventas/guardar', [VentaRegistroController::class, 'guardarRegistroVentas'])->name('ventas.guardar');
+Route::delete('/ventas/eliminar/{id}', [VentaRegistroController::class, 'eliminarRegistro'])->name('ventas.reporte.eliminar');
+Route::get('/ventas/descargar/{id}', [VentaRegistroController::class, 'descargarRegistro'])->name('ventas.reporte.descargar');

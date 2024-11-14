@@ -139,7 +139,8 @@
                 <!-- Botón de Dashboard -->
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
                 </li>
-                <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
+                <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Ver Historial
+                        Ventas</a></li>
                 <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
                 <li><a href="{{ route('pagina.pago') }}" class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</a>
                 </li>
