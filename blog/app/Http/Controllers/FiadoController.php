@@ -17,6 +17,26 @@ class FiadoController extends Controller
         return view('fiados', compact('productos', 'fiados'));
     }
 
+    // Redirigir a la vista de pagos con los datos del fiado seleccionado
+    public function pagar($id)
+    {
+        // Encontrar el fiado y verificar que pertenezca al usuario autenticado
+        $fiado = Fiado::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Decodificar los productos del fiado para pasarlos a la vista de pago
+        $productos = json_decode($fiado->productos, true);
+
+        // Redirigir a la vista de pagos con los datos del fiado
+        return view('pago', [
+            'productos' => $productos,
+            'total_precio' => $fiado->total_precio,
+            'id_cliente' => $fiado->id_cliente,
+            'nombre_cliente' => $fiado->nombre_cliente,
+        ]);
+    }
+
     // Almacenar un nuevo fiado en la base de datos
     public function store(Request $request)
     {

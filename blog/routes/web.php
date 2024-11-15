@@ -34,19 +34,19 @@ Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarPro
 Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
 Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
 Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
-Route::get('/pago/fiado/{id}', [PagoPosController::class, 'pagoFiado'])->name('pago.fiado');
-
+Route::get('/pago/fiado/{id}', [PagoPosController::class, 'pagoFiado'])->name('pago.fiado'); // Nueva ruta para pagar fiado
 
 
 // Incluir las rutas de autenticación generadas por Breeze
 require __DIR__ . '/auth.php';
 
-// Ruta para procesar el pago con POS
+// Rutas para manejo de pagos
 Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');
 Route::post('/pago-pos', [PagoPosController::class, 'procesarPagoPos'])->name('payments.pay.pos');
 Route::post('/procesar-datos', [PagoPosController::class, 'procesarDatos']);
 Route::post('/pago-efectivo', [PagoPosController::class, 'pagarEnEfectivo'])->name('pago.efectivo');
 
+// Rutas para registro de ventas
 Route::get('/registro-ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('registro-ventas');
 Route::get('/ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('ventas.historial');
 Route::post('/ventas/imprimir', [VentaRegistroController::class, 'generarPdfVentas'])->name('ventas.imprimir');

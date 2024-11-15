@@ -23,4 +23,11 @@ class Fiado extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Relación con los productos (opcional, para futuras mejoras)
+    // Si decides cambiar a una tabla intermedia en lugar de usar JSON
+    public function productos()
+    {
+        return $this->belongsToMany(Producto::class, 'fiado_producto')->withPivot('cantidad', 'precio_total');
+    }
 }

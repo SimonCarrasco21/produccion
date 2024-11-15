@@ -280,8 +280,12 @@
                                         <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i>
                                             Eliminar</button>
                                     </form>
-                                    <button class="btn btn-success"><i class="bi bi-cash"></i> Pagar</button>
+                                    <a href="{{ route('pago.fiado', ['id' => $fiado->id]) }}"
+                                        class="btn btn-success">
+                                        <i class="bi bi-cash"></i> Pagar
+                                    </a>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>

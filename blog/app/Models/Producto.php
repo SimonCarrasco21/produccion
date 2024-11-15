@@ -9,7 +9,6 @@ class Producto extends Model
 {
     use HasFactory;
 
-    // Definir los campos que pueden ser llenados con asignación masiva
     protected $fillable = [
         'nombre',
         'descripcion',
@@ -30,5 +29,30 @@ class Producto extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Relación con los fiados (opcional, para futuras mejoras)
+    // Si decides implementar una tabla intermedia
+    public function fiados()
+    {
+        return $this->belongsToMany(Fiado::class, 'fiado_producto')->withPivot('cantidad', 'precio_total');
+    }
+
+    // Método para reducir el stock del producto
+    public function reducirStock($cantidad)
+    {
+        if ($this->stock < $cantidad) {
+            throw new \Exception("Stock insuficiente para el producto: {$this->nombre}");
+        }
+
+        $this->stock -= $cantidad;
+        $this->save();
+    }
+
+    // Método para aumentar el stock del producto (opcional)
+    public function aumentarStock($cantidad)
+    {
+        $this->stock += $cantidad;
+        $this->save();
     }
 }
