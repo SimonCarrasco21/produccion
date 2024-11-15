@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Producto; // Modelo para acceder a los productos
+use App\Models\Producto;
 use App\Models\Fiado;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,59 +12,60 @@ class FiadoController extends Controller
     // Mostrar la vista de fiados con los productos disponibles y los fiados del usuario autenticado
     public function index()
     {
-        // Obtener solo los productos y fiados asociados al usuario autenticado
-        $productos = Producto::all(); // Todos los productos (la tabla de categorías es compartida)
-        $fiados = Fiado::where('user_id', Auth::id())->get(); // Fiados del usuario autenticado
+        $productos = Producto::all(); // Obtener todos los productos
+        $fiados = Fiado::where('user_id', Auth::id())->get(); // Obtener los fiados del usuario autenticado
         return view('fiados', compact('productos', 'fiados'));
     }
 
     // Almacenar un nuevo fiado en la base de datos
     public function store(Request $request)
     {
-        // Validación de datos recibidos del formulario
         $request->validate([
             'id_cliente' => 'required',
             'nombre_cliente' => 'required',
-            'producto' => 'required',
-            'cantidad' => 'required|integer|min:1',
-            'precio' => 'required|numeric',
-            'fecha_compra' => 'required|date'
+            'productos' => 'required|json', // Validar que productos sea un JSON válido
         ]);
 
-        // Buscar el producto en la base de datos
-        $producto = Producto::where('nombre', $request->producto)->first();
-
-        // Verificar que el producto exista y tenga stock disponible
-        if (!$producto) {
-            return back()->with('error', 'El producto seleccionado no existe.');
-        }
-        if ($producto->stock <= 0) {
-            return back()->with('error', 'No hay stock disponible para el producto seleccionado.');
-        }
-        if ($request->cantidad > $producto->stock) {
-            return back()->with('error', 'No puedes agregar esta cantidad. Stock insuficiente.');
-        }
-
-        // Limitar la cantidad de fiados a un máximo de 5 por cliente
+        // Contar la cantidad de fiados existentes para este cliente y usuario
         $fiadosCount = Fiado::where('id_cliente', $request->id_cliente)
             ->where('user_id', Auth::id())
             ->count();
-        if ($fiadosCount >= 5) {
-            return back()->with('error', 'El cliente ya tiene 5 productos fiados y no puede fiar más.');
+
+        // Validar si el cliente ya tiene 2 fiados
+        if ($fiadosCount >= 2) {
+            return back()->with('error', 'El cliente ya tiene 2 fiados y no puede registrar más.');
         }
 
-        // Reducir el stock del producto en función de la cantidad fiada
-        $producto->stock -= $request->cantidad;
-        $producto->save();
+        // Decodificar los productos seleccionados
+        $productosSeleccionados = json_decode($request->productos, true);
+        $total_precio = 0;
 
-        // Registrar el fiado en la base de datos, asociado al usuario autenticado
+        // Validar stock y calcular el total
+        foreach ($productosSeleccionados as $productoData) {
+            $producto = Producto::find($productoData['id']);
+            if (!$producto) {
+                return back()->with('error', 'Uno de los productos seleccionados no existe.');
+            }
+            if ($producto->stock < $productoData['cantidad']) {
+                return back()->with('error', "Stock insuficiente para el producto {$producto->nombre}.");
+            }
+            $total_precio += $productoData['precio_total'];
+        }
+
+        // Registrar el fiado y reducir el stock de los productos
+        foreach ($productosSeleccionados as $productoData) {
+            $producto = Producto::find($productoData['id']);
+            $producto->stock -= $productoData['cantidad'];
+            $producto->save();
+        }
+
+        // Crear el registro de fiado
         Fiado::create([
             'id_cliente' => $request->id_cliente,
             'nombre_cliente' => $request->nombre_cliente,
-            'producto' => $request->producto,
-            'cantidad' => $request->cantidad,
-            'precio' => $request->precio,
-            'fecha_compra' => $request->fecha_compra,
+            'productos' => json_encode($productosSeleccionados), // Guardar los productos como JSON
+            'total_precio' => $total_precio,
+            'fecha_compra' => now(),
             'user_id' => Auth::id(), // Asociar el fiado al usuario autenticado
         ]);
 
@@ -79,16 +80,9 @@ class FiadoController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Buscar el producto correspondiente y restaurar el stock
-        $producto = Producto::where('nombre', $fiado->producto)->first();
-        if ($producto) {
-            $producto->stock += $fiado->cantidad;
-            $producto->save();
-        }
-
         // Eliminar el registro del fiado
         $fiado->delete();
 
-        return back()->with('success', 'Fiado eliminado correctamente. Stock restaurado.');
+        return back()->with('success', 'Fiado eliminado correctamente.');
     }
 }

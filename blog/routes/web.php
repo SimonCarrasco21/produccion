@@ -34,6 +34,9 @@ Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarPro
 Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
 Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
 Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
+Route::get('/pago/fiado/{id}', [PagoPosController::class, 'pagoFiado'])->name('pago.fiado');
+
+
 
 // Incluir las rutas de autenticación generadas por Breeze
 require __DIR__ . '/auth.php';
