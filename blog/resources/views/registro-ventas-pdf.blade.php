@@ -56,7 +56,8 @@
                     <td>
                         @foreach (json_decode($venta->productos) as $producto)
                             {{ $producto->descripcion ?? 'Producto sin descripción' }}
-                            (x{{ $producto->cantidad ?? 1 }})<br>
+                            (x{{ $producto->cantidad ?? 1 }})
+                            <br>
                         @endforeach
                     </td>
                     <td>{{ $venta->metodo_pago }}</td>

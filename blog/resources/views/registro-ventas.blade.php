@@ -66,36 +66,72 @@
         <h1 class="text-center mb-4">Registro de Ventas</h1>
 
         <!-- Bloque agrupado -->
+
+        <!-- Filtro de fechas -->
         <div class="card p-4 mb-4 shadow-sm">
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
-                    <input type="date" id="fechaInicio" name="fecha_inicio" value="{{ $fechaInicio ?? '' }}"
-                        class="form-control">
+            <form action="{{ route('ventas.historial') }}" method="GET">
+                <div class="row">
+                    <!-- Campo Fecha de Inicio -->
+                    <div class="col-md-4">
+                        <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+                        <input type="date" id="fechaInicio" name="fecha_inicio"
+                            value="{{ request('fecha_inicio') }}" class="form-control">
+                    </div>
+                    <!-- Campo Fecha de Fin -->
+                    <div class="col-md-4">
+                        <label for="fechaFin" class="form-label">Fecha de Fin:</label>
+                        <input type="date" id="fechaFin" name="fecha_fin" value="{{ request('fecha_fin') }}"
+                            class="form-control">
+                    </div>
+                    <!-- Botón Filtrar -->
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel"></i> Filtrar
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <label for="fechaFin" class="form-label">Fecha de Fin:</label>
-                    <input type="date" id="fechaFin" name="fecha_fin" value="{{ $fechaFin ?? '' }}"
-                        class="form-control">
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button class="btn btn-primary w-100" onclick="filtrarPorFecha()">Filtrar</button>
-                </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-end">
-                    <form action="{{ route('ventas.imprimir') }}" method="POST"
-                        style="display:inline-block; margin-right: 5px;">
+            </form>
+
+
+
+
+
+            <hr class="text-secondary my-3">
+
+            <!-- Botones de acciones -->
+            <div class="row text-center">
+                <div class="col-md-4 mb-3">
+                    <form action="{{ route('ventas.imprimir') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-danger"><i class="bi bi-file-earmark-pdf"></i> Generar
-                            PDF</button>
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-file-earmark-pdf"></i> Generar PDF
+                        </button>
                     </form>
-                    <form action="{{ route('ventas.guardar') }}" method="POST" style="display:inline-block;">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <form action="{{ route('ventas.guardar') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Guardar
-                            Registro</button>
+                        <button type="submit" class="btn btn-outline-success w-100">
+                            <i class="bi bi-save"></i> Guardar Registro
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <form action="{{ route('ventas.eliminar') }}" method="POST"
+                        onsubmit="return confirmEliminarVentas()">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-trash3-fill"></i> Eliminar Todas las Ventas
+                        </button>
                     </form>
                 </div>
             </div>
-            <div class="ganancias-box mt-3">
+
+            <hr class="text-secondary my-3">
+
+            <!-- Total de ganancias -->
+            <div class="ganancias-box mt-3"
+                style="background-color: #f9f9f9; border: 2px solid #0a2e0f; border-radius: 10px;">
                 <h3 class="total-ganancias">Total de Ganancias: ${{ number_format($totalGanancias, 2) }}</h3>
             </div>
         </div>
@@ -154,7 +190,8 @@
                             <td>{{ \Carbon\Carbon::parse($registro->fecha_generacion)->format('d-m-Y H:i:s') }}</td>
                             <td>${{ $registro->total_ganancias }}</td>
                             <td>
-                                <a href="{{ route('ventas.reporte.descargar', $registro->id) }}" class="btn btn-info">
+                                <a href="{{ route('ventas.reporte.descargar', $registro->id) }}"
+                                    class="btn btn-info">
                                     <i class="bi bi-download"></i> Descargar PDF
                                 </a>
                                 <form action="{{ route('ventas.reporte.eliminar', $registro->id) }}" method="POST"
@@ -181,33 +218,8 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropdown-btn')) {
-                const dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === 'block') {
-                        openDropdown.style.display = 'none';
-                    }
-                }
-            }
-        }
-
-        function filtrarPorFecha() {
-            const fechaInicio = document.getElementById('fechaInicio').value;
-            const fechaFin = document.getElementById('fechaFin').value;
-            if (fechaInicio && fechaFin) {
-                document.getElementById('fechaInicioInput').value = fechaInicio;
-                document.getElementById('fechaFinInput').value = fechaFin;
-                document.getElementById('fechaInicioGuardar').value = fechaInicio;
-                document.getElementById('fechaFinGuardar').value = fechaFin;
-                window.location.href = `?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
-            }
-        }
-
-        function confirmGuardarRegistro() {
-            return confirm(
-                '¿Está seguro de que desea guardar el registro? Esto eliminará los datos de la tabla de ventas.');
+        function confirmEliminarVentas() {
+            return confirm("¿Estás seguro de que deseas eliminar todas las ventas? Esta acción no se puede deshacer.");
         }
     </script>
 

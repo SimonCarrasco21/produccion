@@ -53,3 +53,5 @@ Route::post('/ventas/imprimir', [VentaRegistroController::class, 'generarPdfVent
 Route::post('/ventas/guardar', [VentaRegistroController::class, 'guardarRegistroVentas'])->name('ventas.guardar');
 Route::delete('/ventas/eliminar/{id}', [VentaRegistroController::class, 'eliminarRegistro'])->name('ventas.reporte.eliminar');
 Route::get('/ventas/descargar/{id}', [VentaRegistroController::class, 'descargarRegistro'])->name('ventas.reporte.descargar');
+Route::post('/ventas/eliminar', [VentaRegistroController::class, 'eliminarVentas'])->name('ventas.eliminar');
+Route::get('/ventas/historial', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('ventas.historial');
