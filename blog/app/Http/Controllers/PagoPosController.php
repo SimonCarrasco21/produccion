@@ -37,57 +37,39 @@ class PagoPosController extends Controller
         return $this->procesarPago($request, 'POS');
     }
 
-
     public function pagarEnEfectivo(Request $request)
     {
         // Verificar si se seleccionaron productos
         $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
         if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
-            return response()->json([
-                'success' => false,
-                'error' => 'No se seleccionaron productos para el pago.'
-            ]);
-        }
-
-        // Confirmación del usuario
-        if (!$request->has('confirmacion') || $request->input('confirmacion') !== 'true') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Pago cancelado por el usuario.'
-            ]);
+            return redirect()->back()->withErrors(['error' => 'No se seleccionaron productos para el pago.']);
         }
 
         $total = 0;
         $productosParaVenta = [];
 
         foreach ($productosSeleccionados as $producto) {
-            if (!isset($producto['precio']) || !isset($producto['cantidad'])) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Datos de producto no válidos.'
-                ]);
+            $productoModel = Producto::find($producto['id']);
+
+            if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
+                return redirect()->back()->withErrors(['error' => 'Producto no disponible o stock insuficiente.']);
             }
+
+            // Reducir el stock del producto
+            $productoModel->stock -= $producto['cantidad'];
+            $productoModel->save();
 
             $total += $producto['precio'] * $producto['cantidad'];
-
-            $productoModel = Producto::find($producto['id']);
-            if ($productoModel) {
-                $productosParaVenta[] = [
-                    'id' => $producto['id'],
-                    'descripcion' => $productoModel->descripcion,
-                    'precio' => $producto['precio'],
-                    'cantidad' => $producto['cantidad']
-                ];
-
-                // Reducir el stock del producto
-                $productoModel->stock -= $producto['cantidad'];
-                $productoModel->save();
-            } else {
-                return response()->json(['success' => false, 'error' => 'Producto no encontrado.']);
-            }
+            $productosParaVenta[] = [
+                'id' => $producto['id'],
+                'descripcion' => $productoModel->descripcion,
+                'precio' => $producto['precio'],
+                'cantidad' => $producto['cantidad']
+            ];
         }
 
+        // Si hay fiado, eliminarlo
         $idFiado = $request->input('id_fiado');
         if ($idFiado) {
             Fiado::where('id', $idFiado)
@@ -95,31 +77,21 @@ class PagoPosController extends Controller
                 ->delete();
         }
 
-        $externalReference = uniqid();
+        // Registrar venta
         DB::table('ventas')->insert([
-            'external_reference' => $externalReference,
+            'external_reference' => uniqid(),
             'status' => 'approved',
             'amount' => $total,
             'productos' => json_encode($productosParaVenta),
             'metodo_pago' => 'Efectivo',
             'user_id' => Auth::id(),
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pago en efectivo registrado correctamente.',
-            'data' => [
-                'external_reference' => $externalReference,
-                'status' => 'approved',
-                'amount' => $total,
-                'fecha' => now()->format('Y-m-d H:i:s'),
-                'productos' => $productosParaVenta
-            ]
-        ]);
+        // Redirigir con éxito
+        return redirect()->route('pagina.pago')->with('success', 'Pago en efectivo registrado correctamente.');
     }
-
 
     private function procesarPago(Request $request, $metodoPago)
     {
@@ -133,39 +105,26 @@ class PagoPosController extends Controller
         $productosParaVenta = [];
 
         foreach ($productosSeleccionados as $producto) {
-            if (!isset($producto['precio']) || !isset($producto['cantidad'])) {
-                return response()->json(['success' => false, 'error' => 'Datos de producto no válidos']);
+            $productoModel = Producto::find($producto['id']);
+
+            if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
+                return response()->json(['success' => false, 'error' => 'Producto no disponible o stock insuficiente']);
             }
+
+            $productoModel->stock -= $producto['cantidad'];
+            $productoModel->save();
 
             $total += $producto['precio'] * $producto['cantidad'];
-
-            $productoModel = Producto::find($producto['id']);
-            if ($productoModel) {
-                $productosParaVenta[] = [
-                    'id' => $producto['id'],
-                    'descripcion' => $productoModel->descripcion,
-                    'precio' => $producto['precio'],
-                    'cantidad' => $producto['cantidad'],
-                ];
-
-                // Reducir el stock del producto
-                $productoModel->stock -= $producto['cantidad'];
-                $productoModel->save();
-            } else {
-                return response()->json(['success' => false, 'error' => 'Producto no encontrado']);
-            }
+            $productosParaVenta[] = [
+                'id' => $producto['id'],
+                'descripcion' => $productoModel->descripcion,
+                'precio' => $producto['precio'],
+                'cantidad' => $producto['cantidad']
+            ];
         }
 
-        $idFiado = $request->input('id_fiado');
-        if ($idFiado) {
-            Fiado::where('id', $idFiado)
-                ->where('user_id', Auth::id())
-                ->delete();
-        }
-
-        $externalReference = uniqid();
         DB::table('ventas')->insert([
-            'external_reference' => $externalReference,
+            'external_reference' => uniqid(),
             'status' => 'approved',
             'amount' => $total,
             'productos' => json_encode($productosParaVenta),
@@ -179,12 +138,12 @@ class PagoPosController extends Controller
             'success' => true,
             'message' => "Pago $metodoPago registrado correctamente.",
             'data' => [
-                'external_reference' => $externalReference,
+                'external_reference' => uniqid(),
                 'status' => 'approved',
                 'amount' => $total,
-                'fecha' => now()->format('Y-m-d H:i:s'),
                 'productos' => $productosParaVenta,
-            ]
+                'fecha' => now()->format('Y-m-d H:i:s'),
+            ],
         ]);
     }
 
@@ -199,7 +158,7 @@ class PagoPosController extends Controller
         $productosTransformados = array_map(function ($producto) {
             return [
                 'id' => $producto['id'],
-                'descripcion' => $producto['nombre'], // Mapeo de 'nombre' a 'descripcion'
+                'descripcion' => $producto['nombre'],
                 'precio' => $producto['precio_unitario'],
                 'cantidad' => $producto['cantidad'],
             ];

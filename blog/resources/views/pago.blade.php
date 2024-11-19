@@ -107,13 +107,21 @@
                         </table>
                         <p>Total: $<span id="total">{{ $totalFiado ?? 0 }}</span></p>
 
-                        <form id="productosForm" action="{{ route('payments.pay.pos') }}" method="POST">
+                        <!-- Formulario para "Pagar con POS" -->
+                        <form id="productosFormPos" action="{{ route('payments.pay.pos') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="productosSeleccionados" id="productosSeleccionados">
+                            <input type="hidden" name="productosSeleccionados" id="productosSeleccionadosPos">
                             <input type="hidden" name="id_fiado" value="{{ $idFiado ?? '' }}">
                             <button type="submit" class="btn btn-primary w-100 mb-2">Pagar con POS</button>
                         </form>
-                        <button class="btn btn-success w-100" id="btnPagarEfectivo">Pagar en Efectivo</button>
+
+                        <!-- Formulario para "Pagar en Efectivo" -->
+                        <form id="productosFormEfectivo" action="{{ route('pago.efectivo') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="productosSeleccionados" id="productosSeleccionadosEfectivo">
+                            <input type="hidden" name="id_fiado" value="{{ $idFiado ?? '' }}">
+                            <button type="submit" class="btn btn-success w-100">Pagar en Efectivo</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -157,7 +165,10 @@
         function recalcularTotal() {
             total = productosSeleccionados.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
             document.getElementById('total').textContent = total.toFixed(2);
-            document.getElementById('productosSeleccionados').value = JSON.stringify(productosSeleccionados);
+
+            // Actualizar inputs de ambos formularios
+            document.getElementById('productosSeleccionadosPos').value = JSON.stringify(productosSeleccionados);
+            document.getElementById('productosSeleccionadosEfectivo').value = JSON.stringify(productosSeleccionados);
         }
 
         // Agregar producto desde tabla
@@ -194,15 +205,6 @@
             }
         });
 
-        // Buscador en tiempo real
-        document.getElementById('buscarProducto').addEventListener('input', function() {
-            const filtro = this.value.toLowerCase();
-            document.querySelectorAll('#tablaProductos tbody tr').forEach(row => {
-                const texto = row.textContent.toLowerCase();
-                row.style.display = texto.includes(filtro) ? '' : 'none';
-            });
-        });
-
         // Actualizar tabla seleccionados
         function actualizarTablaSeleccionados() {
             const tabla = document.querySelector('#tablaSeleccionados tbody');
@@ -233,42 +235,6 @@
             productosSeleccionados = productosSeleccionados.filter(p => p.id != id);
             actualizarTablaSeleccionados();
         }
-
-        document.getElementById('btnPagarEfectivo').addEventListener('click', () => {
-            if (confirm('¿Desea confirmar el pago en efectivo?')) {
-                const productosSeleccionados = @json($productosFiados ?? []);
-                if (productosSeleccionados.length === 0) {
-                    alert('No hay productos seleccionados.');
-                    return;
-                }
-
-                fetch('{{ route('pago.efectivo') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            productosSeleccionados,
-                            confirmacion: 'true',
-                            id_fiado: {{ $idFiado ?? 'null' }}
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload(); // Recargar la página para reflejar cambios
-                        } else {
-                            alert(data.error || 'Ocurrió un error.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            } else {
-                alert('Pago cancelado.');
-            }
-        });
-
 
         recalcularTotal();
         actualizarTablaSeleccionados();
