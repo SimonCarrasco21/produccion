@@ -25,6 +25,20 @@
     <nav class="navbar">
         <div class="navbar-left">
             <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
+
+            <div class="dropdown">
+                <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
+                <div class="dropdown-content" id="dropdown-menu" style="display: none;">
+                    <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
+                    <!-- Enlace a la vista del perfil -->
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
+                        @csrf
+                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
         <div class="navbar-right">
             <ul>
@@ -44,6 +58,7 @@
         <div id="mensajeCompra" class="alert d-none"></div>
 
         <div class="row">
+
             <div class="col-lg-8 mb-4">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -204,7 +219,45 @@
                 recalcularTotal();
             }
         });
+        document.getElementById('buscarProducto').addEventListener('input', function() {
+            const query = this.value;
 
+            fetch(`/pagar/buscar-productos?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tablaProductos = document.querySelector('#tablaProductos tbody');
+                    tablaProductos.innerHTML = ''; // Limpiar la tabla
+
+                    if (data.length === 0) {
+                        // Mostrar mensaje si no hay productos
+                        tablaProductos.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">No se encontraron productos</td>
+                    </tr>`;
+                    } else {
+                        // Agregar los productos filtrados a la tabla
+                        data.forEach(producto => {
+                            tablaProductos.innerHTML += `
+                        <tr>
+                            <td>${producto.nombre}</td>
+                            <td>${producto.descripcion}</td>
+                            <td>${producto.categoria.nombre}</td>
+                            <td>${producto.precio}</td>
+                            <td class="stock">${producto.stock}</td>
+                            <td>
+                                <button class="btn btn-success btn-agregar" 
+                                    data-id="${producto.id}" 
+                                    data-descripcion="${producto.descripcion}" 
+                                    data-precio="${producto.precio}">
+                                    Agregar
+                                </button>
+                            </td>
+                        </tr>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error al buscar productos:', error));
+        });
         // Actualizar tabla seleccionados
         function actualizarTablaSeleccionados() {
             const tabla = document.querySelector('#tablaSeleccionados tbody');
@@ -238,6 +291,20 @@
 
         recalcularTotal();
         actualizarTablaSeleccionados();
+    </script>
+
+    <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
+    <script>
+        function confirmLogout() {
+            return confirm('¿Estás seguro de que quieres cerrar sesión?');
+        }
+
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownMenu = document.querySelector('#dropdown-menu');
+
+        dropdownBtn.addEventListener('click', function() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

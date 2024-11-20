@@ -10,6 +10,24 @@ use Illuminate\Support\Facades\Auth;
 
 class PagoPosController extends Controller
 {
+
+    public function buscarProductos(Request $request)
+    {
+        $query = $request->input('query');
+
+        $productos = Producto::with('categoria')
+            ->where('user_id', Auth::id())
+            ->where(function ($q) use ($query) {
+                $q->where('nombre', 'like', "%$query%")
+                    ->orWhere('descripcion', 'like', "%$query%")
+                    ->orWhereHas('categoria', function ($q2) use ($query) {
+                        $q2->where('nombre', 'like', "%$query%");
+                    });
+            })
+            ->get();
+
+        return response()->json($productos);
+    }
     public function mostrarVistaPago(Request $request)
     {
         $productos = Producto::with('categoria')->get();

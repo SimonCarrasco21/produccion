@@ -7,7 +7,6 @@
     <title>Inventario de Productos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
@@ -40,10 +39,11 @@
         </div>
     </nav>
 
-    <!-- Formulario de búsqueda y tabla de productos -->
     <div class="container">
         <h2 class="text-center">Inventario de Productos</h2>
-        <div class="action-buttons">
+
+        <!-- Botones -->
+        <div class="action-buttons mb-3">
             <a href="{{ route('agregar-producto') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Agregar
                 Producto</a>
             <button type="submit" form="formEliminarSeleccionados" class="btn btn-danger"
@@ -52,67 +52,166 @@
             </button>
         </div>
 
-        <div class="mb-3">
-            <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar producto por nombre...">
+        <!-- Filtros -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <input type="text" id="buscarProducto" class="form-control"
+                    placeholder="Buscar por nombre o descripción...">
+            </div>
+            <div class="col-md-3">
+                <select id="filtroCategoria" class="form-select">
+                    <option value="">Todas las Categorías</option>
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->nombre }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" id="filtroPrecio" class="form-control" placeholder="Filtrar por precio...">
+            </div>
+            <div class="col-md-2">
+                <select id="filtroStock" class="form-select">
+                    <option value="">Todos los Stocks</option>
+                    <option value="bajo">Bajo</option>
+                    <option value="suficiente">Suficiente</option>
+                    <option value="alto">Alto</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <label>
+                    <input type="checkbox" id="filtroProximoAVencer"
+                        {{ request('proximo_a_vencer') ? 'checked' : '' }}>
+                    Mostrar solo productos próximos a vencer
+                </label>
+            </div>
         </div>
 
+        <!-- Tabla -->
         <form id="formEliminarSeleccionados" action="{{ route('eliminarProductosSeleccionados') }}" method="POST">
             @csrf
-            <div class="table-container">
-                <table class="table table-striped shadow rounded">
-                    <thead class="table-success">
+            <table class="table table-striped shadow rounded">
+                <thead class="table-success">
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>ID Producto</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Categoría</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos">
+                    @foreach ($productos as $producto)
                         <tr>
-                            <th><input type="checkbox" id="selectAll"></th>
-                            <th>ID Producto</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Categoría</th>
-                            <th>Fecha de Vencimiento</th>
-                            <th>Acciones</th>
+                            <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}"></td>
+                            <td>{{ $producto->id }}</td>
+                            <td>{{ $producto->nombre }}</td>
+                            <td>{{ $producto->descripcion }}</td>
+                            <td>{{ number_format($producto->precio, 2) }} $</td>
+                            <td>
+                                {{ $producto->stock }}
+                                @if ($producto->stock <= 5)
+                                    <span class="badge bg-danger text-light">Stock bajo</span>
+                                @endif
+                            </td>
+
+                            <td>{{ $producto->categoria->nombre }}</td>
+                            <td>
+                                {{ $producto->fecha_vencimiento ?? 'Sin fecha de vencimiento' }}
+                                @if ($producto->proximo_a_vencer)
+                                    <span class="badge bg-warning text-dark">Próximo a vencer</span>
+                                @endif
+                            </td>
+
+                            <td><a href="{{ route('editarProducto', $producto->id) }}"
+                                    class="btn btn-warning">Editar</a></td>
                         </tr>
-                    </thead>
-                    <tbody id="tablaProductos">
-                        @foreach ($productos as $producto)
-                            <tr>
-                                <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}"
-                                        class="checkboxProducto"></td>
-                                <td>{{ $producto->id }}</td>
-                                <td>{{ $producto->nombre }}</td>
-                                <td>{{ $producto->descripcion }}</td>
-                                <td>{{ number_format($producto->precio, 2) }} $</td>
-                                <td>{{ $producto->stock }}</td>
-                                <td>{{ $producto->categoria->nombre }}</td>
-                                <td>{{ $producto->fecha_vencimiento }}</td>
-                                <td>
-                                    <a href="{{ route('editarProducto', $producto->id) }}"
-                                        class="btn btn-warning">Editar</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </form>
     </div>
 
-    <!-- Script para búsqueda y selección de productos -->
+    <!-- Scripts -->
     <script>
-        document.getElementById('buscarProducto').addEventListener('keyup', function() {
-            const value = this.value.toLowerCase();
+        // Configuración de filtros
+        const filtros = {
+            nombre: '',
+            categoria: '',
+            precio: 0,
+            stock: ''
+        };
+
+        const actualizarFiltros = () => {
             const rows = document.querySelectorAll('#tablaProductos tr');
             rows.forEach(row => {
-                const nombreProducto = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                row.style.display = nombreProducto.includes(value) ? '' : 'none';
+                const nombre = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const descripcion = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                const categoria = row.querySelector('td:nth-child(7)').textContent.toLowerCase();
+                const precio = parseFloat(row.querySelector('td:nth-child(5)').textContent.replace('$', '')) ||
+                    0;
+                const stock = parseInt(row.querySelector('td:nth-child(6)').textContent);
+
+                const cumpleNombre = filtros.nombre === '' || nombre.includes(filtros.nombre) || descripcion
+                    .includes(filtros.nombre);
+                const cumpleCategoria = filtros.categoria === '' || categoria.includes(filtros.categoria);
+                const cumplePrecio = filtros.precio === 0 || precio <= filtros.precio;
+                const cumpleStock = filtros.stock === '' ||
+                    (filtros.stock === 'bajo' && stock <= 5) ||
+                    (filtros.stock === 'suficiente' && stock > 5 && stock <= 20) ||
+                    (filtros.stock === 'alto' && stock > 20);
+
+                row.style.display = cumpleNombre && cumpleCategoria && cumplePrecio && cumpleStock ? '' :
+                    'none';
             });
+        };
+
+        // Eventos para los filtros
+        document.getElementById('buscarProducto').addEventListener('input', function() {
+            filtros.nombre = this.value.toLowerCase();
+            actualizarFiltros();
         });
 
-        document.getElementById('selectAll').addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('.checkboxProducto');
+        document.getElementById('filtroCategoria').addEventListener('change', function() {
+            filtros.categoria = this.value.toLowerCase();
+            actualizarFiltros();
+        });
+
+        document.getElementById('filtroPrecio').addEventListener('input', function() {
+            filtros.precio = parseFloat(this.value) || 0;
+            actualizarFiltros();
+        });
+
+        document.getElementById('filtroStock').addEventListener('change', function() {
+            filtros.stock = this.value.toLowerCase();
+            actualizarFiltros();
+        });
+
+        // Checkbox "Seleccionar Todos"
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#tablaProductos input[type="checkbox"]');
             checkboxes.forEach(checkbox => checkbox.checked = this.checked);
         });
 
+        // Checkbox "Mostrar solo productos próximos a vencer"
+        document.getElementById('filtroProximoAVencer').addEventListener('change', function() {
+            const url = new URL(window.location.href);
+            if (this.checked) {
+                url.searchParams.set('proximo_a_vencer', '1');
+            } else {
+                url.searchParams.delete('proximo_a_vencer');
+            }
+            window.location.href = url.toString();
+        });
+    </script>
+
+    <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
+    <script>
         function confirmLogout() {
             return confirm('¿Estás seguro de que quieres cerrar sesión?');
         }
@@ -126,7 +225,10 @@
     </script>
 </body>
 
-</html>
+
+
+
+
 <style>
     .action-buttons {
         display: flex;
@@ -185,3 +287,5 @@
         margin-top: 20px;
     }
 </style>
+
+</html>

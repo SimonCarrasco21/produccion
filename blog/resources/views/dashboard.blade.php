@@ -17,6 +17,7 @@
     <nav class="navbar">
         <div class="navbar-left">
             <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
+
             <div class="dropdown">
                 <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
                 <div class="dropdown-content" id="dropdown-menu" style="display: none;">
@@ -29,6 +30,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
 
         <div class="navbar-right">
@@ -134,10 +136,11 @@
             </a>
             <a href="{{ route('productos.categoria', ['id' => 13]) }}">
                 <div class="product-category">
-                    <i class="fa-solid fa-ellipsis-h"></i>
-                    <p>Otros</p>
+                    <i class="fa-solid fa-cookie-bite"></i>
+                    <p>Snack</p>
                 </div>
             </a>
+
         </div>
     </div>
     <!-- Sección de últimos registros de ventas -->
@@ -176,6 +179,39 @@
         <div id="ventas-load-more-container" class="text-center mt-4"></div>
     </div>
 
+    <!-- Ventana para mesnaje de prodcto por vencer -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/dashboard/productos-por-vencer')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(producto => {
+                            mostrarNotificacion(producto.descripcion, producto.fecha_vencimiento);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error al cargar productos por vencer:', error));
+        });
+
+        function mostrarNotificacion(descripcion, fechaVencimiento) {
+            const contenedor = document.createElement('div');
+            contenedor.className = 'notificacion';
+            contenedor.innerHTML = `
+        <p><strong>¡Atención!</strong> El producto <strong>${descripcion}</strong> está por vencer (Fecha: ${fechaVencimiento}).</p>
+        <button class="cerrar-notificacion">&times;</button>
+    `;
+            document.body.appendChild(contenedor);
+
+            // Evento para cerrar la notificación
+            contenedor.querySelector('.cerrar-notificacion').addEventListener('click', () => {
+                contenedor.remove();
+            });
+
+            // Eliminar automáticamente después de 10 segundos
+            setTimeout(() => contenedor.remove(), 10000);
+        }
+    </script>
 
     <!-- Sección de productos agregados -->
     <div class="container mt-4">
@@ -267,15 +303,31 @@
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(data, 'text/html');
 
-                    // Extraer las nuevas filas de la respuesta y añadirlas al final de la tabla correspondiente
-                    const newRows = doc.getElementById(listId).innerHTML;
-                    document.getElementById(listId).insertAdjacentHTML('beforeend', newRows);
+                    // Eliminar el mensaje "No hay registros..." si existe
+                    const mensaje = document.getElementById(`${listId}-mensaje`);
+                    if (mensaje) {
+                        mensaje.remove();
+                    }
 
-                    // Cambiar el texto del botón a "Ver Menos" cuando se cargan más filas
-                    document.getElementById(loadMoreBtnId).innerText = "Ver Menos";
+                    // Extraer las nuevas filas de la respuesta
+                    const newRows = doc.getElementById(listId).innerHTML;
+
+                    // Verificar si hay nuevos datos
+                    if (newRows.trim() !== "") {
+                        document.getElementById(listId).insertAdjacentHTML('beforeend', newRows);
+                        document.getElementById(loadMoreBtnId).innerText = "Ver Menos";
+                    } else {
+                        // Mostrar el mensaje "No hay registros..."
+                        const nuevoMensaje = document.createElement('p');
+                        nuevoMensaje.id = `${listId}-mensaje`;
+                        nuevoMensaje.className = 'text-center text-muted mt-2';
+                        nuevoMensaje.textContent = `No hay registros de ${type} para mostrar.`;
+                        document.getElementById(listId).parentNode.appendChild(nuevoMensaje);
+                    }
                 })
                 .catch(error => console.error(`Error al cargar más ${type}:`, error));
         }
+
 
         // Función para contraer la tabla y volver a las filas iniciales
         function collapseTable(listId, loadMoreBtnId) {
@@ -284,6 +336,12 @@
 
             // Mantener solo las filas iniciales y eliminar las adicionales
             rows.slice(initialRows).forEach(row => row.remove());
+
+            // Eliminar el mensaje "No hay registros..." si existe
+            const mensaje = document.getElementById(`${listId}-mensaje`);
+            if (mensaje) {
+                mensaje.remove();
+            }
 
             // Restablecer el botón a "Ver Más"
             document.getElementById(loadMoreBtnId).innerText = "Ver Más";
@@ -533,6 +591,54 @@
             }
         }
     </style>
+
+
+    <!-- Estilos personalizados par la ventana emergente -->
+    <style>
+        .notificacion {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            margin-bottom: 10px;
+            max-width: 300px;
+            animation: fadeIn 0.5s;
+        }
+
+        .notificacion p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .notificacion button.cerrar-notificacion {
+            background: none;
+            border: none;
+            color: #721c24;
+            font-size: 18px;
+            font-weight: bold;
+            float: right;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <!-- Pie de página -->

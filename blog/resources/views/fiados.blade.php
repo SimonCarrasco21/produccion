@@ -105,21 +105,16 @@
         <div class="navbar-left">
             <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
             <div class="dropdown">
-                <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
-                    <i class="bi bi-person-circle"></i> Perfil
-                </button>
-                <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
-                    </li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}"
-                            onsubmit="return confirm('¿Estás seguro de que deseas cerrar sesión?');">
-                            @csrf
-                            <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Cerrar
-                                Sesión</button>
-                        </form>
-                    </li>
-                </ul>
+                <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
+                <div class="dropdown-content" id="dropdown-menu" style="display: none;">
+                    <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
+                    <!-- Enlace a la vista del perfil -->
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
+                        @csrf
+                        <button type="submit" class="logout-button"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -344,6 +339,20 @@
             });
         });
     </script>
+
+    <script>
+        function confirmLogout() {
+            return confirm('¿Estás seguro de que quieres cerrar sesión?');
+        }
+
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownMenu = document.querySelector('#dropdown-menu');
+
+        dropdownBtn.addEventListener('click', function() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
