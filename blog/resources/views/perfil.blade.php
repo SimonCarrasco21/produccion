@@ -88,7 +88,7 @@
             object-fit: cover;
             margin-bottom: 15px;
         }
-        
+
         ul {
             padding: 0;
             list-style-type: none;
@@ -100,6 +100,41 @@
     </style>
 </head>
 
+<nav class="navbar">
+    <div class="navbar-left">
+        <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
+        <div class="dropdown">
+            <button class="dropdown-btn" type="button" id="dropdownMenuButton" onclick="toggleDropdown()">
+                <i class="bi bi-person-circle"></i> Perfil
+            </button>
+            <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
+                </li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}"
+                        onsubmit="return confirm('¿Estás seguro de que deseas cerrar sesión?');">
+                        @csrf
+                        <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul>
+            <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
+            <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+            <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
+            <li><a href="#"><i class="bi bi-clock-history"></i> Ver Historial Ventas</a></li>
+            <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
+            <li><a href="{{ route('pagina.pago') }}" class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
 <body>
     <div class="container">
         <div class="card-profile">
@@ -108,7 +143,8 @@
 
                 <!-- Mostrar la foto de perfil o una predeterminada -->
                 <div class="profile-picture">
-                    <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}" alt="Foto de Perfil">
+                    <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}"
+                        alt="Foto de Perfil">
                 </div>
 
                 <p><strong>Nombre:</strong> {{ $user->name }}</p>
@@ -204,4 +240,5 @@
         }
     </script>
 </body>
+
 </html>
