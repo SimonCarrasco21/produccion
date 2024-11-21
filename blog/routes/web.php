@@ -25,6 +25,8 @@ Route::post('/eliminar-productos-seleccionados', [PaginaController::class, 'elim
 Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
 Route::get('/dashboard/productos-por-vencer', [DashboardController::class, 'productosPorVencer'])
     ->name('dashboard.productos-por-vencer');
+Route::get('/dashboard/productos-stock-bajo', [DashboardController::class, 'productosConStockBajo'])
+    ->name('dashboard.productos-stock-bajo');
 Route::get('/agregar-producto', [PaginaController::class, 'mostrarPagina'])->name('agregar-producto');
 Route::post('/guardar-producto', [PaginaController::class, 'guardarProducto'])->name('guardarProducto');
 Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');

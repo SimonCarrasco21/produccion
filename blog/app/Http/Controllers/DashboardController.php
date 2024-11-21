@@ -78,4 +78,13 @@ class DashboardController extends Controller
 
         return response()->json($productosPorVencer);
     }
+
+    public function productosConStockBajo()
+    {
+        $productosConStockBajo = Producto::where('stock', '<', 5) // Stock bajo
+            ->where('user_id', Auth::id()) // Filtrar por usuario autenticado
+            ->get(['descripcion', 'stock']); // Seleccionar solo las columnas necesarias
+
+        return response()->json($productosConStockBajo);
+    }
 }
