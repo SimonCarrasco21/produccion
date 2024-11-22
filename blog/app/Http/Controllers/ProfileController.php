@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
@@ -18,7 +19,7 @@ class ProfileController extends Controller
         $productosPorCategoria = DB::table('categorias')
             ->leftJoin('productos', function ($join) {
                 $join->on('productos.categoria_id', '=', 'categorias.id')
-                    ->where('productos.user_id', Auth::id()); // Filtrar por el user_id del usuario autenticado
+                    ->where('productos.user_id', Auth::id());
             })
             ->select('categorias.nombre', DB::raw('COUNT(productos.id) as cantidad'))
             ->groupBy('categorias.nombre')
@@ -33,10 +34,26 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Obtener el usuario autenticado y actualizar los datos
+        // Obtener el usuario autenticado
         $user = Auth::user();
+
+        // Manejo de la foto de perfil
+        if ($request->hasFile('profile_picture')) {
+            // Eliminar la foto anterior si existe
+            if ($user->profile_picture && Storage::exists('public/' . $user->profile_picture)) {
+                Storage::delete('public/' . $user->profile_picture);
+            }
+
+            // Guardar la nueva foto
+            $file = $request->file('profile_picture');
+            $path = $file->store('profile_pictures', 'public');
+            $user->profile_picture = $path;
+        }
+
+        // Actualizar otros datos
         $user->name = $request->name;
         $user->email = $request->email;
 

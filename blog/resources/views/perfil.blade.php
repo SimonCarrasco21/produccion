@@ -108,8 +108,7 @@
                 <i class="bi bi-person-circle"></i> Perfil
             </button>
             <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
-                </li>
+                <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}"
                         onsubmit="return confirm('¿Estás seguro de que deseas cerrar sesión?');">
@@ -133,7 +132,6 @@
         </ul>
     </div>
 </nav>
-
 
 <body>
     <div class="container">
@@ -170,7 +168,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="profile_picture" class="form-label">Foto de Perfil:</label>
-                        <input type="file" name="profile_picture" id="profile_picture" class="form-control">
+                        <input type="file" name="profile_picture" id="profile_picture" class="form-control"
+                            accept="image/*" required>
+                        <small class="form-text text-muted">Selecciona una imagen para tu perfil (formatos admitidos:
+                            JPG, PNG).</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </form>
@@ -227,16 +228,19 @@
         }
 
         function validatePassword() {
-            const currentPassword = document.getElementById('current_password').value;
-            if (!currentPassword) {
-                alert('Por favor, ingresa tu contraseña actual.');
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('new_password_confirmation').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('Las contraseñas no coinciden.');
                 return false;
             }
             return true;
         }
 
-        function confirmLogout() {
-            return confirm('¿Estás seguro de que quieres cerrar sesión?');
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.classList.toggle('show');
         }
     </script>
 </body>
