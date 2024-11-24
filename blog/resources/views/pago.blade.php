@@ -24,7 +24,16 @@
 <body>
     <nav class="navbar">
         <div class="navbar-left">
-            <h2><i class="bi bi-person-circle"></i> Usuario: {{ Auth::user()->name }}</h2>
+            <h2>
+                <!-- Foto de perfil -->
+                <img src="{{ Auth::user()->profile_picture && file_exists(storage_path('app/public/' . Auth::user()->profile_picture))
+                    ? asset('storage/' . Auth::user()->profile_picture)
+                    : asset('images/default-profile.png') }}"
+                    alt="Foto de Perfil" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+
+                <!-- Icono y nombre del usuario -->
+                <i></i> Usuario: {{ Auth::user()->name }}
+            </h2>
 
             <div class="dropdown">
                 <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
