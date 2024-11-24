@@ -139,74 +139,80 @@
 
     <!-- Scripts -->
     <script>
-        // Configuración de filtros
+        // Define un objeto para almacenar los valores de los filtros
         const filtros = {
-            nombre: '',
-            categoria: '',
-            precio: 0,
-            stock: ''
+            nombre: '', // Filtro por nombre o descripción
+            categoria: '', // Filtro por categoría
+            precio: 0, // Filtro por precio
+            stock: '' // Filtro por nivel de stock (bajo, suficiente, alto)
         };
 
+        // Función que actualiza los filtros en la tabla
         const actualizarFiltros = () => {
+            // Obtiene todas las filas de la tabla de productos
             const rows = document.querySelectorAll('#tablaProductos tr');
             rows.forEach(row => {
-                const nombre = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                const descripcion = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                const categoria = row.querySelector('td:nth-child(7)').textContent.toLowerCase();
+                // Extrae datos de cada fila para evaluar los filtros
+                const nombre = row.querySelector('td:nth-child(3)').textContent
+                    .toLowerCase(); // Nombre del producto
+                const descripcion = row.querySelector('td:nth-child(4)').textContent
+                    .toLowerCase(); // Descripción del producto
+                const categoria = row.querySelector('td:nth-child(7)').textContent.toLowerCase(); // Categoría
                 const precio = parseFloat(row.querySelector('td:nth-child(5)').textContent.replace('$', '')) ||
-                    0;
-                const stock = parseInt(row.querySelector('td:nth-child(6)').textContent);
+                    0; // Precio
+                const stock = parseInt(row.querySelector('td:nth-child(6)').textContent); // Nivel de stock
 
+                // Aplica cada filtro según los valores del objeto "filtros"
                 const cumpleNombre = filtros.nombre === '' || nombre.includes(filtros.nombre) || descripcion
-                    .includes(filtros.nombre);
-                const cumpleCategoria = filtros.categoria === '' || categoria.includes(filtros.categoria);
-                const cumplePrecio = filtros.precio === 0 || precio <= filtros.precio;
-                const cumpleStock = filtros.stock === '' ||
-                    (filtros.stock === 'bajo' && stock <= 5) ||
-                    (filtros.stock === 'suficiente' && stock > 5 && stock <= 20) ||
-                    (filtros.stock === 'alto' && stock > 20);
+                    .includes(filtros.nombre); // Filtro por nombre/descripción
+                const cumpleCategoria = filtros.categoria === '' || categoria.includes(filtros
+                    .categoria); // Filtro por categoría
+                const cumplePrecio = filtros.precio === 0 || precio <= filtros.precio; // Filtro por precio
+                const cumpleStock = filtros.stock === '' || // Filtro por stock
+                    (filtros.stock === 'bajo' && stock <= 5) || // Stock bajo
+                    (filtros.stock === 'suficiente' && stock > 5 && stock <= 20) || // Stock suficiente
+                    (filtros.stock === 'alto' && stock > 20); // Stock alto
 
+                // Muestra u oculta la fila según si cumple con todos los filtros
                 row.style.display = cumpleNombre && cumpleCategoria && cumplePrecio && cumpleStock ? '' :
                     'none';
             });
         };
 
-        // Eventos para los filtros
+        // Eventos que actualizan los valores de los filtros y aplican los cambios a la tabla
         document.getElementById('buscarProducto').addEventListener('input', function() {
-            filtros.nombre = this.value.toLowerCase();
-            actualizarFiltros();
+            filtros.nombre = this.value.toLowerCase(); // Actualiza el filtro de nombre
+            actualizarFiltros(); // Aplica los filtros
         });
 
         document.getElementById('filtroCategoria').addEventListener('change', function() {
-            filtros.categoria = this.value.toLowerCase();
-            actualizarFiltros();
+            filtros.categoria = this.value.toLowerCase(); // Actualiza el filtro de categoría
+            actualizarFiltros(); // Aplica los filtros
         });
 
         document.getElementById('filtroPrecio').addEventListener('input', function() {
-            filtros.precio = parseFloat(this.value) || 0;
-            actualizarFiltros();
+            filtros.precio = parseFloat(this.value) || 0; // Actualiza el filtro de precio
+            actualizarFiltros(); // Aplica los filtros
         });
 
         document.getElementById('filtroStock').addEventListener('change', function() {
-            filtros.stock = this.value.toLowerCase();
-            actualizarFiltros();
+            filtros.stock = this.value.toLowerCase(); // Actualiza el filtro de stock
+            actualizarFiltros(); // Aplica los filtros
+        });
+        document.getElementById('filtroProximoAVencer').addEventListener('change', function() {
+            const url = new URL(window.location.href); // Obtiene la URL actual
+            if (this.checked) {
+                url.searchParams.set('proximo_a_vencer', '1'); // Agrega el parámetro al URL
+            } else {
+                url.searchParams.delete('proximo_a_vencer'); // Elimina el parámetro si se desactiva el checkbox
+            }
+            window.location.href = url.toString(); // Redirige con los nuevos parámetros
         });
 
-        // Checkbox "Seleccionar Todos"
+        // Seleccionar o deseleccionar todos los checkboxes
         document.getElementById('selectAll').addEventListener('change', function() {
             const checkboxes = document.querySelectorAll('#tablaProductos input[type="checkbox"]');
             checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
-
-        // Checkbox "Mostrar solo productos próximos a vencer"
-        document.getElementById('filtroProximoAVencer').addEventListener('change', function() {
-            const url = new URL(window.location.href);
-            if (this.checked) {
-                url.searchParams.set('proximo_a_vencer', '1');
-            } else {
-                url.searchParams.delete('proximo_a_vencer');
-            }
-            window.location.href = url.toString();
         });
     </script>
 
@@ -224,10 +230,6 @@
         });
     </script>
 </body>
-
-
-
-
 
 <style>
     .action-buttons {

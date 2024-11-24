@@ -174,25 +174,27 @@
     </div>
 
     <script>
+        // Lista inicial de productos seleccionados
         let productosSeleccionados = @json($productosFiados ?? []);
-        let total = {{ $totalFiado ?? 0 }};
+        let total = {{ $totalFiado ?? 0 }}; // Total inicial
 
+        // Recalcula el total y actualiza los formularios con los productos seleccionados
         function recalcularTotal() {
             total = productosSeleccionados.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
             document.getElementById('total').textContent = total.toFixed(2);
 
-            // Actualizar inputs de ambos formularios
+            // Actualiza los campos ocultos para enviar productos seleccionados en ambos métodos de pago
             document.getElementById('productosSeleccionadosPos').value = JSON.stringify(productosSeleccionados);
             document.getElementById('productosSeleccionadosEfectivo').value = JSON.stringify(productosSeleccionados);
         }
 
-        // Agregar producto desde tabla
+        // Evento para agregar productos desde la tabla de productos disponibles
         document.getElementById('tablaProductos').addEventListener('click', function(e) {
             if (e.target.classList.contains('btn-agregar')) {
                 const button = e.target;
-                const id = button.dataset.id;
-                const descripcion = button.dataset.descripcion;
-                const precio = parseFloat(button.dataset.precio);
+                const id = button.dataset.id; // ID del producto
+                const descripcion = button.dataset.descripcion; // Descripción
+                const precio = parseFloat(button.dataset.precio); // Precio
                 const stockElement = button.closest('tr').querySelector('.stock');
                 let stock = parseInt(stockElement.textContent);
 
@@ -201,6 +203,7 @@
                     return;
                 }
 
+                // Si el producto ya está en la lista, incrementa la cantidad; si no, lo agrega
                 const productoExistente = productosSeleccionados.find(p => p.id == id);
                 if (productoExistente) {
                     productoExistente.cantidad++;
@@ -219,64 +222,28 @@
                 recalcularTotal();
             }
         });
-        document.getElementById('buscarProducto').addEventListener('input', function() {
-            const query = this.value;
 
-            fetch(`/pagar/buscar-productos?query=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    const tablaProductos = document.querySelector('#tablaProductos tbody');
-                    tablaProductos.innerHTML = ''; // Limpiar la tabla
-
-                    if (data.length === 0) {
-                        // Mostrar mensaje si no hay productos
-                        tablaProductos.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="text-center">No se encontraron productos</td>
-                    </tr>`;
-                    } else {
-                        // Agregar los productos filtrados a la tabla
-                        data.forEach(producto => {
-                            tablaProductos.innerHTML += `
-                        <tr>
-                            <td>${producto.nombre}</td>
-                            <td>${producto.descripcion}</td>
-                            <td>${producto.categoria.nombre}</td>
-                            <td>${producto.precio}</td>
-                            <td class="stock">${producto.stock}</td>
-                            <td>
-                                <button class="btn btn-success btn-agregar" 
-                                    data-id="${producto.id}" 
-                                    data-descripcion="${producto.descripcion}" 
-                                    data-precio="${producto.precio}">
-                                    Agregar
-                                </button>
-                            </td>
-                        </tr>`;
-                        });
-                    }
-                })
-                .catch(error => console.error('Error al buscar productos:', error));
-        });
-        // Actualizar tabla seleccionados
+        // Actualiza la tabla de productos seleccionados
         function actualizarTablaSeleccionados() {
             const tabla = document.querySelector('#tablaSeleccionados tbody');
             tabla.innerHTML = '';
             productosSeleccionados.forEach(producto => {
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
-                    <td>${producto.descripcion}</td>
-                    <td>${producto.precio.toFixed(2)}</td>
-                    <td><input type="number" class="form-control cantidad-input" value="${producto.cantidad}" min="1"></td>
-                    <td><button class="btn btn-danger btn-eliminar">Eliminar</button></td>
-                `;
+            <td>${producto.descripcion}</td>
+            <td>${producto.precio.toFixed(2)}</td>
+            <td><input type="number" class="form-control cantidad-input" value="${producto.cantidad}" min="1"></td>
+            <td><button class="btn btn-danger btn-eliminar">Eliminar</button></td>
+        `;
                 tabla.appendChild(fila);
 
+                // Modifica la cantidad del producto
                 fila.querySelector('.cantidad-input').addEventListener('input', function() {
                     producto.cantidad = parseInt(this.value) || 1;
                     recalcularTotal();
                 });
 
+                // Elimina el producto de la lista
                 fila.querySelector('.btn-eliminar').addEventListener('click', function() {
                     eliminarProducto(producto.id);
                     recalcularTotal();
@@ -284,11 +251,13 @@
             });
         }
 
+        // Elimina un producto de la lista seleccionada
         function eliminarProducto(id) {
             productosSeleccionados = productosSeleccionados.filter(p => p.id != id);
             actualizarTablaSeleccionados();
         }
 
+        // Inicializa la tabla y el total
         recalcularTotal();
         actualizarTablaSeleccionados();
     </script>

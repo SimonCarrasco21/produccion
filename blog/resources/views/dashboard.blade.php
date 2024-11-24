@@ -182,47 +182,51 @@
     <!-- Ventana para mesnaje de prodcto por vencer -->
 
     <script>
+        // Cuando la página carga, se hace una solicitud para obtener productos próximos a vencer
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/dashboard/productos-por-vencer')
-                .then(response => response.json())
+            fetch('/dashboard/productos-por-vencer') // Llama a la API que devuelve productos próximos a vencer
+                .then(response => response.json()) // Convierte la respuesta en JSON
                 .then(data => {
-                    if (data.length > 0) {
+                    if (data.length > 0) { // Si hay productos próximos a vencer
                         data.forEach(producto => {
+                            // Muestra una notificación por cada producto próximo a vencer
                             mostrarNotificacionPorVencer(producto.descripcion, producto
                                 .fecha_vencimiento);
                         });
                     }
                 })
-                .catch(error => console.error('Error al cargar productos por vencer:', error));
+                .catch(error => console.error('Error al cargar productos por vencer:',
+                error)); // Maneja errores en la solicitud
         });
 
+        // Función para mostrar una notificación emergente de producto próximo a vencer
         function mostrarNotificacionPorVencer(descripcion, fechaVencimiento) {
-            const contenedor = document.createElement('div');
-            contenedor.className = 'notificacion-por-vencer';
+            const contenedor = document.createElement('div'); // Crea un contenedor para la notificación
+            contenedor.className = 'notificacion-por-vencer'; // Aplica estilos CSS a la notificación
             contenedor.innerHTML = `
         <div class="notificacion-icono">
-            <i class="fa fa-exclamation-circle"></i>
+            <i class="fa fa-exclamation-circle"></i> <!-- Icono de advertencia -->
         </div>
         <div class="notificacion-contenido">
             <p><strong>¡Atención!</strong></p>
             <p>El producto <strong>${descripcion}</strong> está por vencer. Fecha de vencimiento: <strong>${fechaVencimiento}</strong>.</p>
-            <button class="btn-ir-inventario">Ir a Inventario</button>
+            <button class="btn-ir-inventario">Ir a Inventario</button> <!-- Botón que lleva al inventario -->
         </div>
-        <button class="cerrar-notificacion">&times;</button>
+        <button class="cerrar-notificacion">&times;</button> <!-- Botón para cerrar la notificación -->
     `;
-            document.body.appendChild(contenedor);
+            document.body.appendChild(contenedor); // Agrega la notificación al cuerpo de la página
 
-            // Evento para cerrar la notificación
+            // Evento para cerrar la notificación manualmente
             contenedor.querySelector('.cerrar-notificacion').addEventListener('click', () => {
-                contenedor.remove();
+                contenedor.remove(); // Elimina la notificación
             });
 
-            // Evento para redirigir al inventario
+            // Evento para redirigir al inventario desde la notificación
             contenedor.querySelector('.btn-ir-inventario').addEventListener('click', () => {
-                window.location.href = '/inventario'; // Cambia esta ruta si es diferente
+                window.location.href = '/inventario'; // Redirige al inventario
             });
 
-            // Eliminar automáticamente después de 10 segundos
+            // Elimina automáticamente la notificación después de 10 segundos
             setTimeout(() => contenedor.remove(), 10000);
         }
     </script>
