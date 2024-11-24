@@ -25,8 +25,39 @@ class ProfileController extends Controller
             ->groupBy('categorias.nombre')
             ->get();
 
-        return view('perfil', compact('user', 'productosPorCategoria'));
+        // Nueva funcionalidad: Ventas por día (Ganancias diarias)
+        $ventasPorDia = DB::table('ventas')
+            ->select(DB::raw('DATE(created_at) as fecha'), DB::raw('SUM(amount) as total_ganancias'))
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        // Productos con stock bajo (usando un umbral arbitrario, por ejemplo, < 5 unidades)
+        $productosConStockBajo = DB::table('productos')
+            ->where('stock', '<', 5)
+            ->select('nombre', 'stock')
+            ->get();
+
+        // Métodos de pago más utilizados
+        $metodosDePago = DB::table('ventas')
+            ->select('metodo_pago', DB::raw('COUNT(*) as cantidad'))
+            ->groupBy('metodo_pago')
+            ->orderByDesc('cantidad')
+            ->get();
+
+        // Obtener todas las categorías para el filtro
+        $categorias = DB::table('categorias')->select('id', 'nombre')->get();
+
+        return view('perfil', compact(
+            'user',
+            'productosPorCategoria',
+            'ventasPorDia',
+            'productosConStockBajo',
+            'metodosDePago',
+            'categorias'
+        ));
     }
+
 
     public function updateProfile(Request $request)
     {

@@ -223,6 +223,232 @@
             </ul>
         </div>
     </div>
+    <div>
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Ventas por Día -->
+                <div class="col-md-12 mb-4">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">Ventas por Día</h4>
+                        </div>
+                        <div class="card-body" style="height: 450px;">
+                            @if ($ventasPorDia->isNotEmpty())
+                                <canvas id="ventasPorDiaChart" style="max-height: 400px;"></canvas>
+                            @else
+                                <p class="text-center">No hay datos disponibles para las ventas diarias.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos con Stock Bajo -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-danger text-white text-center">
+                            <h4 class="mb-0">Productos con Stock Bajo</h4>
+                        </div>
+                        <div class="card-body" style="height: 450px;">
+                            @if ($productosConStockBajo->isNotEmpty())
+                                <canvas id="productosConStockBajoChart" style="max-height: 400px;"></canvas>
+                            @else
+                                <p class="text-center">No hay productos con stock bajo.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métodos de Pago Más Utilizados -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-success text-white text-center">
+                            <h4 class="mb-0">Métodos de Pago Más Utilizados</h4>
+                        </div>
+                        <div class="card-body" style="height: 450px;">
+                            @if ($metodosDePago->isNotEmpty())
+                                <canvas id="metodosDePagoChart" style="max-height: 400px;"></canvas>
+                            @else
+                                <p class="text-center">No hay datos disponibles para los métodos de pago.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Gráfico de Ventas por Día
+            const ventasPorDiaLabels = @json($ventasPorDia->pluck('fecha'));
+            const ventasPorDiaData = @json($ventasPorDia->pluck('total_ganancias'));
+
+            const ctxVentasPorDia = document.getElementById('ventasPorDiaChart').getContext('2d');
+            new Chart(ctxVentasPorDia, {
+                type: 'bar',
+                data: {
+                    labels: ventasPorDiaLabels,
+                    datasets: [{
+                        label: 'Ganancias Diarias',
+                        data: ventasPorDiaData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha',
+                                color: '#333',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Ganancias',
+                                color: '#333',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.3)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Productos con Stock Bajo
+            const productosConStockBajoLabels = @json($productosConStockBajo->pluck('nombre'));
+            const productosConStockBajoData = @json($productosConStockBajo->pluck('stock'));
+
+            const ctxProductosConStockBajo = document.getElementById('productosConStockBajoChart').getContext('2d');
+            new Chart(ctxProductosConStockBajo, {
+                type: 'bar',
+                data: {
+                    labels: productosConStockBajoLabels,
+                    datasets: [{
+                        label: 'Stock Actual',
+                        data: productosConStockBajoData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Producto',
+                                color: '#333',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cantidad en Stock',
+                                color: '#333',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.3)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Métodos de Pago Más Utilizados
+            const metodosDePagoLabels = @json($metodosDePago->pluck('metodo_pago'));
+            const metodosDePagoData = @json($metodosDePago->pluck('cantidad'));
+
+            const ctxMetodosDePago = document.getElementById('metodosDePagoChart').getContext('2d');
+            new Chart(ctxMetodosDePago, {
+                type: 'doughnut',
+                data: {
+                    labels: metodosDePagoLabels,
+                    datasets: [{
+                        label: 'Métodos de Pago',
+                        data: metodosDePagoData,
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(153, 102, 255, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(255, 99, 132, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
