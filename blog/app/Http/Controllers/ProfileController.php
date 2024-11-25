@@ -25,7 +25,16 @@ class ProfileController extends Controller
             ->groupBy('categorias.nombre')
             ->get();
 
-        // Nueva funcionalidad: Ventas por día (Ganancias diarias)
+        // Ganancias por Categoría de Producto
+        $gananciasPorCategoria = DB::table('ventas')
+            ->join('productos', 'ventas.productos', 'like', DB::raw("CONCAT('%', productos.id, '%')"))
+            ->join('categorias', 'productos.categoria_id', '=', 'categorias.id')
+            ->select('categorias.nombre', DB::raw('SUM(ventas.amount) as total_ganancias'))
+            ->groupBy('categorias.nombre')
+            ->orderByDesc('total_ganancias')
+            ->get();
+
+        // Ventas por día (Ganancias diarias)
         $ventasPorDia = DB::table('ventas')
             ->select(DB::raw('DATE(created_at) as fecha'), DB::raw('SUM(amount) as total_ganancias'))
             ->groupBy('fecha')
@@ -45,18 +54,18 @@ class ProfileController extends Controller
             ->orderByDesc('cantidad')
             ->get();
 
-        // Obtener todas las categorías para el filtro
-        $categorias = DB::table('categorias')->select('id', 'nombre')->get();
-
         return view('perfil', compact(
             'user',
             'productosPorCategoria',
+            'gananciasPorCategoria',
             'ventasPorDia',
             'productosConStockBajo',
-            'metodosDePago',
-            'categorias'
+            'metodosDePago'
         ));
     }
+
+
+
 
 
     public function updateProfile(Request $request)

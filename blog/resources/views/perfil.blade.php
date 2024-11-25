@@ -225,50 +225,70 @@
     </div>
     <div>
         <div class="container mt-4">
-            <div class="row">
+            <div class="row g-4">
                 <!-- Ventas por Día -->
-                <div class="col-md-12 mb-4">
-                    <div class="card shadow-lg">
+                <div class="col-md-6">
+                    <div class="card shadow border-0">
                         <div class="card-header bg-primary text-white text-center">
-                            <h4 class="mb-0">Ventas por Día</h4>
+                            <h5 class="mb-0">Ventas por Día</h5>
                         </div>
-                        <div class="card-body" style="height: 450px;">
+                        <div class="card-body d-flex justify-content-center align-items-center">
                             @if ($ventasPorDia->isNotEmpty())
-                                <canvas id="ventasPorDiaChart" style="max-height: 400px;"></canvas>
+                                <canvas id="ventasPorDiaChart" class="w-100" style="max-height: 300px;"></canvas>
                             @else
-                                <p class="text-center">No hay datos disponibles para las ventas diarias.</p>
+                                <p class="text-center text-muted">No hay datos disponibles para las ventas diarias.</p>
                             @endif
                         </div>
                     </div>
                 </div>
 
                 <!-- Productos con Stock Bajo -->
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-lg">
+                <div class="col-md-6">
+                    <div class="card shadow border-0">
                         <div class="card-header bg-danger text-white text-center">
-                            <h4 class="mb-0">Productos con Stock Bajo</h4>
+                            <h5 class="mb-0">Productos con Stock Bajo</h5>
                         </div>
-                        <div class="card-body" style="height: 450px;">
+                        <div class="card-body d-flex justify-content-center align-items-center">
                             @if ($productosConStockBajo->isNotEmpty())
-                                <canvas id="productosConStockBajoChart" style="max-height: 400px;"></canvas>
+                                <canvas id="productosConStockBajoChart" class="w-100"
+                                    style="max-height: 300px;"></canvas>
                             @else
-                                <p class="text-center">No hay productos con stock bajo.</p>
+                                <p class="text-center text-muted">No hay productos con stock bajo.</p>
                             @endif
                         </div>
                     </div>
                 </div>
 
                 <!-- Métodos de Pago Más Utilizados -->
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-lg">
+                <div class="col-md-6">
+                    <div class="card shadow border-0">
                         <div class="card-header bg-success text-white text-center">
-                            <h4 class="mb-0">Métodos de Pago Más Utilizados</h4>
+                            <h5 class="mb-0">Métodos de Pago Más Utilizados</h5>
                         </div>
-                        <div class="card-body" style="height: 450px;">
+                        <div class="card-body d-flex justify-content-center align-items-center">
                             @if ($metodosDePago->isNotEmpty())
-                                <canvas id="metodosDePagoChart" style="max-height: 400px;"></canvas>
+                                <canvas id="metodosDePagoChart" class="w-100" style="max-height: 300px;"></canvas>
                             @else
-                                <p class="text-center">No hay datos disponibles para los métodos de pago.</p>
+                                <p class="text-center text-muted">No hay datos disponibles para los métodos de pago.
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ganancias por Categoría de Producto -->
+                <div class="col-md-6">
+                    <div class="card shadow border-0">
+                        <div class="card-header bg-info text-white text-center">
+                            <h5 class="mb-0">Ganancias por Categoría de Producto</h5>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            @if ($gananciasPorCategoria->isNotEmpty())
+                                <canvas id="gananciasPorCategoriaChart" class="w-100"
+                                    style="max-height: 300px;"></canvas>
+                            @else
+                                <p class="text-center text-muted">No hay datos disponibles para las ganancias por
+                                    categoría.</p>
                             @endif
                         </div>
                     </div>
@@ -290,9 +310,9 @@
                     datasets: [{
                         label: 'Ganancias Diarias',
                         data: ventasPorDiaData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -303,40 +323,25 @@
                             title: {
                                 display: true,
                                 text: 'Fecha',
-                                color: '#333',
                                 font: {
-                                    size: 16,
-                                    weight: 'bold'
+                                    size: 14
                                 }
-                            },
-                            grid: {
-                                display: false
                             }
                         },
                         y: {
                             title: {
                                 display: true,
                                 text: 'Ganancias',
-                                color: '#333',
                                 font: {
-                                    size: 16,
-                                    weight: 'bold'
+                                    size: 14
                                 }
                             },
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(200, 200, 200, 0.3)'
-                            }
+                            beginAtZero: true
                         }
                     },
                     plugins: {
                         legend: {
-                            labels: {
-                                color: '#333',
-                                font: {
-                                    size: 14
-                                }
-                            }
+                            display: true
                         }
                     }
                 }
@@ -354,9 +359,9 @@
                     datasets: [{
                         label: 'Stock Actual',
                         data: productosConStockBajoData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
                         borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 2
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -367,10 +372,8 @@
                             title: {
                                 display: true,
                                 text: 'Producto',
-                                color: '#333',
                                 font: {
-                                    size: 16,
-                                    weight: 'bold'
+                                    size: 14
                                 }
                             }
                         },
@@ -378,26 +381,16 @@
                             title: {
                                 display: true,
                                 text: 'Cantidad en Stock',
-                                color: '#333',
                                 font: {
-                                    size: 16,
-                                    weight: 'bold'
+                                    size: 14
                                 }
                             },
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(200, 200, 200, 0.3)'
-                            }
+                            beginAtZero: true
                         }
                     },
                     plugins: {
                         legend: {
-                            labels: {
-                                color: '#333',
-                                font: {
-                                    size: 14
-                                }
-                            }
+                            display: true
                         }
                     }
                 }
@@ -409,25 +402,18 @@
 
             const ctxMetodosDePago = document.getElementById('metodosDePagoChart').getContext('2d');
             new Chart(ctxMetodosDePago, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels: metodosDePagoLabels,
                     datasets: [{
                         label: 'Métodos de Pago',
                         data: metodosDePagoData,
                         backgroundColor: [
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(255, 206, 86, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                            'rgba(255, 159, 64, 0.8)',
-                            'rgba(255, 99, 132, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 99, 132, 1)'
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
                         ],
                         borderWidth: 1
                     }]
@@ -447,7 +433,58 @@
                     }
                 }
             });
+
+            // Gráfico de Ganancias por Categoría
+            const gananciasPorCategoriaLabels = @json($gananciasPorCategoria->pluck('nombre'));
+            const gananciasPorCategoriaData = @json($gananciasPorCategoria->pluck('total_ganancias'));
+
+            const ctxGananciasPorCategoria = document.getElementById('gananciasPorCategoriaChart').getContext('2d');
+            new Chart(ctxGananciasPorCategoria, {
+                type: 'bar',
+                data: {
+                    labels: gananciasPorCategoriaLabels,
+                    datasets: [{
+                        label: 'Ganancias Totales',
+                        data: gananciasPorCategoriaData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Categoría de Producto',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Ganancias',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
+            });
         </script>
+
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
