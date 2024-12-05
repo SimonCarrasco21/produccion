@@ -31,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');
     Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
     Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
+    Route::post('/guardar-producto-unico', [PaginaController::class, 'guardarProductoUnico'])->name('guardarProductoUnico')->middleware('web');
+
+
 
     // Alertas y reportes
     Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');

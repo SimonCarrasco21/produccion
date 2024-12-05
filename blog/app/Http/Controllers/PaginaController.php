@@ -7,6 +7,7 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PaginaController extends Controller
 {
@@ -20,16 +21,50 @@ class PaginaController extends Controller
 
     public function guardarProducto(Request $request)
     {
+        // Validar si es un solo producto o una lista
+        $productos = $request->has('productos') ? json_decode($request->productos, true) : [$request->all()];
+
+        foreach ($productos as $producto) {
+            // Validar cada producto individualmente
+            $validator = Validator::make($producto, [
+                'nombre' => 'required|string|max:255',
+                'descripcion' => 'required|string|min:10',
+                'precio' => 'required|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'categoria_id' => 'required|exists:categorias,id',
+                'fecha_vencimiento' => 'nullable|date|after_or_equal:today',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            // Crear el producto asociado al usuario autenticado
+            Producto::create([
+                'nombre' => $producto['nombre'],
+                'descripcion' => $producto['descripcion'],
+                'precio' => $producto['precio'],
+                'stock' => $producto['stock'],
+                'categoria_id' => $producto['categoria_id'],
+                'fecha_vencimiento' => $producto['fecha_vencimiento'] ?? null,
+                'user_id' => Auth::id(), // Asociar el producto al usuario autenticado
+            ]);
+        }
+
+        return redirect('/agregar-producto')->with('success', 'Productos guardados correctamente.');
+    }
+
+    public function guardarProductoUnico(Request $request)
+    {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'precio' => 'required|numeric',
-            'stock' => 'required|integer',
+            'descripcion' => 'required|string|min:10',
+            'precio' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
             'categoria_id' => 'required|exists:categorias,id',
-            'fecha_vencimiento' => 'nullable|date',
+            'fecha_vencimiento' => 'nullable|date|after_or_equal:today',
         ]);
 
-        // Crear el producto asociado al usuario autenticado
         Producto::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
@@ -37,11 +72,13 @@ class PaginaController extends Controller
             'stock' => $request->stock,
             'categoria_id' => $request->categoria_id,
             'fecha_vencimiento' => $request->fecha_vencimiento,
-            'user_id' => Auth::id(), // Asociar el producto al usuario autenticado
+            'user_id' => Auth::id(),
         ]);
 
-        return redirect('/agregar-producto')->with('success', 'Producto agregado correctamente.');
+        return redirect()->back()->with('success', 'Producto agregado correctamente.');
     }
+
+
 
     public function mostrarProductosPorCategoria($id)
     {
