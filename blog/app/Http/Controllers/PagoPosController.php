@@ -52,8 +52,24 @@ class PagoPosController extends Controller
 
     public function procesarPagoPos(Request $request)
     {
-        return $this->procesarPago($request, 'POS');
+        // Procesar el pago como POS utilizando la función común
+        $response = $this->procesarPago($request, 'POS');
+
+        // Verificar si el pago fue exitoso antes de continuar
+        if ($response->getData()->success) {
+            // Eliminar el fiado si existe
+            $idFiado = $request->input('id_fiado');
+            if ($idFiado) {
+                Fiado::where('id', $idFiado)
+                    ->where('user_id', Auth::id())
+                    ->delete();
+            }
+        }
+
+        // Retornar la respuesta del pago (como JSON en este caso)
+        return $response;
     }
+
 
     public function pagarEnEfectivo(Request $request)
     {

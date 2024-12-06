@@ -87,4 +87,13 @@ class DashboardController extends Controller
 
         return response()->json($productosConStockBajo);
     }
+
+    public function obtenerProductosVencidos()
+    {
+        $productosVencidos = Producto::where('fecha_vencimiento', '<', now())
+            ->where('user_id', Auth::id()) // Si los productos están asociados a usuarios
+            ->get(['descripcion', 'fecha_vencimiento']); // Incluye "descripcion" explícitamente
+
+        return response()->json($productosVencidos);
+    }
 }

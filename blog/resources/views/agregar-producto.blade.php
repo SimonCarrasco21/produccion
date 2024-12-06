@@ -158,9 +158,6 @@
         </div>
     </div>
 
-
-
-
     <!-- Tabla de productos -->
     <div class="container mt-5">
         <h2 class="text-center text-success fw-bold mb-4">Gestión Completa de Productos</h2>
@@ -230,7 +227,6 @@
         </div>
     </div>
 
-
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>
         function confirmLogout() {
@@ -244,7 +240,6 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
-
 
     <!-- Script para confirmar la funcion de agregar un producto  -->
 

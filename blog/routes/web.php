@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
     Route::get('/dashboard/productos-por-vencer', [DashboardController::class, 'productosPorVencer'])->name('dashboard.productos-por-vencer');
     Route::get('/dashboard/productos-stock-bajo', [DashboardController::class, 'productosConStockBajo'])->name('dashboard.productos-stock-bajo');
+    Route::get('/dashboard/productos-vencidos', [DashboardController::class, 'obtenerProductosVencidos']);
+
     Route::get('/inventario/graficos', [DashboardController::class, 'datosGraficos'])->name('inventario.graficos');
 
     // Fiados

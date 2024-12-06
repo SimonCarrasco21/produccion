@@ -18,7 +18,6 @@ class PaginaController extends Controller
         $categorias = Categoria::all();
         return view('agregar-producto', compact('productos', 'categorias'));
     }
-
     public function guardarProducto(Request $request)
     {
         // Validar si es un solo producto o una lista
@@ -53,7 +52,6 @@ class PaginaController extends Controller
 
         return redirect('/agregar-producto')->with('success', 'Productos guardados correctamente.');
     }
-
     public function guardarProductoUnico(Request $request)
     {
         $request->validate([
@@ -77,9 +75,6 @@ class PaginaController extends Controller
 
         return redirect()->back()->with('success', 'Producto agregado correctamente.');
     }
-
-
-
     public function mostrarProductosPorCategoria($id)
     {
         $categoria = Categoria::findOrFail($id);
@@ -89,7 +84,6 @@ class PaginaController extends Controller
             ->get();
         return view('productos-por-categoria', compact('categoria', 'productos'));
     }
-
     public function eliminarProducto($id)
     {
         // Encontrar el producto y asegurarse de que pertenezca al usuario autenticado
@@ -98,7 +92,6 @@ class PaginaController extends Controller
 
         return redirect('/agregar-producto')->with('success', 'Producto eliminado correctamente.');
     }
-
     public function eliminarProductosSeleccionados(Request $request)
     {
         // Validar que se envíen productos seleccionados
@@ -117,7 +110,6 @@ class PaginaController extends Controller
 
         return redirect('/inventario')->with('success', 'Productos eliminados correctamente.');
     }
-
     public function editarProducto($id)
     {
         // Encontrar el producto y asegurarse de que pertenezca al usuario autenticado
@@ -125,7 +117,6 @@ class PaginaController extends Controller
         $categorias = Categoria::all();
         return view('editar-producto', compact('producto', 'categorias'));
     }
-
     public function actualizarProducto(Request $request, $id)
     {
         $request->validate([
@@ -151,7 +142,6 @@ class PaginaController extends Controller
 
         return redirect('/agregar-producto')->with('success', 'Producto actualizado correctamente.');
     }
-
     public function buscarProductos(Request $request)
     {
         $query = $request->input('query');
