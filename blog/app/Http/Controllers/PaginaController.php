@@ -8,6 +8,7 @@ use App\Models\Categoria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
 class PaginaController extends Controller
 {
@@ -151,5 +152,52 @@ class PaginaController extends Controller
             ->get();
         $categorias = Categoria::all();
         return view('inventario', compact('productos', 'categorias'))->with('query', $query);
+    }
+
+    public function mostrarFormulario()
+    {
+        $productos = Producto::where('user_id', Auth::id())->get(); // Obtiene los productos del usuario actual
+        $categorias = Categoria::all(); // Obtiene las categorías disponibles
+        return view('agregar-producto', compact('productos', 'categorias')); // Pasa las variables a la vista
+    }
+
+
+    public function obtenerDatosProducto(Request $request)
+    {
+        $codigoBarras = $request->codigo;
+
+        // URL de la API Open Food Facts
+        $url = "https://world.openfoodfacts.org/api/v0/product/{$codigoBarras}.json";
+
+        // Realizar la consulta a la API
+        $response = Http::get($url);
+
+        // Verificar si el producto existe y la solicitud fue exitosa
+        if ($response->ok() && $response->json('status') === 1) {
+            $producto = $response->json('product');
+
+            // Datos del producto
+            $productoData = [
+                'nombre' => $producto['product_name'] ?? 'Producto sin nombre',
+                'descripcion' => $producto['categories'] ?? 'Descripción no disponible',
+                'precio' => $producto['price'] ?? null, // Si la API incluye un precio
+                'fecha_vencimiento' => $producto['expiration_date'] ?? null,
+                'disponible_en' => $producto['countries_tags'] ?? [],
+            ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto encontrado.',
+                'producto' => $productoData,
+                'raw_response' => $response->json() // Respuesta completa para pruebas
+            ]);
+        }
+
+        // Respuesta en caso de que el producto no se encuentre
+        return response()->json([
+            'success' => false,
+            'message' => 'Producto no encontrado en la base de datos.',
+            'raw_response' => $response->json() // Respuesta completa para pruebas
+        ]);
     }
 }

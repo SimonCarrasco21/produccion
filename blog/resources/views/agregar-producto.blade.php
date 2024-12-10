@@ -67,48 +67,82 @@
                 <div id="success-message" class="alert alert-success d-none" role="alert">Producto agregado
                     correctamente.</div>
 
+
                 <!-- Formulario -->
                 <form id="producto-form" action="{{ route('guardarProductoUnico') }}" method="POST">
                     @csrf
+
+                    <!-- Bloque principal -->
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <label for="nombre" class="form-label fw-bold text-dark">Nombre:</label>
-                            <input type="text" name="nombre" id="nombre"
-                                class="form-control border border-success" placeholder="Ej. Shampoo" required>
+                            <div class="p-4 bg-light border border-success rounded" style="height: 100%;">
+                                <!-- Botones de escaneo -->
+                                <div class="d-flex justify-content-center gap-3 mb-4">
+                                    <button id="start-scan" type="button"
+                                        class="btn btn-outline-success fw-bold px-5 py-3" style="font-size: 1.2rem;">
+                                        <i class="bi bi-camera"></i> Activar Cámara
+                                    </button>
+                                    <button id="stop-scan" type="button"
+                                        class="btn btn-outline-danger fw-bold px-5 py-3 d-none"
+                                        style="font-size: 1.2rem;">
+                                        <i class="bi bi-camera-off"></i> Detener Cámara
+                                    </button>
+                                </div>
+
+                                <!-- Video para mostrar la cámara -->
+                                <div class="video-container" style="height: calc(100% - 120px);">
+                                    <!-- Ajuste dinámico para el cuadro -->
+                                    <video id="barcode-video"
+                                        class="rounded shadow-sm border border-success w-100 h-100" autoplay></video>
+                                </div>
+                                <div id="scan-result" class="alert alert-success mt-3 fw-bold d-none" role="alert">
+                                </div>
+                            </div>
                         </div>
+
+
+                        <!-- Campos del formulario -->
                         <div class="col-md-6">
-                            <label for="descripcion" class="form-label fw-bold text-dark">Descripción:</label>
-                            <textarea name="descripcion" id="descripcion" class="form-control border border-success"
-                                placeholder="Mínimo 10 caracteres" required></textarea>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="precio" class="form-label fw-bold text-dark">Precio:</label>
-                            <input type="number" name="precio" id="precio"
-                                class="form-control border border-success" placeholder="Ej. 12.50" step="0.01"
-                                required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="stock" class="form-label fw-bold text-dark">Stock:</label>
-                            <input type="number" name="stock" id="stock"
-                                class="form-control border border-success" placeholder="Ej. 50" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="categoria" class="form-label fw-bold text-dark">Categoría:</label>
-                            <select name="categoria_id" id="categoria" class="form-select border border-success"
-                                required>
-                                <option value="" disabled selected>Seleccionar Categoría</option>
-                                @foreach ($categorias as $categoria)
-                                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="fecha_vencimiento" class="form-label fw-bold text-dark">Fecha de
-                                Vencimiento:</label>
-                            <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
-                                class="form-control border border-success">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label fw-bold text-dark">Nombre:</label>
+                                <input type="text" name="nombre" id="nombre"
+                                    class="form-control border border-success" placeholder="Ej. Shampoo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label fw-bold text-dark">Descripción:</label>
+                                <textarea name="descripcion" id="descripcion" class="form-control border border-success"
+                                    placeholder="Mínimo 10 caracteres" rows="4" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="precio" class="form-label fw-bold text-dark">Precio:</label>
+                                <input type="number" name="precio" id="precio"
+                                    class="form-control border border-success" placeholder="Ej. 12.50" step="0.01"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="stock" class="form-label fw-bold text-dark">Stock:</label>
+                                <input type="number" name="stock" id="stock"
+                                    class="form-control border border-success" placeholder="Ej. 50" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label fw-bold text-dark">Categoría:</label>
+                                <select name="categoria_id" id="categoria" class="form-select border border-success"
+                                    required>
+                                    <option value="" disabled selected>Seleccionar Categoría</option>
+                                    @foreach ($categorias as $categoria)
+                                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_vencimiento" class="form-label fw-bold text-dark">Fecha de
+                                    Vencimiento:</label>
+                                <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
+                                    class="form-control border border-success">
+                            </div>
                         </div>
                     </div>
+
                     <!-- Botones -->
                     <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
                         <button type="button" id="add-to-list"
@@ -120,6 +154,9 @@
                         </button>
                     </div>
                 </form>
+
+
+
 
                 <!-- Productos en Lista -->
                 <div class="card mt-5 border-0">
@@ -343,6 +380,100 @@
             }
         });
     </script>
+
+    <!-- Script para camara y escaneo   -->
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+    <script>
+        const videoElement = document.getElementById('barcode-video');
+        const startScanButton = document.getElementById('start-scan');
+        const stopScanButton = document.getElementById('stop-scan');
+        const scanResult = document.getElementById('scan-result');
+        let stream;
+
+        // Función para iniciar el escaneo
+        startScanButton.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "environment"
+                    }
+                });
+                videoElement.srcObject = stream;
+                startScanButton.classList.add('d-none');
+                stopScanButton.classList.remove('d-none');
+
+                const codeReader = new ZXing.BrowserBarcodeReader();
+                codeReader.decodeOnceFromVideoDevice(undefined, videoElement).then(result => {
+                    scanResult.textContent = `Código Escaneado: ${result.text}`;
+                    scanResult.classList.remove('d-none');
+
+                    // Llamar a la API con el código de barras
+                    fetch('{{ route('productos.api') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                codigo: result.text
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.getElementById('nombre').value = data.producto.nombre ||
+                                    '';
+                                document.getElementById('descripcion').value = data.producto
+                                    .descripcion || '';
+                                document.getElementById('precio').value = data.producto.precio ||
+                                    '';
+                                document.getElementById('fecha_vencimiento').value = data.producto
+                                    .fecha_vencimiento || '';
+                            } else {
+                                alert('Producto no encontrado.');
+                            }
+                        });
+                });
+            } catch (error) {
+                alert('Error al acceder a la cámara: ' + error.message);
+            }
+        });
+
+        // Función para detener el escaneo
+        stopScanButton.addEventListener('click', () => {
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            videoElement.srcObject = null;
+            startScanButton.classList.remove('d-none');
+            stopScanButton.classList.add('d-none');
+            scanResult.classList.add('d-none');
+            scanResult.textContent = '';
+        });
+    </script>
+    <style>
+        .video-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            #barcode-video {
+                max-height: 200px;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+
 
 </body>
 

@@ -27,20 +27,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/productos/categoria/{id}', [PaginaController::class, 'mostrarProductosPorCategoria'])->name('productos.categoria');
     Route::post('/eliminar-productos-seleccionados', [PaginaController::class, 'eliminarProductosSeleccionados'])->name('eliminarProductosSeleccionados');
     Route::get('/agregar-producto', [PaginaController::class, 'mostrarPagina'])->name('agregar-producto');
+    Route::get('/agregar-producto', [PaginaController::class, 'mostrarFormulario'])->name('agregar-producto');
     Route::post('/guardar-producto', [PaginaController::class, 'guardarProducto'])->name('guardarProducto');
     Route::delete('/eliminar-producto/{id}', [PaginaController::class, 'eliminarProducto'])->name('eliminarProducto');
     Route::get('/editar-producto/{id}', [PaginaController::class, 'editarProducto'])->name('editarProducto');
     Route::put('/actualizar-producto/{id}', [PaginaController::class, 'actualizarProducto'])->name('actualizarProducto');
     Route::post('/guardar-producto-unico', [PaginaController::class, 'guardarProductoUnico'])->name('guardarProductoUnico')->middleware('web');
-
-
+    Route::post('/productos/api', [PaginaController::class, 'obtenerDatosProducto'])->name('productos.api');
+    Route::post('/productos/guardar', [PaginaController::class, 'guardarProducto'])->name('productos.guardar');
 
     // Alertas y reportes
     Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
     Route::get('/dashboard/productos-por-vencer', [DashboardController::class, 'productosPorVencer'])->name('dashboard.productos-por-vencer');
     Route::get('/dashboard/productos-stock-bajo', [DashboardController::class, 'productosConStockBajo'])->name('dashboard.productos-stock-bajo');
     Route::get('/dashboard/productos-vencidos', [DashboardController::class, 'obtenerProductosVencidos']);
-
     Route::get('/inventario/graficos', [DashboardController::class, 'datosGraficos'])->name('inventario.graficos');
 
     // Fiados
