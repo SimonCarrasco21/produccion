@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
     <title>Login</title>
     <!-- Enlace a Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,24 +24,35 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .login-container {
             background-color: #ffffff;
             padding: 80px;
             border-radius: 30px;
-            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2); 
-            width: 550px; /* Cambiado a 550px */
+            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+            width: 550px;
+            /* Cambiado a 550px */
             text-align: center;
             animation: zoomIn 0.7s ease;
             transition: transform 0.3s ease;
         }
 
         @keyframes zoomIn {
-            from { transform: scale(0.8); }
-            to { transform: scale(1); }
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
         }
 
         .login-container h1 {
@@ -104,7 +118,8 @@
             color: #45a049;
         }
 
-        .error-message, .success-message {
+        .error-message,
+        .success-message {
             font-size: 18px;
             margin-bottom: 20px;
             display: none;
@@ -119,6 +134,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h1>Login</h1>
@@ -139,12 +155,14 @@
 
             <!-- Campo de usuario -->
             <div class="mb-3">
-                <input type="text" id="email" name="email" class="form-control" placeholder="Correo Electrónico o Usuario" required autofocus>
+                <input type="text" id="email" name="email" class="form-control"
+                    placeholder="Correo Electrónico o Usuario" required autofocus>
             </div>
 
             <!-- Campo de contraseña -->
             <div class="mb-3">
-                <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña"
+                    required>
             </div>
 
             <!-- Botón para iniciar sesión -->
@@ -171,10 +189,5 @@
     <!-- Bootstrap JS y Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
-
-
-
-
-
-

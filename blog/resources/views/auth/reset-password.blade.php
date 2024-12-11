@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cambiar Contraseña</title>
     <!-- Enlace a Bootstrap y Bootstrap Icons -->
@@ -21,23 +24,34 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .container {
             background-color: #ffffff;
             padding: 60px;
             border-radius: 30px;
-            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2); 
-            width: 550px; /* Ancho mayor para coherencia */
+            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2);
+            width: 550px;
+            /* Ancho mayor para coherencia */
             text-align: center;
             animation: slideIn 1s ease;
         }
 
         @keyframes slideIn {
-            from { transform: translateY(-70px); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(-70px);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
 
         h1 {
@@ -78,7 +92,7 @@
         }
 
         .btn {
-            width: 100%; 
+            width: 100%;
             padding: 15px;
             border-radius: 10px;
             font-size: 18px;
@@ -121,6 +135,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Cambiar Contraseña</h1>
@@ -143,13 +158,15 @@
             <!-- Campo de nueva contraseña -->
             <div class="input-group">
                 <i class="bi bi-lock-fill form-icon"></i>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Nueva Contraseña" required autocomplete="new-password">
+                <input type="password" id="password" name="password" class="form-control"
+                    placeholder="Nueva Contraseña" required autocomplete="new-password">
             </div>
 
             <!-- Confirmar nueva contraseña -->
             <div class="input-group">
                 <i class="bi bi-shield-lock-fill form-icon"></i>
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirmar Contraseña" required autocomplete="new-password">
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
+                    placeholder="Confirmar Contraseña" required autocomplete="new-password">
             </div>
 
             <!-- Botón para cambiar la contraseña -->
@@ -160,6 +177,5 @@
     <!-- Cargar Bootstrap JS (opcional para más interacción) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
-
-

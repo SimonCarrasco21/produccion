@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
     <title>Recuperar Contraseña</title>
     <!-- Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -22,23 +25,33 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .container {
             background-color: #ffffff;
             padding: 60px;
             border-radius: 30px;
-            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2);
             width: 550px;
             text-align: center;
             animation: slideIn 1s ease;
         }
 
         @keyframes slideIn {
-            from { transform: translateY(-70px); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(-70px);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
 
         .container h1 {
@@ -95,10 +108,12 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1><i class="bi bi-envelope"></i> Recuperar Contraseña</h1>
-        <p>¿Olvidaste tu contraseña? Introduce tu correo electrónico y te enviaremos un enlace para que la restablezcas.</p>
+        <p>¿Olvidaste tu contraseña? Introduce tu correo electrónico y te enviaremos un enlace para que la restablezcas.
+        </p>
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
@@ -113,9 +128,5 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
-
-
-
-
-

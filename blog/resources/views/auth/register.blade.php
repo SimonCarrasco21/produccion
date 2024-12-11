@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
     <title>Registro</title>
     <!-- Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,15 +25,20 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .container {
             background-color: #ffffff;
             padding: 60px;
             border-radius: 30px;
-            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2);
             width: 550px;
             text-align: center;
             animation: zoomIn 0.7s ease;
@@ -38,8 +46,13 @@
         }
 
         @keyframes zoomIn {
-            from { transform: scale(0.8); }
-            to { transform: scale(1); }
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
         }
 
         .container h1 {
@@ -100,6 +113,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1><i class="bi bi-pencil-square"></i> Registrarse</h1>
@@ -108,27 +122,31 @@
             @csrf
 
             <!-- Nombre -->
-            <input type="text" id="name" name="name" placeholder="Nombre Completo" value="{{ old('name') }}" required autofocus>
+            <input type="text" id="name" name="name" placeholder="Nombre Completo"
+                value="{{ old('name') }}" required autofocus>
 
             <!-- Correo Electrónico -->
-            <input type="email" id="email" name="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
+            <input type="email" id="email" name="email" placeholder="Correo Electrónico"
+                value="{{ old('email') }}" required>
 
             <!-- Contraseña -->
             <input type="password" id="password" name="password" placeholder="Contraseña" required>
 
             <!-- Confirmar Contraseña -->
-            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirmar Contraseña" required>
+            <input type="password" id="password_confirmation" name="password_confirmation"
+                placeholder="Confirmar Contraseña" required>
 
             <!-- Botón para registrarse -->
             <button type="submit"><i class="bi bi-person-plus-fill"></i> Registrate</button>
 
             <!-- Enlace para iniciar sesión -->
-            <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i> ¿Ya tienes una cuenta? Inicia sesión</a>
+            <a href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i> ¿Ya tienes una cuenta? Inicia
+                sesión</a>
         </form>
     </div>
 
     <!-- Bootstrap JS y Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>
