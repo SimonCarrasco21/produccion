@@ -56,30 +56,71 @@
         </div>
     </nav>
 
-    <!-- Título y tabla de productos por categoría -->
-    <div class="container">
-        <h2 class="text-center page-title">Categoria: {{ $categoria->nombre }}</h2>
-        <div class="btn-container">
-            <a href="{{ route('agregar-producto') }}" class="btn btn-success btn-agregar mb-4">
-                <i class="bi bi-plus-circle"></i> Agregar Nuevo Producto
-            </a>
+    <!-- Título y resumen de categoría -->
+    <div class="container my-5">
+        <h2 class="text-center page-title mb-4">Categoría: {{ $categoria->nombre }}</h2>
+
+        <!-- Resumen de la categoría -->
+        <div class="row mb-4">
+            <div class="col-sm-6 col-md-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h6>Total de Productos</h6>
+                        <h4>{{ $productos->count() }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h6>Promedio de Precio</h6>
+                        <h4>${{ number_format($productos->avg('precio'), 2) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h6>Stock Bajo</h6>
+                        <h4>{{ $productos->where('stock', '<=', 5)->count() }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="card shadow-sm text-center">
+                    <div class="card-body">
+                        <h6>Próximos a Vencer</h6>
+                        <h4>{{ $productos->where('proximo_a_vencer', true)->count() }}</h4>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="table-container">
-            <table class="table table-striped">
-                <thead>
+
+        <!-- Buscador y tabla -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div class="input-group w-100 w-md-50 shadow-sm">
+                <span class="input-group-text bg-light text-dark"><i class="bi bi-search"></i></span>
+                <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar producto...">
+            </div>
+        </div>
+
+        <!-- Tabla responsiva -->
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle" id="tablaProductos">
+                <thead class="table-dark">
                     <tr>
-                        <th>ID Producto</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Fecha de Vencimiento</th>
+                        <th class="sortable" data-col="id">ID</th>
+                        <th class="sortable" data-col="nombre">Nombre</th>
+                        <th class="sortable" data-col="descripcion">Descripción</th>
+                        <th class="sortable" data-col="precio">Precio</th>
+                        <th class="sortable" data-col="stock">Stock</th>
+                        <th class="sortable" data-col="fecha_vencimiento">Fecha Vencimiento</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if ($productos->isEmpty())
                         <tr>
-                            <td colspan="6" class="text-center">No hay productos en esta categoría.</td>
+                            <td colspan="6" class="text-center text-muted">No hay productos en esta categoría.</td>
                         </tr>
                     @else
                         @foreach ($productos as $producto)
@@ -87,9 +128,14 @@
                                 <td>{{ $producto->id }}</td>
                                 <td>{{ $producto->nombre }}</td>
                                 <td>{{ $producto->descripcion }}</td>
-                                <td>{{ number_format($producto->precio, 2) }} $</td>
-                                <td>{{ $producto->stock }}</td>
-                                <td>{{ $producto->fecha_vencimiento }}</td>
+                                <td>${{ number_format($producto->precio, 2) }}</td>
+                                <td>
+                                    {{ $producto->stock }}
+                                    @if ($producto->stock <= 5)
+                                        <span class="badge bg-danger text-light">Bajo</span>
+                                    @endif
+                                </td>
+                                <td>{{ $producto->fecha_vencimiento ?? 'N/A' }}</td>
                             </tr>
                         @endforeach
                     @endif
@@ -97,6 +143,46 @@
             </table>
         </div>
     </div>
+
+    <script>
+        // Búsqueda dinámica
+        document.getElementById('buscarProducto').addEventListener('keyup', function() {
+            const filtro = this.value.toLowerCase();
+            const filas = document.querySelectorAll('#tablaProductos tbody tr');
+
+            filas.forEach(fila => {
+                const celdas = Array.from(fila.children);
+                fila.style.display = celdas.some(celda =>
+                    celda.textContent.toLowerCase().includes(filtro)
+                ) ? '' : 'none';
+            });
+        });
+
+        // Ordenamiento de columnas
+        document.querySelectorAll('.sortable').forEach(th => {
+            th.addEventListener('click', function() {
+                const table = th.closest('table');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.rows);
+                const colIndex = Array.from(th.parentNode.children).indexOf(th);
+                const isAscending = th.classList.toggle('asc');
+
+                rows.sort((a, b) => {
+                    const aText = a.cells[colIndex].textContent.trim();
+                    const bText = b.cells[colIndex].textContent.trim();
+                    return isAscending ?
+                        aText.localeCompare(bText, undefined, {
+                            numeric: true
+                        }) :
+                        bText.localeCompare(aText, undefined, {
+                            numeric: true
+                        });
+                });
+
+                tbody.append(...rows);
+            });
+        });
+    </script>
 
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>

@@ -102,50 +102,51 @@
         <!-- Tabla -->
         <form id="formEliminarSeleccionados" action="{{ route('eliminarProductosSeleccionados') }}" method="POST">
             @csrf
-            <table class="table table-striped shadow rounded">
-                <thead class="table-success">
-                    <tr>
-                        <th><input type="checkbox" id="selectAll"></th>
-                        <th>ID Producto</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Categoría</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaProductos">
-                    @foreach ($productos as $producto)
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover shadow-sm">
+                    <thead class="table-success">
                         <tr>
-                            <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}"></td>
-                            <td>{{ $producto->id }}</td>
-                            <td>{{ $producto->nombre }}</td>
-                            <td>{{ $producto->descripcion }}</td>
-                            <td>{{ number_format($producto->precio, 2) }} $</td>
-                            <td>
-                                {{ $producto->stock }}
-                                @if ($producto->stock <= 5)
-                                    <span class="badge bg-danger text-light">Stock bajo</span>
-                                @endif
-                            </td>
-
-                            <td>{{ $producto->categoria->nombre }}</td>
-                            <td>
-                                {{ $producto->fecha_vencimiento ?? 'Sin fecha de vencimiento' }}
-                                @if ($producto->proximo_a_vencer)
-                                    <span class="badge bg-warning text-dark">Próximo a vencer</span>
-                                @endif
-                            </td>
-
-                            <td><a href="{{ route('editarProducto', $producto->id) }}"
-                                    class="btn btn-warning">Editar</a></td>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>ID Producto</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Categoría</th>
+                            <th>Fecha de Vencimiento</th>
+                            <th>Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="tablaProductos">
+                        @foreach ($productos as $producto)
+                            <tr>
+                                <td><input type="checkbox" name="productos[]" value="{{ $producto->id }}"></td>
+                                <td>{{ $producto->id }}</td>
+                                <td>{{ $producto->nombre }}</td>
+                                <td>{{ $producto->descripcion }}</td>
+                                <td>{{ number_format($producto->precio, 2) }} $</td>
+                                <td>
+                                    {{ $producto->stock }}
+                                    @if ($producto->stock <= 5)
+                                        <span class="badge bg-danger text-light">Stock bajo</span>
+                                    @endif
+                                </td>
+                                <td>{{ $producto->categoria->nombre }}</td>
+                                <td>
+                                    {{ $producto->fecha_vencimiento ?? 'Sin fecha de vencimiento' }}
+                                    @if ($producto->proximo_a_vencer)
+                                        <span class="badge bg-warning text-dark">Próximo a vencer</span>
+                                    @endif
+                                </td>
+                                <td><a href="{{ route('editarProducto', $producto->id) }}"
+                                        class="btn btn-warning">Editar</a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </form>
+
     </div>
 
     <!-- Scripts -->

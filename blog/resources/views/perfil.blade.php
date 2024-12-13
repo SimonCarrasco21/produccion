@@ -148,83 +148,108 @@
 
 <body>
     <div class="container">
-        <div class="card-profile">
-            <div class="profile-info text-center">
-                <h2>Perfil de Usuario</h2>
+        <div class="container my-4">
+            <div class="row g-4">
+                <!-- Tarjeta de Perfil -->
+                <div class="col-12 col-md-6">
+                    <div class="card-profile">
+                        <div class="profile-info text-center">
+                            <h2>Perfil de Usuario</h2>
 
-                <!-- Foto de Perfil -->
-                <div class="profile-picture">
-                    <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}"
-                        alt="Foto de Perfil">
+                            <!-- Foto de Perfil -->
+                            <div class="profile-picture">
+                                <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}"
+                                    alt="Foto de Perfil">
+                            </div>
+
+                            <!-- Información Básica del Usuario -->
+                            <p><strong>Nombre:</strong> {{ $user->name }}</p>
+                            <p><strong>Correo Electrónico:</strong> {{ $user->email }}</p>
+                            <p><strong>Fecha de Creación:</strong> {{ $user->created_at->format('d-m-Y') }}</p>
+
+                            <!-- Botones de Acción -->
+                            <button class="btn-toggle" onclick="toggleEditSection()">Editar Perfil</button>
+                            <button class="btn-toggle" onclick="togglePasswordSection()">Cambiar Contraseña</button>
+                        </div>
+
+                        <div class="edit-section mt-4" id="editProfileSection">
+                            <h4>Editar Información del Perfil</h4>
+                            <form action="{{ route('perfil.update') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre:</label>
+                                    <input type="text" name="name" id="name" class="form-control"
+                                        value="{{ $user->name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo Electrónico:</label>
+                                    <input type="email" name="email" id="email" class="form-control"
+                                        value="{{ $user->email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profile_picture" class="form-label">Foto de Perfil:</label>
+                                    <input type="file" name="profile_picture" id="profile_picture"
+                                        class="form-control" accept="image/*" required>
+                                    <small class="form-text text-muted">Selecciona una imagen para tu perfil (formatos
+                                        admitidos:
+                                        JPG, PNG).</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+
+                        <div class="edit-section mt-4" id="changePasswordSection">
+                            <h4>Cambiar Contraseña</h4>
+                            <form action="{{ route('perfil.cambiar-contrasena') }}" method="POST"
+                                onsubmit="return validatePassword()">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="current_password" class="form-label">Contraseña Actual:</label>
+                                    <input type="password" name="current_password" id="current_password"
+                                        class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password" class="form-label">Nueva Contraseña:</label>
+                                    <input type="password" name="new_password" id="new_password"
+                                        class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password_confirmation" class="form-label">Confirmar Nueva
+                                        Contraseña:</label>
+                                    <input type="password" name="new_password_confirmation"
+                                        id="new_password_confirmation" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning">Guardar Contraseña</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Información Básica del Usuario -->
-                <p><strong>Nombre:</strong> {{ $user->name }}</p>
-                <p><strong>Correo Electrónico:</strong> {{ $user->email }}</p>
-                <p><strong>Fecha de Creación:</strong> {{ $user->created_at->format('d-m-Y') }}</p>
-
-                <!-- Botones de Acción -->
-                <button class="btn-toggle" onclick="toggleEditSection()">Editar Perfil</button>
-                <button class="btn-toggle" onclick="togglePasswordSection()">Cambiar Contraseña</button>
-            </div>
-
-            <div class="edit-section mt-4" id="editProfileSection">
-                <h4>Editar Información del Perfil</h4>
-                <form action="{{ route('perfil.update') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nombre:</label>
-                        <input type="text" name="name" id="name" class="form-control"
-                            value="{{ $user->name }}" required>
+                <!-- Tarjeta de Categoría -->
+                <div class="col-12 col-md-6">
+                    <div class="card-category">
+                        <h3>Cantidad de Productos por Categoría:</h3>
+                        <ul>
+                            @foreach ($productosPorCategoria as $categoria)
+                                <li><strong>{{ $categoria->nombre }}:</strong> {{ $categoria->cantidad }} productos
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico:</label>
-                        <input type="email" name="email" id="email" class="form-control"
-                            value="{{ $user->email }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="profile_picture" class="form-label">Foto de Perfil:</label>
-                        <input type="file" name="profile_picture" id="profile_picture" class="form-control"
-                            accept="image/*" required>
-                        <small class="form-text text-muted">Selecciona una imagen para tu perfil (formatos admitidos:
-                            JPG, PNG).</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </form>
-            </div>
-
-            <div class="edit-section mt-4" id="changePasswordSection">
-                <h4>Cambiar Contraseña</h4>
-                <form action="{{ route('perfil.cambiar-contrasena') }}" method="POST"
-                    onsubmit="return validatePassword()">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="current_password" class="form-label">Contraseña Actual:</label>
-                        <input type="password" name="current_password" id="current_password" class="form-control"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="new_password" class="form-label">Nueva Contraseña:</label>
-                        <input type="password" name="new_password" id="new_password" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="new_password_confirmation" class="form-label">Confirmar Nueva Contraseña:</label>
-                        <input type="password" name="new_password_confirmation" id="new_password_confirmation"
-                            class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-warning">Guardar Contraseña</button>
-                </form>
+                </div>
             </div>
         </div>
 
-        <div class="card-category">
-            <h3>Cantidad de Productos por Categoría:</h3>
-            <ul>
-                @foreach ($productosPorCategoria as $categoria)
-                    <li><strong>{{ $categoria->nombre }}:</strong> {{ $categoria->cantidad }} productos</li>
-                @endforeach
-            </ul>
-        </div>
+        <style>
+            /* Responsividad para apilar las tarjetas */
+            @media (max-width: 768px) {
+                .row.g-4 .col-12 {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
+            }
+        </style>
+
     </div>
     <div>
         <div class="container mt-4">

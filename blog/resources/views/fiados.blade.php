@@ -13,92 +13,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <style>
-        body {
-            background-color: #d4edda;
-            font-size: 1.1em;
-        }
 
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .navbar-dark {
-            background-color: #000 !important;
-        }
-
-        .navbar .btn-success {
-            margin-right: 10px;
-            border-radius: 25px;
-        }
-
-        .navbar .nav-link {
-            border-radius: 25px;
-            background-color: #28a745;
-            color: white !important;
-            margin-right: 10px;
-            padding: 8px 15px;
-            transition: background-color 0.3s ease;
-        }
-
-        .navbar .nav-link:hover {
-            background-color: #218838;
-        }
-
-        .navbar .btn-success i {
-            margin-right: 5px;
-        }
-
-        .footer {
-            background-color: #f8f9fa;
-            padding: 20px 0;
-        }
-
-        .dropdown-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-btn:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-
-        .dropdown-menu {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .dropdown-menu a,
-        .dropdown-menu button {
-            color: #000;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .dropdown-menu a:hover,
-        .dropdown-menu button:hover {
-            background-color: #e9ecef;
-        }
-
-        /* Letras en negrita para la tabla */
-        .table thead th,
-        .table tbody td {
-            font-weight: bold;
-        }
-    </style>
 </head>
 
 <body>
@@ -165,35 +80,38 @@
                             placeholder="Buscar producto...">
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tablaProductos">
-                                @foreach ($productos as $producto)
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover shadow-sm">
+                                <thead class="table-dark">
                                     <tr>
-                                        <td>{{ $producto->nombre }}</td>
-                                        <td>{{ $producto->descripcion }}</td>
-                                        <td>{{ $producto->precio }}</td>
-                                        <td>{{ $producto->stock }}</td>
-                                        <td>
-                                            <button class="btn btn-success btn-agregar" data-id="{{ $producto->id }}"
-                                                data-nombre="{{ $producto->nombre }}"
-                                                data-precio="{{ $producto->precio }}"
-                                                data-stock="{{ $producto->stock }}">
-                                                <i class="bi bi-cart-plus"></i> Agregar
-                                            </button>
-                                        </td>
+                                        <th>Nombre</th>
+                                        <th class="d-none d-md-table-cell">Descripción</th>
+                                        <th class="d-none d-lg-table-cell">Precio</th>
+                                        <th class="d-none d-lg-table-cell">Stock</th>
+                                        <th>Acción</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody id="tablaProductos">
+                                    @foreach ($productos as $producto)
+                                        <tr>
+                                            <td>{{ $producto->nombre }}</td>
+                                            <td class="d-none d-md-table-cell">{{ $producto->descripcion }}</td>
+                                            <td class="d-none d-lg-table-cell">{{ $producto->precio }}</td>
+                                            <td class="d-none d-lg-table-cell">{{ $producto->stock }}</td>
+                                            <td>
+                                                <button class="btn btn-success btn-agregar"
+                                                    data-id="{{ $producto->id }}"
+                                                    data-nombre="{{ $producto->nombre }}"
+                                                    data-precio="{{ $producto->precio }}"
+                                                    data-stock="{{ $producto->stock }}">
+                                                    <i class="bi bi-cart-plus"></i> Agregar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -220,16 +138,20 @@
                             <!-- Tabla de productos seleccionados -->
                             <div class="mb-3">
                                 <label class="form-label">Productos Seleccionados</label>
-                                <table class="table table-bordered" id="tablaProductosSeleccionados">
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover shadow-sm"
+                                        id="tablaProductosSeleccionados">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Cantidad</th>
+                                                <th>Total</th>
+                                                <th>Acción</th> <!-- Nueva columna para el botón eliminar -->
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save"></i> Registrar
                                 Fiado</button>
@@ -240,64 +162,68 @@
             </div>
         </div>
 
+
         <!-- Tabla de fiados registrados -->
         <div class="card">
             <div class="card-header">
                 Fiados Registrados
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID Cliente</th>
-                            <th>Nombre del Cliente</th>
-                            <th>Productos</th>
-                            <th>Total Precio</th>
-                            <th>Fecha de Compra</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($fiados as $fiado)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover shadow-sm">
+                        <thead class="table-dark">
                             <tr>
-                                <td>{{ $fiado->id_cliente }}</td>
-                                <td>{{ $fiado->nombre_cliente }}</td>
-                                <td>
-                                    @php
-                                        $productos = json_decode($fiado->productos, true);
-                                    @endphp
-                                    @if (is_array($productos))
-                                        @foreach ($productos as $producto)
-                                            {{ $producto['nombre'] }} - ${{ $producto['precio_total'] }}
-                                            (x{{ $producto['cantidad'] }})
-                                            <br>
-                                        @endforeach
-                                    @else
-                                        Sin productos registrados.
-                                    @endif
-                                </td>
-                                <td>${{ $fiado->total_precio }}</td>
-                                <td>{{ $fiado->fecha_compra }}</td>
-                                <td>
-                                    <form method="POST" action="{{ route('fiados.destroy', $fiado->id) }}"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i>
-                                            Eliminar</button>
-                                    </form>
-                                    <a href="{{ route('pago.fiado', ['id' => $fiado->id]) }}"
-                                        class="btn btn-success">
-                                        <i class="bi bi-cash"></i> Pagar
-                                    </a>
-                                </td>
-
+                                <th>ID Cliente</th>
+                                <th>Nombre del Cliente</th>
+                                <th>Productos</th>
+                                <th>Total Precio</th>
+                                <th>Fecha de Compra</th>
+                                <th>Acciones</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($fiados as $fiado)
+                                <tr>
+                                    <td>{{ $fiado->id_cliente }}</td>
+                                    <td>{{ $fiado->nombre_cliente }}</td>
+                                    <td>
+                                        @php
+                                            $productos = json_decode($fiado->productos, true);
+                                        @endphp
+                                        @if (is_array($productos))
+                                            @foreach ($productos as $producto)
+                                                {{ $producto['nombre'] }} - ${{ $producto['precio_total'] }}
+                                                (x{{ $producto['cantidad'] }})
+                                                <br>
+                                            @endforeach
+                                        @else
+                                            Sin productos registrados.
+                                        @endif
+                                    </td>
+                                    <td>${{ $fiado->total_precio }}</td>
+                                    <td>{{ $fiado->fecha_compra }}</td>
+                                    <td>
+                                        <form method="POST" action="{{ route('fiados.destroy', $fiado->id) }}"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                        </form>
+                                        <a href="{{ route('pago.fiado', ['id' => $fiado->id]) }}"
+                                            class="btn btn-success">
+                                            <i class="bi bi-cash"></i> Pagar
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -306,13 +232,26 @@
         function actualizarTablaProductosSeleccionados() {
             const tabla = document.getElementById('tablaProductosSeleccionados').getElementsByTagName('tbody')[0];
             tabla.innerHTML = '';
-            productosSeleccionados.forEach(producto => {
+            productosSeleccionados.forEach((producto, index) => {
                 const row = tabla.insertRow();
                 row.insertCell(0).textContent = producto.nombre;
                 row.insertCell(1).textContent = producto.cantidad;
-                row.insertCell(2).textContent = `$${producto.precio_total}`;
+                row.insertCell(2).textContent = `$${producto.precio_total.toFixed(2)}`;
+
+                // Botón Eliminar
+                const accionCell = row.insertCell(3);
+                const eliminarButton = document.createElement('button');
+                eliminarButton.textContent = 'Eliminar';
+                eliminarButton.className = 'btn btn-danger btn-sm';
+                eliminarButton.addEventListener('click', () => eliminarProducto(index));
+                accionCell.appendChild(eliminarButton);
             });
             document.getElementById('productosSeleccionados').value = JSON.stringify(productosSeleccionados);
+        }
+
+        function eliminarProducto(index) {
+            productosSeleccionados.splice(index, 1); // Elimina el producto del arreglo
+            actualizarTablaProductosSeleccionados(); // Actualiza la tabla
         }
 
         document.getElementById('buscarProducto').addEventListener('keyup', function() {

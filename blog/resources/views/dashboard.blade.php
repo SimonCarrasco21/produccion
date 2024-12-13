@@ -57,6 +57,7 @@
             </ul>
         </div>
     </nav>
+
     <!-- Catálogo de Productos -->
     <div class="container mt-4">
         <h2 class="text-center">Catálogo de Productos</h2>
@@ -151,44 +152,87 @@
                     <p>Snack</p>
                 </div>
             </a>
-
         </div>
     </div>
+
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
         <h2 class="text-center">Últimos Registros de Ventas</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Código de Venta</th>
-                    <th>Monto</th>
-                    <th>Productos</th>
-                    <th>Método de Pago</th>
-                </tr>
-            </thead>
-            <tbody id="ventas-list">
-                @forelse ($ventas as $venta)
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover shadow-sm">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{ $venta->external_reference }}</td>
-                        <td>{{ $venta->amount }}</td>
-                        <td>
-                            @foreach (json_decode($venta->productos) as $producto)
-                                {{ $producto->descripcion }} (x{{ $producto->cantidad ?? 1 }}) <br>
-                            @endforeach
-                        </td>
-                        <td>{{ $venta->metodo_pago }}</td>
+                        <th>Código de Venta</th>
+                        <th>Monto</th>
+                        <th>Productos</th>
+                        <th>Método de Pago</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center">No hay registros de ventas para mostrar.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="ventas-list">
+                    @forelse ($ventas as $venta)
+                        <tr>
+                            <td>{{ $venta->external_reference }}</td>
+                            <td>{{ $venta->amount }}</td>
+                            <td>
+                                @foreach (json_decode($venta->productos) as $producto)
+                                    {{ $producto->descripcion }} (x{{ $producto->cantidad ?? 1 }}) <br>
+                                @endforeach
+                            </td>
+                            <td>{{ $venta->metodo_pago }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">No hay registros de ventas para mostrar.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
         <!-- Botón "Ver Más" para Ventas se agregará por JavaScript -->
         <div id="ventas-load-more-container" class="text-center mt-4"></div>
     </div>
+
+    <!-- Sección de productos agregados -->
+    <div class="container mt-4">
+        <h2 class="text-center">Productos Agregados</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Producto</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Categoría</th>
+                        <th>Fecha de Agregado</th>
+                        <th>Fecha de Vencimiento del Producto</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list">
+                    @foreach ($productos as $producto)
+                        <tr>
+                            <td>{{ $producto->id }}</td>
+                            <td>{{ $producto->nombre }}</td>
+                            <td>{{ $producto->descripcion }}</td>
+                            <td>{{ number_format($producto->precio, 2) }} $</td>
+                            <td>{{ $producto->stock }}</td>
+                            <td>{{ $producto->categoria->nombre }}</td>
+                            <td>{{ $producto->created_at->format('d-m-Y') }}</td>
+                            <td>{{ $producto->fecha_vencimiento }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Botón "Ver Más" para Productos se agregará por JavaScript -->
+        <div id="product-load-more-container" class="text-center mt-4"></div>
+    </div>
+
+
+
     <!-- Ventana para mesnaje de prodcto por vencer -->
     <script>
         // Cuando la página carga, se hace una solicitud para obtener productos próximos a vencer
@@ -238,6 +282,7 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
+
     <!-- Ventana para mesnaje de productos con bajo stock -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -283,6 +328,7 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
+
     <!-- Ventana para mesnaje de productos vencidos -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -329,41 +375,8 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
-    <!-- Sección de productos agregados -->
-    <div class="container mt-4">
-        <h2 class="text-center">Productos Agregados</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID Producto</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Categoría</th>
-                    <th>Fecha de Agregado</th>
-                    <th>Fecha de Vencimiento del producto</th>
-                </tr>
-            </thead>
-            <tbody id="product-list">
-                @foreach ($productos as $producto)
-                    <tr>
-                        <td>{{ $producto->id }}</td>
-                        <td>{{ $producto->nombre }}</td>
-                        <td>{{ $producto->descripcion }}</td>
-                        <td>{{ number_format($producto->precio, 2) }} $</td>
-                        <td>{{ $producto->stock }}</td>
-                        <td>{{ $producto->categoria->nombre }}</td>
-                        <td>{{ $producto->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $producto->fecha_vencimiento }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
 
-        <!-- Botón "Ver Más" para Productos se agregará por JavaScript -->
-        <div id="product-load-more-container" class="text-center mt-4"></div>
-    </div>
+
     <!-- Aquí va el código JavaScript-->
     <script>
         let currentPageProductos = 1; // Página actual para productos
@@ -470,6 +483,7 @@
             }
         }
     </script>
+
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
     <script>
         function confirmLogout() {
@@ -483,6 +497,7 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
+
     <!-- Estilos personalizados -->
     <style>
         body {
@@ -707,6 +722,7 @@
             }
         }
     </style>
+
     <!-- Estilos personalizados par la ventana emergente -->
     <style>
         .notificacion-por-vencer {
@@ -781,6 +797,7 @@
             }
         }
     </style>
+
     <style>
         .notificacion-stock-bajo {
             position: fixed;
@@ -854,7 +871,7 @@
             }
         }
     </style>
-    <!-- Estilos personalizados par la ventana emergente producto vencido -->
+
     <style>
         .notificacion-vencido {
             position: fixed;
@@ -932,7 +949,9 @@
             }
         }
     </style>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 <!-- Pie de página -->
 <footer class="bg-light text-center text-lg-start mt-5">

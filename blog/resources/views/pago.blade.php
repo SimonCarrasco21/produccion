@@ -70,6 +70,7 @@
 
         <div class="row">
 
+            <!-- Productos Disponibles -->
             <div class="col-lg-8 mb-4">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -78,59 +79,65 @@
                             placeholder="Buscar producto...">
                     </div>
                     <div class="card-body">
-                        <table class="table table-responsive" id="tablaProductos">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Descripción</th>
-                                    <th>Categoría</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($productos as $producto)
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="tablaProductos">
+                                <thead class="table-dark">
                                     <tr>
-                                        <td>{{ $producto->nombre }}</td>
-                                        <td>{{ $producto->descripcion }}</td>
-                                        <td>{{ $producto->categoria->nombre }}</td>
-                                        <td>{{ $producto->precio }}</td>
-                                        <td class="stock">{{ $producto->stock }}</td>
-                                        <td>
-                                            <button class="btn btn-success btn-agregar" data-id="{{ $producto->id }}"
-                                                data-descripcion="{{ $producto->descripcion }}"
-                                                data-precio="{{ $producto->precio }}">
-                                                Agregar
-                                            </button>
-                                        </td>
+                                        <th>Producto</th>
+                                        <th>Descripción</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Acción</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($productos as $producto)
+                                        <tr>
+                                            <td>{{ $producto->nombre }}</td>
+                                            <td>{{ $producto->descripcion }}</td>
+                                            <td>{{ $producto->categoria->nombre }}</td>
+                                            <td>{{ $producto->precio }}</td>
+                                            <td class="stock">{{ $producto->stock }}</td>
+                                            <td>
+                                                <button class="btn btn-success btn-agregar"
+                                                    data-id="{{ $producto->id }}"
+                                                    data-descripcion="{{ $producto->descripcion }}"
+                                                    data-precio="{{ $producto->precio }}">
+                                                    Agregar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Productos Seleccionados -->
             <div class="col-lg-4 mb-4">
                 <div class="card">
                     <div class="card-header">
                         <h3>Productos Seleccionados</h3>
                     </div>
                     <div class="card-body">
-                        <table class="table table-responsive" id="tablaSeleccionados">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio</th>
-                                    <th>Cantidad</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Aquí se añadirán los productos seleccionados -->
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="tablaSeleccionados">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Aquí se añadirán los productos seleccionados -->
+                                </tbody>
+                            </table>
+                        </div>
                         <p>Total: $<span id="total">{{ $totalFiado ?? 0 }}</span></p>
 
                         <!-- Formulario para "Pagar con POS" -->
@@ -153,35 +160,38 @@
             </div>
         </div>
 
+        <!-- Registro de Ventas -->
         <h2 class="text-center my-4">Registro de Ventas</h2>
-        <table class="table table-striped" id="tablaVentas">
-            <thead>
-                <tr>
-                    <th>Referencia</th>
-                    <th>Estado</th>
-                    <th>Monto</th>
-                    <th>Productos</th>
-                    <th>Método de Pago</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($ventas as $venta)
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle" id="tablaVentas">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{ $venta->external_reference }}</td>
-                        <td>{{ $venta->status }}</td>
-                        <td>{{ $venta->amount }}</td>
-                        <td>
-                            @foreach (json_decode($venta->productos) as $producto)
-                                {{ $producto->descripcion }} (x{{ $producto->cantidad }})<br>
-                            @endforeach
-                        </td>
-                        <td>{{ $venta->metodo_pago }}</td>
-                        <td>{{ $venta->created_at }}</td>
+                        <th>Referencia</th>
+                        <th>Estado</th>
+                        <th>Monto</th>
+                        <th>Productos</th>
+                        <th>Método de Pago</th>
+                        <th>Fecha</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($ventas as $venta)
+                        <tr>
+                            <td>{{ $venta->external_reference }}</td>
+                            <td>{{ $venta->status }}</td>
+                            <td>{{ $venta->amount }}</td>
+                            <td>
+                                @foreach (json_decode($venta->productos) as $producto)
+                                    {{ $producto->descripcion }} (x{{ $producto->cantidad }})<br>
+                                @endforeach
+                            </td>
+                            <td>{{ $venta->metodo_pago }}</td>
+                            <td>{{ $venta->created_at }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
