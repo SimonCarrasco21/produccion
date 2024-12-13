@@ -71,6 +71,8 @@ body {
     transform: translateY(-2px);
 }
 
+
+
 .dropdown-btn {
     background-color: #4CAF50;
     color: white;
@@ -294,36 +296,6 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-}
-
-/* Estilos para la barra de navegación */
-.navbar {
-    background-color: #000;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-}
-
-.navbar-left h2 {
-    margin: 0;
-    font-size: 24px;
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 10px 20px;
-    border-radius: 15px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-    margin-right: 10px;
-}
-
-.navbar-right ul li a,
-.navbar-right ul li button {
-    color: white;
-    font-size: 18px;
-    padding: 12px 25px;
-    background-color: #4CAF50;
-    border-radius: 12px;
 }
 
 /* Estilos para las tablas */
