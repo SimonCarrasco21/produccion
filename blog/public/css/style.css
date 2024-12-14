@@ -2,76 +2,123 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-
     font-weight: bold;
 }
 
-.navbar {
-    background-color: #000000;
-    padding: 20px;
+
+
+ /* Navbar General */
+ .navbar {
+    background-color: #333;
+    color: white;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: white;
+    width: 100%;
+    z-index: 1000;
+    
 }
+
 
 .navbar-left {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .navbar-left h2 {
     margin: 0;
-    font-size: 24px;
-    font-weight: normal;
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 10px 20px;
-    border-radius: 15px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
+    color: white;
+    font-size: 18px;
 }
 
-.navbar-left h2 i {
-    margin-right: 10px;
+/* Botón Hamburguesa */
+.nav-btn {
+    display: none;
 }
 
+.nav-btn label {
+    cursor: pointer;
+    display: inline-block;
+    width: 30px;
+    height: 25px;
+}
+
+.nav-btn label span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: white;
+    margin-bottom: 5px;
+}
+
+/* Navbar Derecho */
 .navbar-right {
     display: flex;
     align-items: center;
+    gap: 20px;
 }
 
-.navbar-right ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.nav-list {
+    list-style: none;
     display: flex;
+    flex-direction: row;
     gap: 15px;
 }
 
-.navbar-right ul li a,
-.navbar-right ul li button {
-    color: white;
+.nav-list li a {
+    padding: 10px 15px;
     text-decoration: none;
-    font-size: 18px;
-    padding: 12px 25px;
-    background-color: #4CAF50;
-    border-radius: 12px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-    border: none;
+    color: white;
+    border-radius: 8px;
 }
 
-.navbar-right ul li a:hover,
-.navbar-right ul li button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
+/* Botones Hamburguesa */
+.hamburger-only {
+    display: none;
 }
 
+/* Responsivo */
+.nav-check {
+    display: none;
+}
 
+@media (max-width: 768px) {
+    .nav-btn {
+        display: block;
+    }
+
+    .navbar-right {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        flex-direction: column;
+    }
+
+    .nav-check:checked~.navbar-right {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-list {
+        flex-direction: column;
+    }
+
+    .hamburger-only {
+        display: block;
+    }
+
+    /* Ocultar el botón "Perfil" en pantallas pequeñas */
+    .dropdown {
+        display: none;
+    }
+
+}
 
 .dropdown-btn {
     background-color: #4CAF50;
@@ -288,6 +335,7 @@ body {
 
 /* Centrando el título de las secciones */
 .text-center {
+    
     text-align: center;
 }
 

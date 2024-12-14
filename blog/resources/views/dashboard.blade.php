@@ -16,19 +16,17 @@
 </head>
 
 <body>
+
     <nav class="navbar">
+        <!-- Navbar izquierda -->
         <div class="navbar-left">
             <h2>
-                <!-- Foto de perfil -->
                 <img src="{{ Auth::user()->profile_picture && file_exists(storage_path('app/public/' . Auth::user()->profile_picture))
                     ? asset('storage/' . Auth::user()->profile_picture)
                     : asset('images/default-profile.png') }}"
                     alt="Foto de Perfil" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-
-                <!-- Icono y nombre del usuario -->
-                <i></i> Usuario: {{ Auth::user()->name }}
+                Usuario: {{ Auth::user()->name }}
             </h2>
-
             <div class="dropdown">
                 <button class="dropdown-btn"><i class="bi bi-person-circle"></i> Perfil</button>
                 <div class="dropdown-content" id="dropdown-menu" style="display: none;">
@@ -41,22 +39,82 @@
                     </form>
                 </div>
             </div>
-
         </div>
 
+        <!-- Botón hamburguesa -->
+        <input type="checkbox" id="nav-check" class="nav-check">
+        <div class="nav-btn">
+            <label for="nav-check">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+        </div>
+
+        <!-- Navbar derecha -->
         <div class="navbar-right">
-            <ul>
+            <ul class="nav-list">
                 <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
                 </li>
-                <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Ver Historial
-                        Ventas</a></li>
+                <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Historial Ventas</a>
+                </li>
                 <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
                 <li><a href="{{ route('pagina.pago') }}" class="btn-pagar"><i class="bi bi-credit-card"></i> Pagar</a>
+                </li>
+                <!-- Botones adicionales dentro del menú hamburguesa -->
+                <li class="hamburger-only">
+                    <a href="{{ route('perfil') }}"><i class="bi bi-eye"></i> Ver Perfil</a>
+                </li>
+                <li class="hamburger-only">
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirmLogout()">
+                        @csrf
+                        <button type="submit" class="btn btn-logout"><i class="bi bi-box-arrow-right"></i> Cerrar
+                            Sesión</button>
+                    </form>
                 </li>
             </ul>
         </div>
     </nav>
+    <!-- script de navbar -->
+    <script>
+        // Confirmar cierre de sesión
+        function confirmLogout() {
+            return confirm('¿Estás seguro de que deseas cerrar sesión?');
+        }
+
+        // Controlar Menú Hamburguesa
+        document.addEventListener('DOMContentLoaded', function() {
+            const navCheck = document.querySelector('.nav-check');
+            const navbarRight = document.querySelector('.navbar-right');
+
+            navCheck.addEventListener('change', function() {
+                navbarRight.style.display = navCheck.checked ? 'flex' : 'none';
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    navbarRight.style.display = 'flex';
+                    navCheck.checked = false;
+                } else {
+                    navbarRight.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    <script>
+        function confirmLogout() {
+            return confirm('¿Estás seguro de que quieres cerrar sesión?');
+        }
+
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownMenu = document.querySelector('#dropdown-menu');
+
+        dropdownBtn.addEventListener('click', function() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+
 
     <!-- Catálogo de Productos -->
     <div class="container mt-4">
@@ -154,7 +212,6 @@
             </a>
         </div>
     </div>
-
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
         <h2 class="text-center">Últimos Registros de Ventas</h2>
@@ -192,7 +249,6 @@
         <!-- Botón "Ver Más" para Ventas se agregará por JavaScript -->
         <div id="ventas-load-more-container" class="text-center mt-4"></div>
     </div>
-
     <!-- Sección de productos agregados -->
     <div class="container mt-4">
         <h2 class="text-center">Productos Agregados</h2>
@@ -230,9 +286,6 @@
         <!-- Botón "Ver Más" para Productos se agregará por JavaScript -->
         <div id="product-load-more-container" class="text-center mt-4"></div>
     </div>
-
-
-
     <!-- Ventana para mesnaje de prodcto por vencer -->
     <script>
         // Cuando la página carga, se hace una solicitud para obtener productos próximos a vencer
@@ -282,7 +335,6 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
-
     <!-- Ventana para mesnaje de productos con bajo stock -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -328,7 +380,6 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
-
     <!-- Ventana para mesnaje de productos vencidos -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -375,8 +426,6 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
-
-
     <!-- Aquí va el código JavaScript-->
     <script>
         let currentPageProductos = 1; // Página actual para productos
@@ -483,21 +532,6 @@
             }
         }
     </script>
-
-    <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil -->
-    <script>
-        function confirmLogout() {
-            return confirm('¿Estás seguro de que quieres cerrar sesión?');
-        }
-
-        const dropdownBtn = document.querySelector('.dropdown-btn');
-        const dropdownMenu = document.querySelector('#dropdown-menu');
-
-        dropdownBtn.addEventListener('click', function() {
-            dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
-        });
-    </script>
-
     <!-- Estilos personalizados -->
     <style>
         body {
@@ -722,7 +756,6 @@
             }
         }
     </style>
-
     <!-- Estilos personalizados par la ventana emergente -->
     <style>
         .notificacion-por-vencer {
@@ -797,7 +830,6 @@
             }
         }
     </style>
-
     <style>
         .notificacion-stock-bajo {
             position: fixed;
@@ -871,7 +903,6 @@
             }
         }
     </style>
-
     <style>
         .notificacion-vencido {
             position: fixed;
@@ -949,9 +980,7 @@
             }
         }
     </style>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 <!-- Pie de página -->
 <footer class="bg-light text-center text-lg-start mt-5">
