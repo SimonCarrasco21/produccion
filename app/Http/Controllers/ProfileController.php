@@ -27,7 +27,7 @@ class ProfileController extends Controller
 
         // Ganancias por Categoría de Producto
         $gananciasPorCategoria = DB::table('ventas')
-            ->join('productos', 'ventas.productos', 'like', DB::raw("CONCAT('%', productos.id, '%')"))
+            ->join('productos', DB::raw("ventas.productos::text LIKE '%' || productos.id || '%'"))
             ->join('categorias', 'productos.categoria_id', '=', 'categorias.id')
             ->select('categorias.nombre', DB::raw('SUM(ventas.amount) as total_ganancias'))
             ->groupBy('categorias.nombre')
@@ -63,6 +63,7 @@ class ProfileController extends Controller
             'metodosDePago'
         ));
     }
+
 
 
 
