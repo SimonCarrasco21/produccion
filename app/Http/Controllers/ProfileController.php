@@ -27,12 +27,15 @@ class ProfileController extends Controller
 
         // Ganancias por Categoría de Producto
         $gananciasPorCategoria = DB::table('ventas')
-            ->join('productos', DB::raw("ventas.productos::text LIKE '%' || productos.id || '%'"))
+            ->join('productos', function ($join) {
+                $join->on(DB::raw("ventas.productos::text"), 'LIKE', DB::raw("'%\"' || productos.id || '\"%'"));
+            })
             ->join('categorias', 'productos.categoria_id', '=', 'categorias.id')
             ->select('categorias.nombre', DB::raw('SUM(ventas.amount) as total_ganancias'))
             ->groupBy('categorias.nombre')
             ->orderByDesc('total_ganancias')
             ->get();
+
 
         // Ventas por día (Ganancias diarias)
         $ventasPorDia = DB::table('ventas')
