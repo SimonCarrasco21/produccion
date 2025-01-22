@@ -5,10 +5,41 @@ body {
     font-weight: bold;
 }
 
+.carousel-inner img {
+    width: 100%;
+    /* Ocupa todo el ancho */
+    height: auto;
+    /* Mantiene la relación de aspecto */
+    max-height: 500px;
+    /* Limita la altura para pantallas grandes */
+    object-fit: contain;
+    /* Muestra toda la imagen sin recortes */
+    background-color: #d4e7f5;
+    /* Fondo gris claro para imágenes más pequeñas */
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.6);
+    /* Fondo semitransparente oscuro */
+    border-radius: 8px;
+    padding: 15px 25px;
+    color: #fff;
+    max-width: 500px;
+    margin: auto;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo semitransparente */
+    border-radius: 50%;
+    padding: 10px;
+}
 
 
- /* Navbar General */
- .navbar {
+
+/* Navbar General */
+.navbar {
     background-color: #333;
     color: white;
     padding: 15px;
@@ -17,7 +48,7 @@ body {
     align-items: center;
     width: 100%;
     z-index: 1000;
-    
+
 }
 
 
@@ -120,8 +151,10 @@ body {
 
 }
 
+/* Botones y Dropdown */
 .dropdown-btn {
-    background-color: #4CAF50;
+    background-color: #2563eb;
+    /* Azul */
     color: white;
     padding: 12px 25px;
     font-size: 16px;
@@ -156,7 +189,8 @@ body {
 }
 
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
+    background-color: #e0f2fe;
+    /* Azul claro */
 }
 
 .dropdown:hover .dropdown-content {
@@ -164,7 +198,8 @@ body {
 }
 
 .logout-button {
-    background-color: #e74c3c;
+    background-color: #ef4444;
+    /* Rojo */
     color: white;
     padding: 10px;
     border: none;
@@ -176,11 +211,13 @@ body {
 }
 
 .logout-button:hover {
-    background-color: #c0392b;
+    background-color: #dc2626;
+    /* Rojo oscuro */
 }
 
 .btn-pagar {
-    background-color: #4CAF50;
+    background-color: #2563eb;
+    /* Azul */
     padding: 12px 25px;
     color: white;
     font-size: 18px;
@@ -192,9 +229,12 @@ body {
 }
 
 .btn-pagar:hover {
-    background-color: #218838;
+    background-color: #1d4ed8;
+    /* Azul oscuro */
     transform: translateY(-2px);
 }
+
+
 
 /* Estilos para la tabla de "Últimos registros de ventas" */
 .table {
@@ -214,24 +254,28 @@ body {
 }
 
 .table th {
-    background-color: #064208;
+    background-color: #1e3a8a;
+    /* Azul oscuro */
     color: white;
     font-size: 18px;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #e0f2fe;
+    /* Azul claro */
 }
 
 .table tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e3f2fd;
+    /* Azul muy claro */
 }
 
 /* Estilos para el catálogo de productos */
 .product-catalog {
     padding: 20px;
     text-align: center;
-    background-color: #d4f5d3;
+    background-color: #dbeafe;
+    /* Azul pastel */
     border-radius: 10px;
 }
 
@@ -258,7 +302,8 @@ body {
 
 .product-category i {
     font-size: 3rem;
-    color: #4CAF50;
+    color: #1e88e5;
+    /* Azul */
     margin-bottom: 10px;
 }
 
@@ -286,18 +331,22 @@ body {
 }
 
 .table th {
-    background-color: #4CAF50;
+    background-color: #1e3a8a;
+    /* Azul oscuro */
     color: white;
     font-size: 18px;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #e0f2fe;
+    /* Azul claro */
 }
 
 .table tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e3f2fd;
+    /* Azul muy claro */
 }
+
 
 /* Estilos para el catálogo de productos */
 .product-grid {
@@ -308,7 +357,8 @@ body {
 }
 
 .product-category {
-    background-color: #2c8d2f;
+    background-color: #1e3a8a;
+    /* Azul oscuro */
     border-radius: 12px;
     padding: 30px;
     text-align: center;
@@ -335,10 +385,8 @@ body {
 
 /* Centrando el título de las secciones */
 .text-center {
-    
     text-align: center;
 }
-
 
 body {
     font-family: Arial, sans-serif;
@@ -364,24 +412,28 @@ body {
 }
 
 .table th {
-    background-color: #4CAF50;
+    background-color: #1e3a8a;
+    /* Azul oscuro */
     color: white;
     font-size: 18px;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #e0f2fe;
+    /* Azul claro */
 }
 
 .table tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e3f2fd;
+    /* Azul muy claro */
 }
 
 /* Estilos para el catálogo de productos */
 
 /* Fondo general */
 body {
-    background-color: #d4f5d3;
+    background-color: #e0f7fa;
+    /* Azul pastel */
 }
 
 /* Centrando el título de las secciones */
@@ -401,7 +453,8 @@ body {
 }
 
 .page-link {
-    color: #4CAF50;
+    color: #1e88e5;
+    /* Azul */
     font-weight: 500;
     padding: 10px 15px;
     border: 1px solid #e0e0e0;
@@ -412,14 +465,16 @@ body {
 }
 
 .page-link:hover {
-    background-color: #e8f8e0;
-    color: #4CAF50;
+    background-color: #bbdefb;
+    /* Azul claro */
+    color: #1e88e5;
 }
 
 .page-item.active .page-link {
-    background-color: #4CAF50;
+    background-color: #1e88e5;
+    /* Azul */
     color: white;
-    border-color: #4CAF50;
+    border-color: #1e88e5;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 

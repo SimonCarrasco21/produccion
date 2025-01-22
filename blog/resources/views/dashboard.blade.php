@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}"> <!-- Enlace al CSS separado -->
+    
 </head>
 
 <body>
@@ -54,7 +55,8 @@
         <!-- Navbar derecha -->
         <div class="navbar-right">
             <ul class="nav-list">
-                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-cart-fill"></i> Carrito de compra</a></li>
+
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
                 </li>
                 <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Historial Ventas</a>
@@ -115,103 +117,145 @@
         });
     </script>
 
-
-    <!-- Catálogo de Productos -->
-    <div class="container mt-4">
-        <h2 class="text-center">Catálogo de Productos</h2>
-        <div class="product-grid">
-            <a href="{{ route('productos.categoria', ['id' => 1]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-cheese"></i>
-                    <p>Lácteos</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 2]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-seedling"></i>
-                    <p>Granos</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 3]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-soap"></i>
-                    <p>Productos de Limpieza</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 4]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-cookie"></i>
-                    <p>Galletas</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 5]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-bottle-water"></i>
-                    <p>Bebidas</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 6]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-bread-slice"></i>
-                    <p>Panadería</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 7]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-apple-alt"></i>
-                    <p>Frutas y Verduras</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 8]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-drumstick-bite"></i>
-                    <p>Embutidos</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 9]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-hand-sparkles"></i>
-                    <p>Productos de Aseo Personal</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 10]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-paw"></i>
-                    <p>Productos para Mascotas</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 11]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-snowflake"></i>
-                    <p>Congelados</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 12]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-box"></i>
-                    <p>Envasados</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 14]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-home"></i>
-                    <p>Productos para el Hogar</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 15]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-drumstick-bite"></i>
-                    <p>Carnes</p>
-                </div>
-            </a>
-            <a href="{{ route('productos.categoria', ['id' => 13]) }}">
-                <div class="product-category">
-                    <i class="fa-solid fa-cookie-bite"></i>
-                    <p>Snack</p>
-                </div>
-            </a>
+  <!-- carrusel-->
+  <div id="carouselExample" class="carousel slide mb-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <!-- Primera imagen -->
+        <div class="carousel-item active">
+            <img src="{{ asset('images/banner1.jpg') }}" class="d-block w-100" alt="Promoción 1">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="fw-bold">¡Promoción Especial!</h5>
+                <p>Disfruta de descuentos exclusivos en todos nuestros productos por tiempo limitado.</p>
+                <a href="#" class="btn btn-primary">Explorar Ofertas</a>
+            </div>
+        </div>
+        <!-- Segunda imagen -->
+        <div class="carousel-item">
+            <img src="{{ asset('images/banner2.jpg') }}" class="d-block w-100" alt="Nuevos Productos">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="fw-bold">Descubre Novedades</h5>
+                <p>Conoce nuestra última línea de productos diseñados para ti.</p>
+                <a href="#" class="btn btn-success">Ver Más</a>
+            </div>
+        </div>
+        <!-- Tercera imagen -->
+        <div class="carousel-item">
+            <img src="{{ asset('images/banner3.jpg') }}" class="d-block w-100" alt="Calidad Garantizada">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="fw-bold">Calidad Garantizada</h5>
+                <p>Confía en nosotros para productos de la mejor calidad a precios accesibles.</p>
+                <a href="#" class="btn btn-warning">Más Información</a>
+            </div>
         </div>
     </div>
+    <!-- Controles del carrusel -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
+    <!-- Catálogo de Productos -->
+<div class="container mt-4">
+    <h2 class="text-center">Elige tu Categoría de Productos</h2>
+    <div class="product-grid">
+        <a href="{{ route('productos.categoria', ['id' => 1]) }}">
+            <div class="product-category">
+                <i class="fas fa-wrench"></i>
+                <p>Herramientas de Mano</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 2]) }}">
+            <div class="product-category">
+                <i class="fas fa-tools"></i>
+                <p>Herramientas Eléctricas</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 3]) }}">
+            <div class="product-category">
+                <i class="fas fa-paint-roller"></i>
+                <p>Pinturas y Acabados</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 4]) }}">
+            <div class="product-category">
+                <i class="fas fa-plug"></i>
+                <p>Material Eléctrico</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 5]) }}">
+            <div class="product-category">
+                <i class="fas fa-hammer"></i>
+                <p>Materiales de Construcción</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 6]) }}">
+            <div class="product-category">
+                <i class="fas fa-hard-hat"></i>
+                <p>Equipos de Seguridad</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 7]) }}">
+            <div class="product-category">
+                <i class="fas fa-tint"></i>
+                <p>Adhesivos y Selladores</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 8]) }}">
+            <div class="product-category">
+                <i class="fas fa-screwdriver"></i>
+                <p>Tornillería</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 9]) }}">
+            <div class="product-category">
+                <i class="fas fa-faucet"></i>
+                <p>Plomería</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 10]) }}">
+            <div class="product-category">
+                <i class="fas fa-leaf"></i>
+                <p>Jardinería</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 11]) }}">
+            <div class="product-category">
+                <i class="fas fa-box"></i>
+                <p>Almacenaje</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 12]) }}">
+            <div class="product-category">
+                <i class="fas fa-lightbulb"></i>
+                <p>Iluminación</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 13]) }}">
+            <div class="product-category">
+                <i class="fas fa-cogs"></i>
+                <p>Accesorios Industriales</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 14]) }}">
+            <div class="product-category">
+                <i class="fas fa-drafting-compass"></i>
+                <p>Instrumentos de Medición</p>
+            </div>
+        </a>
+        <a href="{{ route('productos.categoria', ['id' => 15]) }}">
+            <div class="product-category">
+                <i class="fas fa-anchor"></i>
+                <p>Fijaciones</p>
+            </div>
+        </a>
+    </div>
+</div>
+
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
         <h2 class="text-center">Últimos Registros de Ventas</h2>
@@ -535,226 +579,227 @@
     <!-- Estilos personalizados -->
     <style>
         body {
-            background-color: #d4edda;
-            /* Fondo verde claro */
-        }
+    background-color: #d4e7f5;
+    /* Fondo azul claro */
+}
 
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            /* Añadir sombra para efecto de elevación */
-        }
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Añadir sombra para efecto de elevación */
+}
 
-        .navbar {
-            background-color: #000;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
+.navbar {
+    background-color: #000;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
 
-        .navbar-left {
-            display: flex;
-            align-items: center;
-        }
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
 
-        .navbar-left h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: normal;
-            background-color: #f4f4f4;
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 15px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-        }
+.navbar-left h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: normal;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
 
-        .navbar-left h2 i {
-            margin-right: 10px;
-        }
+.navbar-left h2 i {
+    margin-right: 10px;
+}
 
-        .navbar-right {
-            display: flex;
-            align-items: center;
-        }
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
 
-        .navbar-right ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 15px;
-        }
+.navbar-right ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
 
-        .navbar-right ul li a,
-        .navbar-right ul li button {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            padding: 12px 25px;
-            background-color: #4CAF50;
-            border-radius: 12px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            display: inline-block;
-            border: none;
-        }
+.navbar-right ul li a,
+.navbar-right ul li button {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 12px 25px;
+    background-color: #3498db;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    border: none;
+}
 
-        .navbar-right ul li a:hover,
-        .navbar-right ul li button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
+.navbar-right ul li a:hover,
+.navbar-right ul li button:hover {
+    background-color: #2d81c4;
+    transform: translateY(-2px);
+}
 
-        .dropdown-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+.dropdown-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
-        .dropdown-btn:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
+.dropdown-btn:hover {
+    background-color: #2d81c4;
+    transform: translateY(-2px);
+}
 
-        .dropdown-menu {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: 1;
-            margin-top: 5px;
-        }
+.dropdown-menu {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    margin-top: 5px;
+}
 
-        .dropdown-menu a,
-        .dropdown-menu button {
-            color: #000;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: block;
-        }
+.dropdown-menu a,
+.dropdown-menu button {
+    color: #000;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: block;
+}
 
-        .dropdown-menu a:hover,
-        .dropdown-menu button:hover {
-            background-color: #e9ecef;
-        }
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: #e9ecef;
+}
 
-        .footer {
-            background-color: #f8f9fa;
-            padding: 20px 0;
-            box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
-            border-top: 1px solid #e9ecef;
-        }
+.footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e9ecef;
+}
 
-        .footer .col {
-            text-align: left;
-        }
+.footer .col {
+    text-align: left;
+}
 
-        .footer a {
-            color: #000;
-            text-decoration: none;
-        }
+.footer a {
+    color: #000;
+    text-decoration: none;
+}
 
-        .footer a:hover {
-            color: #4CAF50;
-        }
+.footer a:hover {
+    color: #3498db;
+}
 
-        .text-center {
-            margin-top: 30px;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
+.text-center {
+    margin-top: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
 
-        .btn-ver-mas {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 12px;
-            border: none;
-            font-size: 18px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+.btn-ver-mas {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    border: none;
+    font-size: 18px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
-        .btn-ver-mas:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
+.btn-ver-mas:hover {
+    background-color: #2d81c4;
+    transform: translateY(-2px);
+}
 
-        .btn-ver-mas:focus {
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(72, 173, 67, 0.5);
-        }
+.btn-ver-mas:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.5);
+}
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
 
-        .product-category {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 150px;
-        }
+.product-category {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+}
 
-        .product-category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
-        }
+.product-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+}
 
-        .product-category i {
-            font-size: 2.5rem;
-            color: #4CAF50;
-            margin-bottom: 10px;
-        }
+.product-category i {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 10px;
+}
 
-        .product-category p {
-            font-size: 18px;
-            font-weight: bold;
-            color: #495057;
-            margin: 0;
-        }
+.product-category p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #495057;
+    margin: 0;
+}
 
-        @media (max-width: 768px) {
-            .product-category {
-                height: auto;
-                padding: 15px;
-            }
+@media (max-width: 768px) {
+    .product-category {
+        height: auto;
+        padding: 15px;
+    }
 
-            .product-category i {
-                font-size: 2rem;
-            }
+    .product-category i {
+        font-size: 2rem;
+    }
 
-            .product-category p {
-                font-size: 16px;
-            }
-        }
+    .product-category p {
+        font-size: 16px;
+    }
+}
+
     </style>
     <!-- Estilos personalizados par la ventana emergente -->
     <style>
@@ -981,51 +1026,78 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 <!-- Pie de página -->
-<footer class="bg-light text-center text-lg-start mt-5">
+<footer class="bg-dark text-white text-center text-lg-start mt-5">
     <div class="container p-4">
-        <!-- Enlaces rápidos -->
         <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Enlaces Rápidos</h5>
+            <!-- Enlaces rápidos -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase fw-bold">Enlaces Rápidos</h5>
                 <ul class="list-unstyled">
                     <li>
-                        <a href="{{ route('dashboard') }}" class="text-dark">Inicio</a>
+                        <a href="{{ route('dashboard') }}" class="text-white text-decoration-none">Inicio</a>
                     </li>
                     <li>
-                        <a href="{{ route('inventario') }}" class="text-dark">Inventario</a>
+                        <a href="{{ route('inventario') }}" class="text-white text-decoration-none">Inventario</a>
                     </li>
                     <li>
-                        <a href="{{ route('agregar-producto') }}" class="text-dark">Agregar Producto</a>
+                        <a href="{{ route('agregar-producto') }}" class="text-white text-decoration-none">Agregar Producto</a>
                     </li>
                     <li>
-                        <a href="#" class="text-dark">Historial de Ventas</a>
+                        <a href="#" class="text-white text-decoration-none">Historial de Ventas</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Información de contacto -->
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Contáctanos</h5>
-                <p>
-                    <i class="fas fa-map-marker-alt"></i> Dirección: Melipilla,Ortusa 250<br>
-                    <i class="fas fa-phone"></i> Teléfono: +56 9 1334 5618<br>
-                    <i class="fas fa-envelope"></i> Correo: Si.carrasco@duocuc.cl
-                </p>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase fw-bold">Contáctanos</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-map-marker-alt"></i> Dirección: Av. Los Ferreteros 123, Santiago, Chile</li>
+                    <li><i class="fas fa-phone"></i> Teléfono: +56 9 1122 3344</li>
+                    <li><i class="fas fa-envelope"></i> Correo: <a href="mailto:contacto@ferremax.cl" class="text-white text-decoration-none">contacto@ferremax.cl</a></li>
+                </ul>
             </div>
 
-            <!-- Información adicional -->
-            <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-                <h5 class="text-uppercase">Sobre Nosotros</h5>
+            <!-- Redes sociales -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase fw-bold">Síguenos</h5>
+                <div class="d-flex justify-content-center">
+                    <a href="#" class="text-white me-4">
+                        <i class="fab fa-facebook fa-2x"></i>
+                    </a>
+                    <a href="#" class="text-white me-4">
+                        <i class="fab fa-instagram fa-2x"></i>
+                    </a>
+                    <a href="#" class="text-white me-4">
+                        <i class="fab fa-twitter fa-2x"></i>
+                    </a>
+                    <a href="#" class="text-white me-4">
+                        <i class="fab fa-linkedin fa-2x"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Acerca de Ferremax -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase fw-bold">Sobre Ferremax</h5>
                 <p>
-                    Este es una aplicacion dedicada a proporcionar la mejor experiencia de gestión de inventarios para
-                    pequeños y medianos negocios. Nuestro objetivo es facilitar la administración de tus productos de
-                    manera simple y eficiente.
+                    En Ferremax encontrarás herramientas y materiales de construcción para cada proyecto. 
+                    Nos esforzamos por ofrecer productos de calidad para profesionales y entusiastas del bricolaje.
                 </p>
             </div>
         </div>
     </div>
+
+    <div class="text-center p-3 bg-secondary">
+        <p class="mb-0">© 2025 Ferremax. Todos los derechos reservados.</p>
+        <p class="mb-0">
+            Diseñado con <i class="fas fa-heart text-danger"></i> para los amantes de la construcción.
+        </p>
+    </div>
 </footer>
+
 
 </html>

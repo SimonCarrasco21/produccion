@@ -6,7 +6,7 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Fiados</title>
+    <title>Carrito de compras</title>
     <!-- Enlace a Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -79,7 +79,7 @@
 
 
     <div class="container mt-5">
-        <h1 class="text-center">Fiar Productos</h1>
+        <h1 class="text-center">Carrito de compras</h1>
 
         <!-- Mensajes de éxito y error -->
         @if (session('success'))
@@ -90,98 +90,7 @@
         @endif
 
         <!-- Productos y formulario en la misma fila -->
-        <div class="row">
-            <!-- Lista de productos -->
-            <div class="col-lg-8 mb-4">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Productos Disponibles</span>
-                        <input type="text" id="buscarProducto" class="form-control w-50"
-                            placeholder="Buscar producto...">
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover shadow-sm">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th class="d-none d-md-table-cell">Descripción</th>
-                                        <th class="d-none d-lg-table-cell">Precio</th>
-                                        <th class="d-none d-lg-table-cell">Stock</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaProductos">
-                                    @foreach ($productos as $producto)
-                                        <tr>
-                                            <td>{{ $producto->nombre }}</td>
-                                            <td class="d-none d-md-table-cell">{{ $producto->descripcion }}</td>
-                                            <td class="d-none d-lg-table-cell">{{ $producto->precio }}</td>
-                                            <td class="d-none d-lg-table-cell">{{ $producto->stock }}</td>
-                                            <td>
-                                                <button class="btn btn-success btn-agregar"
-                                                    data-id="{{ $producto->id }}"
-                                                    data-nombre="{{ $producto->nombre }}"
-                                                    data-precio="{{ $producto->precio }}"
-                                                    data-stock="{{ $producto->stock }}">
-                                                    <i class="bi bi-cart-plus"></i> Agregar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulario de fiados y productos seleccionados -->
-            <div class="col-lg-4 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        Registrar Fiados
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('fiados.store') }}"
-                            onsubmit="return verificarLimiteFiados();">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="id_cliente" class="form-label">ID Cliente</label>
-                                <input type="text" name="id_cliente" id="id_cliente" class="form-control"
-                                    required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nombre_cliente" class="form-label">Nombre del Cliente</label>
-                                <input type="text" name="nombre_cliente" id="nombre_cliente" class="form-control"
-                                    required>
-                            </div>
-                            <!-- Tabla de productos seleccionados -->
-                            <div class="mb-3">
-                                <label class="form-label">Productos Seleccionados</label>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover shadow-sm"
-                                        id="tablaProductosSeleccionados">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Cantidad</th>
-                                                <th>Total</th>
-                                                <th>Acción</th> <!-- Nueva columna para el botón eliminar -->
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save"></i> Registrar
-                                Fiado</button>
-                            <input type="hidden" name="productos" id="productosSeleccionados">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
 
 
         <!-- Tabla de fiados registrados -->
@@ -352,25 +261,28 @@
     <!-- Estilos personalizados  navbar -->
     <style>
         .navbar {
-            background-color: #000;
+            background-color: #000000;
+            /* Fondo azul oscuro */
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
         }
-
+    
         .navbar-left {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 {
             margin: 0;
             font-size: 24px;
             font-weight: normal;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #ffffff;
+            /* Fondo blanco */
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px 20px;
             border-radius: 15px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
@@ -378,16 +290,16 @@
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 i {
             margin-right: 10px;
         }
-
+    
         .navbar-right {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-right ul {
             list-style-type: none;
             margin: 0;
@@ -395,29 +307,32 @@
             display: flex;
             gap: 15px;
         }
-
+    
         .navbar-right ul li a,
         .navbar-right ul li button {
             color: white;
             text-decoration: none;
             font-size: 18px;
             padding: 12px 25px;
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             border-radius: 12px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.3s ease;
             display: inline-block;
             border: none;
         }
-
+    
         .navbar-right ul li a:hover,
         .navbar-right ul li button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-btn {
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             color: white;
             padding: 12px 25px;
             font-size: 16px;
@@ -429,14 +344,16 @@
             align-items: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-
+    
         .dropdown-btn:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-menu {
-            background-color: #ffffff;
+            background-color: #f0f8ff;
+            /* Azul claro */
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             display: none;
@@ -446,21 +363,24 @@
             z-index: 1;
             margin-top: 5px;
         }
-
+    
         .dropdown-menu a,
         .dropdown-menu button {
-            color: #000;
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px;
             text-decoration: none;
             border-radius: 5px;
             display: block;
         }
-
+    
         .dropdown-menu a:hover,
         .dropdown-menu button:hover {
-            background-color: #e9ecef;
+            background-color: #dceffe;
+            /* Azul más claro */
         }
     </style>
+    
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
