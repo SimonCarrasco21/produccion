@@ -330,55 +330,7 @@
         <!-- Botón "Ver Más" para Productos se agregará por JavaScript -->
         <div id="product-load-more-container" class="text-center mt-4"></div>
     </div>
-    <!-- Ventana para mesnaje de prodcto por vencer -->
-    <script>
-        // Cuando la página carga, se hace una solicitud para obtener productos próximos a vencer
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/dashboard/productos-por-vencer') // Llama a la API que devuelve productos próximos a vencer
-                .then(response => response.json()) // Convierte la respuesta en JSON
-                .then(data => {
-                    if (data.length > 0) { // Si hay productos próximos a vencer
-                        data.forEach(producto => {
-                            // Muestra una notificación por cada producto próximo a vencer
-                            mostrarNotificacionPorVencer(producto.descripcion, producto
-                                .fecha_vencimiento);
-                        });
-                    }
-                })
-                .catch(error => console.error('Error al cargar productos por vencer:',
-                    error)); // Maneja errores en la solicitud
-        });
-
-        // Función para mostrar una notificación emergente de producto próximo a vencer
-        function mostrarNotificacionPorVencer(descripcion, fechaVencimiento) {
-            const contenedor = document.createElement('div'); // Crea un contenedor para la notificación
-            contenedor.className = 'notificacion-por-vencer'; // Aplica estilos CSS a la notificación
-            contenedor.innerHTML = `
-        <div class="notificacion-icono">
-            <i class="fa fa-exclamation-circle"></i> <!-- Icono de advertencia -->
-        </div>
-        <div class="notificacion-contenido">
-            <p><strong>¡Atención!</strong></p>
-            <p>El producto <strong>${descripcion}</strong> está por vencer. Fecha de vencimiento: <strong>${fechaVencimiento}</strong>.</p>
-            <button class="btn-ir-inventario">Ir a Inventario</button> <!-- Botón que lleva al inventario -->
-        </div>
-        <button class="cerrar-notificacion">&times;</button> <!-- Botón para cerrar la notificación -->`;
-            document.body.appendChild(contenedor); // Agrega la notificación al cuerpo de la página
-
-            // Evento para cerrar la notificación manualmente
-            contenedor.querySelector('.cerrar-notificacion').addEventListener('click', () => {
-                contenedor.remove(); // Elimina la notificación
-            });
-
-            // Evento para redirigir al inventario desde la notificación
-            contenedor.querySelector('.btn-ir-inventario').addEventListener('click', () => {
-                window.location.href = '/inventario'; // Redirige al inventario
-            });
-
-            // Elimina automáticamente la notificación después de 5 segundos
-            setTimeout(() => contenedor.remove(), 5000);
-        }
-    </script>
+   
     <!-- Ventana para mesnaje de productos con bajo stock -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -424,52 +376,7 @@
             setTimeout(() => contenedor.remove(), 5000);
         }
     </script>
-    <!-- Ventana para mesnaje de productos vencidos -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Llama a la API para obtener productos vencidos
-            fetch('/dashboard/productos-vencidos')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        data.forEach(producto => {
-                            mostrarNotificacionVencido(producto.descripcion, producto
-                                .fecha_vencimiento);
-                        });
-                    }
-                })
-                .catch(error => console.error('Error al cargar productos vencidos:', error));
-        });
-
-        function mostrarNotificacionVencido(descripcion, fechaVencimiento) {
-            const contenedor = document.createElement('div');
-            contenedor.className = 'notificacion-vencido'; // Clase específica para la tarjeta de productos vencidos
-            contenedor.innerHTML = `
-        <div class="notificacion-icono">
-            <i class="fa fa-exclamation-circle"></i>
-        </div>
-        <div class="notificacion-contenido">
-            <p><strong>¡Producto Vencido!</strong></p>
-            <p>El producto <strong>${descripcion}</strong> venció el <strong>${fechaVencimiento}</strong>.</p>
-            <button class="btn-ir-inventario">Ir a Inventario</button>
-        </div>
-        <button class="cerrar-notificacion">&times;</button>`;
-            document.body.appendChild(contenedor);
-
-            // Cerrar la notificación manualmente
-            contenedor.querySelector('.cerrar-notificacion').addEventListener('click', () => {
-                contenedor.remove();
-            });
-
-            // Redirigir al inventario
-            contenedor.querySelector('.btn-ir-inventario').addEventListener('click', () => {
-                window.location.href = '/inventario';
-            });
-
-            // Eliminar automáticamente la notificación después de 5 segundos
-            setTimeout(() => contenedor.remove(), 5000);
-        }
-    </script>
+  
     <!-- Aquí va el código JavaScript-->
     <script>
         let currentPageProductos = 1; // Página actual para productos
@@ -803,79 +710,6 @@
     </style>
     <!-- Estilos personalizados par la ventana emergente -->
     <style>
-        .notificacion-por-vencer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            /* Ajustado para la esquina inferior derecha */
-            background-color: #f8d7da;
-            /* Rojo claro */
-            color: #721c24;
-            /* Rojo oscuro */
-            border: 1px solid #f5c6cb;
-            /* Borde rojo claro */
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            margin-bottom: 10px;
-            max-width: 350px;
-            display: flex;
-            align-items: center;
-            animation: fadeIn 0.5s;
-        }
-
-        .notificacion-por-vencer .notificacion-icono {
-            margin-right: 15px;
-            font-size: 24px;
-            color: #dc3545;
-            /* Rojo brillante */
-        }
-
-        .notificacion-por-vencer .notificacion-contenido p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .notificacion-por-vencer .btn-ir-inventario {
-            background-color: #dc3545;
-            /* Botón rojo */
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .notificacion-por-vencer .btn-ir-inventario:hover {
-            background-color: #c82333;
-            /* Rojo más oscuro */
-        }
-
-        .notificacion-por-vencer button.cerrar-notificacion {
-            background: none;
-            border: none;
-            color: #721c24;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-    <style>
         .notificacion-stock-bajo {
             position: fixed;
             bottom: 20px;
@@ -948,83 +782,7 @@
             }
         }
     </style>
-    <style>
-        .notificacion-vencido {
-            position: fixed;
-            top: 20px;
-            /* Ajusta la distancia desde la parte superior */
-            left: 20px;
-            /* Ajusta la distancia desde la parte izquierda */
-            background-color: #fff3cd;
-            /* Fondo amarillo claro */
-            color: #856404;
-            /* Texto amarillo oscuro */
-            border: 1px solid #ffeeba;
-            /* Borde amarillo */
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            margin-bottom: 10px;
-            max-width: 350px;
-            display: flex;
-            align-items: center;
-            animation: fadeIn 0.5s;
-        }
-
-
-        .notificacion-vencido .notificacion-icono {
-            margin-right: 15px;
-            font-size: 24px;
-            color: #856404;
-            /* Amarillo oscuro */
-        }
-
-        .notificacion-vencido .notificacion-contenido p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .notificacion-vencido .btn-ir-inventario {
-            background-color: #ffc107;
-            /* Botón amarillo */
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .notificacion-vencido .btn-ir-inventario:hover {
-            background-color: #e0a800;
-            /* Amarillo más oscuro */
-        }
-
-        .notificacion-vencido button.cerrar-notificacion {
-            background: none;
-            border: none;
-            color: #856404;
-            /* Amarillo oscuro */
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: auto;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
 </body>

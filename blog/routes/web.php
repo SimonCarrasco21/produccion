@@ -38,9 +38,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Alertas y reportes
     Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
-    Route::get('/dashboard/productos-por-vencer', [DashboardController::class, 'productosPorVencer'])->name('dashboard.productos-por-vencer');
     Route::get('/dashboard/productos-stock-bajo', [DashboardController::class, 'productosConStockBajo'])->name('dashboard.productos-stock-bajo');
-    Route::get('/dashboard/productos-vencidos', [DashboardController::class, 'obtenerProductosVencidos']);
     Route::get('/inventario/graficos', [DashboardController::class, 'datosGraficos'])->name('inventario.graficos');
 
     // Fiados
@@ -51,12 +49,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Pagos
     Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');
-    Route::post('/pago-pos', [PagoPosController::class, 'procesarPagoPos'])->name('payments.pay.pos');
-    Route::post('/procesar-datos', [PagoPosController::class, 'procesarDatos']);
-    Route::post('/pago-efectivo', [PagoPosController::class, 'pagarEnEfectivo'])->name('pago.efectivo');
+    Route::post('/paypal/procesar', [PagoPosController::class, 'procesarPagoPaypal'])->name('paypal.procesar');
+    Route::get('/paypal/exitoso', [PagoPosController::class, 'pagoExitoso'])->name('paypal.success');
+    Route::get('/paypal/cancelado', [PagoPosController::class, 'pagoCancelado'])->name('paypal.cancel');
     Route::get('/pagar/buscar-productos', [PagoPosController::class, 'buscarProductos'])->name('pagar.buscar-productos');
+    Route::post('/pago-efectivo', [PagoPosController::class, 'pagarEnEfectivo'])->name('pago.efectivo');
 
-    // Registro de ventas
+
+
+
+    Route::post('/ventas', [PagoPosController::class, 'guardarVenta'])->name('ventas.store');
     Route::get('/registro-ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('registro-ventas');
     Route::get('/ventas', [VentaRegistroController::class, 'mostrarRegistroVentas'])->name('ventas.historial');
     Route::post('/ventas/imprimir', [VentaRegistroController::class, 'generarPdfVentas'])->name('ventas.imprimir');
@@ -64,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ventas/eliminar/{id}', [VentaRegistroController::class, 'eliminarRegistro'])->name('ventas.reporte.eliminar');
     Route::get('/ventas/descargar/{id}', [VentaRegistroController::class, 'descargarRegistro'])->name('ventas.reporte.descargar');
     Route::post('/ventas/eliminar', [VentaRegistroController::class, 'eliminarVentas'])->name('ventas.eliminar');
+    Route::post('/guardar-venta', [PagoPosController::class, 'guardarVenta'])->name('guardar.venta');
+
+
+
 });
 
 // Incluir las rutas de autenticación generadas por Breeze

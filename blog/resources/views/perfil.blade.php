@@ -609,25 +609,28 @@
     <!-- Estilos personalizados  navbar -->
     <style>
         .navbar {
-            background-color: #000;
+            background-color: #000000;
+            /* Fondo azul oscuro */
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
         }
-
+    
         .navbar-left {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 {
             margin: 0;
             font-size: 24px;
             font-weight: normal;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #ffffff;
+            /* Fondo blanco */
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px 20px;
             border-radius: 15px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
@@ -635,16 +638,16 @@
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 i {
             margin-right: 10px;
         }
-
+    
         .navbar-right {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-right ul {
             list-style-type: none;
             margin: 0;
@@ -652,29 +655,32 @@
             display: flex;
             gap: 15px;
         }
-
+    
         .navbar-right ul li a,
         .navbar-right ul li button {
             color: white;
             text-decoration: none;
             font-size: 18px;
             padding: 12px 25px;
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             border-radius: 12px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.3s ease;
             display: inline-block;
             border: none;
         }
-
+    
         .navbar-right ul li a:hover,
         .navbar-right ul li button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-btn {
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             color: white;
             padding: 12px 25px;
             font-size: 16px;
@@ -686,14 +692,16 @@
             align-items: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-
+    
         .dropdown-btn:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-menu {
-            background-color: #ffffff;
+            background-color: #f0f8ff;
+            /* Azul claro */
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             display: none;
@@ -703,21 +711,24 @@
             z-index: 1;
             margin-top: 5px;
         }
-
+    
         .dropdown-menu a,
         .dropdown-menu button {
-            color: #000;
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px;
             text-decoration: none;
             border-radius: 5px;
             display: block;
         }
-
+    
         .dropdown-menu a:hover,
         .dropdown-menu button:hover {
-            background-color: #e9ecef;
+            background-color: #dceffe;
+            /* Azul más claro */
         }
     </style>
+    
 </body>
 
 </html>

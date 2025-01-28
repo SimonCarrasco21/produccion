@@ -16,7 +16,7 @@
         "laravel/tinker": "^2.9",
         "league/commonmark": "2.6.0",
         "maatwebsite/excel": "^1.1",
-        "srmklive/paypal": "*"
+        "srmklive/paypal": "3.0.30"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

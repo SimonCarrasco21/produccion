@@ -8,9 +8,9 @@ use App\Models\Fiado;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+
 class PagoPosController extends Controller
 {
-
     public function buscarProductos(Request $request)
     {
         $query = $request->input('query');
@@ -28,6 +28,7 @@ class PagoPosController extends Controller
 
         return response()->json($productos);
     }
+
     public function mostrarVistaPago(Request $request)
     {
         $productos = Producto::with('categoria')->get();
@@ -50,135 +51,158 @@ class PagoPosController extends Controller
         ));
     }
 
-    public function procesarPagoPos(Request $request)
-    {
-        // Procesar el pago como POS utilizando la función común
-        $response = $this->procesarPago($request, 'POS');
+    public function procesarPagoPaypal(Request $request)
+{
+    // Obtener los productos seleccionados
+    $productosSeleccionados = json_decode($request->productosSeleccionados, true);
 
-        // Verificar si el pago fue exitoso antes de continuar
-        if ($response->getData()->success) {
-            // Eliminar el fiado si existe
-            $idFiado = $request->input('id_fiado');
-            if ($idFiado) {
-                Fiado::where('id', $idFiado)
-                    ->where('user_id', Auth::id())
-                    ->delete();
-            }
-        }
-
-        // Retornar la respuesta del pago (como JSON en este caso)
-        return $response;
+    if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
+        return redirect()->back()->withErrors(['error' => 'No se seleccionaron productos para el pago.']);
     }
 
+    $total = 0;
+    $productosParaVenta = [];
 
-    public function pagarEnEfectivo(Request $request)
-    {
-        // Verificar si se seleccionaron productos
-        $productosSeleccionados = json_decode($request->productosSeleccionados, true);
+    foreach ($productosSeleccionados as $producto) {
+        $productoModel = Producto::find($producto['id']);
 
-        if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
-            return redirect()->back()->withErrors(['error' => 'No se seleccionaron productos para el pago.']);
+        if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
+            return redirect()->back()->withErrors(['error' => 'Producto no disponible o stock insuficiente.']);
         }
 
-        $total = 0;
-        $productosParaVenta = [];
+        // Reducir el stock del producto
+        $productoModel->stock -= $producto['cantidad'];
+        $productoModel->save();
 
-        foreach ($productosSeleccionados as $producto) {
-            $productoModel = Producto::find($producto['id']);
+        $total += $producto['precio'] * $producto['cantidad']; // Usa el precio directamente con formato 1000.00
+        $productosParaVenta[] = [
+            'id' => $producto['id'],
+            'descripcion' => $productoModel->descripcion,
+            'precio' => $producto['precio'], // Respetando el formato original
+            'cantidad' => $producto['cantidad']
+        ];
+    }
 
-            if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
-                return redirect()->back()->withErrors(['error' => 'Producto no disponible o stock insuficiente.']);
-            }
+    // Crear la orden de PayPal
+    $provider = new \Srmklive\PayPal\Services\PayPal();
+    $provider->setApiCredentials(config('paypal'));
+    $provider->getAccessToken();
 
-            // Reducir el stock del producto
-            $productoModel->stock -= $producto['cantidad'];
-            $productoModel->save();
+    $response = $provider->createOrder([
+        "intent" => "CAPTURE",
+        "application_context" => [
+            "return_url" => route('paypal.success'),
+            "cancel_url" => route('paypal.cancel'),
+        ],
+        "purchase_units" => [
+            0 => [
+                "amount" => [
+                    "currency_code" => 'USD', // Asegúrate de usar USD si PayPal no soporta CLP
+                    "value" => number_format($total, 2, '.', ''), // El total siempre con dos decimales
+                ],
+                "description" => "Pago en Mi Almacén",
+            ],
+        ],
+    ]);
 
-            $total += $producto['precio'] * $producto['cantidad'];
-            $productosParaVenta[] = [
-                'id' => $producto['id'],
-                'descripcion' => $productoModel->descripcion,
-                'precio' => $producto['precio'],
-                'cantidad' => $producto['cantidad']
-            ];
-        }
-
-        // Si hay fiado, eliminarlo
-        $idFiado = $request->input('id_fiado');
-        if ($idFiado) {
-            Fiado::where('id', $idFiado)
-                ->where('user_id', Auth::id())
-                ->delete();
-        }
-
-        // Registrar venta
+    if (isset($response['id']) && $response['status'] == "CREATED") {
+        // Guardar la orden en la base de datos
         DB::table('ventas')->insert([
-            'external_reference' => uniqid(),
-            'status' => 'approved',
-            'amount' => $total,
+            'external_reference' => $response['id'],
+            'status' => 'pending',
+            'amount' => number_format($total, 2, '.', ''), // Guardamos el total formateado
             'productos' => json_encode($productosParaVenta),
-            'metodo_pago' => 'Efectivo',
+            'metodo_pago' => 'PayPal',
             'user_id' => Auth::id(),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Redirigir con éxito
-        return redirect()->route('pagina.pago')->with('success', 'Pago en efectivo registrado correctamente.');
+        // Redirigir al usuario al enlace de aprobación de PayPal
+        foreach ($response['links'] as $link) {
+            if ($link['rel'] === 'approve') {
+                return redirect()->away($link['href']);
+            }
+        }
     }
 
-    private function procesarPago(Request $request, $metodoPago)
+    return redirect()->back()->withErrors(['error' => 'No se pudo completar el pago. Inténtelo de nuevo.']);
+}
+
+public function guardarVenta(Request $request)
+{
+    $validated = $request->validate([
+        'orderID' => 'required|string',
+        'details' => 'required|array',
+        'productos' => 'required|array',
+    ]);
+
+    // Procesar los productos seleccionados
+    $productosParaGuardar = [];
+    foreach ($validated['productos'] as $producto) {
+        $productoModel = Producto::find($producto['id']);
+
+        if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
+            return response()->json(['success' => false, 'message' => 'Stock insuficiente para el producto ' . $producto['nombre']]);
+        }
+
+        // Reducir el stock del producto
+        $productoModel->stock -= $producto['cantidad'];
+        $productoModel->save();
+
+        // Agregar el producto al arreglo para guardar
+        $productosParaGuardar[] = [
+            'id' => $producto['id'],
+            'nombre' => $producto['nombre'],
+            'descripcion' => $producto['descripcion'],
+            'precio' => $producto['precio'],
+            'cantidad' => $producto['cantidad'],
+        ];
+    }
+
+    // Guardar la venta en la base de datos
+    DB::table('ventas')->insert([
+        'external_reference' => $validated['orderID'],
+        'status' => 'approved',
+        'amount' => $validated['details']['purchase_units'][0]['amount']['value'],
+        'productos' => json_encode($productosParaGuardar), // Guarda los productos incluyendo el nombre
+        'metodo_pago' => 'PayPal',
+        'user_id' => Auth::id(),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    return response()->json(['success' => true]);
+}
+
+
+
+    public function pagoExitoso(Request $request)
     {
-        $productosSeleccionados = json_decode($request->productosSeleccionados, true);
+        $provider = new \Srmklive\PayPal\Services\PayPal();
+        $provider->setApiCredentials(config('paypal'));
+        $paypalToken = $provider->getAccessToken();
 
-        if (is_null($productosSeleccionados) || empty($productosSeleccionados)) {
-            return response()->json(['success' => false, 'error' => 'No se seleccionaron productos para el pago']);
+        $response = $provider->capturePaymentOrder($request->query('token'));
+
+        if (isset($response['status']) && $response['status'] == 'COMPLETED') {
+            // Actualizar el estado de la venta en la base de datos
+            DB::table('ventas')
+                ->where('external_reference', $response['id'])
+                ->update([
+                    'status' => 'approved',
+                    'updated_at' => now(),
+                ]);
+
+            return redirect()->route('pagina.pago')->with('success', 'Pago completado con éxito.');
         }
 
-        $total = 0;
-        $productosParaVenta = [];
+        return redirect()->route('pagina.pago')->withErrors(['error' => 'El pago no pudo ser procesado.']);
+    }
 
-        foreach ($productosSeleccionados as $producto) {
-            $productoModel = Producto::find($producto['id']);
-
-            if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
-                return response()->json(['success' => false, 'error' => 'Producto no disponible o stock insuficiente']);
-            }
-
-            $productoModel->stock -= $producto['cantidad'];
-            $productoModel->save();
-
-            $total += $producto['precio'] * $producto['cantidad'];
-            $productosParaVenta[] = [
-                'id' => $producto['id'],
-                'descripcion' => $productoModel->descripcion,
-                'precio' => $producto['precio'],
-                'cantidad' => $producto['cantidad']
-            ];
-        }
-
-        DB::table('ventas')->insert([
-            'external_reference' => uniqid(),
-            'status' => 'approved',
-            'amount' => $total,
-            'productos' => json_encode($productosParaVenta),
-            'metodo_pago' => $metodoPago,
-            'user_id' => Auth::id(),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "Pago $metodoPago registrado correctamente.",
-            'data' => [
-                'external_reference' => uniqid(),
-                'status' => 'approved',
-                'amount' => $total,
-                'productos' => $productosParaVenta,
-                'fecha' => now()->format('Y-m-d H:i:s'),
-            ],
-        ]);
+    public function pagoCancelado()
+    {
+        return redirect()->route('pagina.pago')->withErrors(['error' => 'El pago fue cancelado.']);
     }
 
     public function pagoFiado($id)
