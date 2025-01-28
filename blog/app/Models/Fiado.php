@@ -12,22 +12,38 @@ class Fiado extends Model
     protected $fillable = [
         'id_cliente',
         'nombre_cliente',
-        'productos',
-        'total_precio',
-        'fecha_compra',
-        'user_id'
+        'productos',       // JSON con los productos
+        'total_precio',    // Precio total del carrito
+        'fecha_compra',    // Fecha de compra
+        'user_id',         // Usuario que realiza el fiado
+        'pagado',          // Indica si el carrito ya fue pagado
+        'imagen_producto', // Ruta de la imagen del producto (opcional)
     ];
 
-    // Relación con el usuario
+    /**
+     * Relación con el usuario.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relación con los productos (opcional, para futuras mejoras)
-    // Si decides cambiar a una tabla intermedia en lugar de usar JSON
+    /**
+     * Relación con la tabla de productos (si decides usar una relación en lugar de JSON).
+     */
     public function productos()
     {
-        return $this->belongsToMany(Producto::class, 'fiado_producto')->withPivot('cantidad', 'precio_total');
+        return $this->belongsToMany(Producto::class, 'fiado_producto')
+            ->withPivot('cantidad', 'precio_total');
     }
+
+    /**
+     * Acceso rápido a la imagen del producto.
+     * Si no guardas las imágenes directamente en la tabla `fiados`, utiliza esta relación.
+     */
+    public function imagenes()
+    {
+        return $this->hasManyThrough(ProductoImagen::class, Producto::class, 'id', 'producto_id', 'id', 'id');
+    }
+    
 }

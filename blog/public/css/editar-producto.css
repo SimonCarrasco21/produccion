@@ -1,6 +1,7 @@
 /* Estilos adicionales para la página de editar producto */
 body {
-    background: linear-gradient(135deg, #A6E6A0, #19eb9a); /* Fondo verde degradado */
+    background: linear-gradient(135deg, #A0CBE6, #19B7EB);
+    /* Fondo azul degradado */
     font-family: 'Roboto', sans-serif;
     height: 100vh;
     display: flex;
@@ -13,45 +14,70 @@ body {
 .card {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    /* Fondo blanco */
 }
 
 h1 {
     font-size: 28px;
     font-weight: bold;
-    color: #333;
+    color: #1F4E79;
+    /* Azul oscuro */
 }
 
 p.text-muted {
     font-size: 14px;
-    color: #6c757d;
+    color: #4C7BA0;
+    /* Azul grisáceo */
 }
 
-button, a {
+button,
+a {
     border-radius: 12px;
     transition: all 0.3s ease-in-out;
+    background-color: #19B7EB;
+    /* Azul brillante */
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
 }
 
-button:hover, a:hover {
+button:hover,
+a:hover {
     transform: translateY(-3px);
+    background-color: #157CAD;
+    /* Azul más oscuro */
 }
 
 .w-45 {
     width: 48%;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
     border-radius: 12px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease;
+    border: 1px solid #1F4E79;
+    /* Azul oscuro */
+    padding: 10px;
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
     transform: scale(1.02);
+    border-color: #19B7EB;
+    /* Azul brillante */
+    outline: none;
 }
 
 .material-icons {
     vertical-align: middle;
     margin-right: 5px;
+    color: #19B7EB;
+    /* Azul brillante */
 }
 
 /* Animaciones */

@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Producto;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use App\Models\ProductoImagen; // Modelo de imágenes del producto
 
 class PaginaController extends Controller
 {
@@ -54,28 +57,41 @@ class PaginaController extends Controller
         return redirect('/agregar-producto')->with('success', 'Productos guardados correctamente.');
     }
     public function guardarProductoUnico(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|min:10',
-            'precio' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'categoria_id' => 'required|exists:categorias,id',
-            'fecha_vencimiento' => 'nullable|date|after_or_equal:today',
-        ]);
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'descripcion' => 'required|string|min:10',
+        'precio' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'categoria_id' => 'required|exists:categorias,id',
+        'fecha_vencimiento' => 'nullable|date|after_or_equal:today',
+        'imagen' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validación de la imagen
+    ]);
 
-        Producto::create([
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'precio' => $request->precio,
-            'stock' => $request->stock,
-            'categoria_id' => $request->categoria_id,
-            'fecha_vencimiento' => $request->fecha_vencimiento,
-            'user_id' => Auth::id(),
-        ]);
+    // Crear el producto
+    $producto = Producto::create([
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion,
+        'precio' => $request->precio,
+        'stock' => $request->stock,
+        'categoria_id' => $request->categoria_id,
+        'fecha_vencimiento' => $request->fecha_vencimiento,
+        'user_id' => Auth::id(),
+    ]);
 
-        return redirect()->back()->with('success', 'Producto agregado correctamente.');
+    // Si se sube una imagen, guardarla en la tabla `producto_imagenes`
+    if ($request->hasFile('imagen')) {
+        $path = $request->file('imagen')->store('imagenes_productos', 'public');
+
+        ProductoImagen::create([
+            'producto_id' => $producto->id,
+            'imagen' => $path,
+        ]);
     }
+
+    return redirect()->back()->with('success', 'Producto agregado correctamente.');
+}
+
     public function mostrarProductosPorCategoria($id)
     {
         $categoria = Categoria::findOrFail($id);
@@ -112,37 +128,63 @@ class PaginaController extends Controller
         return redirect('/inventario')->with('success', 'Productos eliminados correctamente.');
     }
     public function editarProducto($id)
-    {
-        // Encontrar el producto y asegurarse de que pertenezca al usuario autenticado
-        $producto = Producto::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-        $categorias = Categoria::all();
-        return view('editar-producto', compact('producto', 'categorias'));
+{
+    // Encontrar el producto y asegurarse de que pertenezca al usuario autenticado
+    $producto = Producto::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+    $categorias = Categoria::all();
+    return view('editar-producto', compact('producto', 'categorias'));
+}
+public function actualizarProducto(Request $request, $id)
+{
+    // Validar los datos del formulario, incluyendo la imagen
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'descripcion' => 'required|string',
+        'precio' => 'required|numeric',
+        'stock' => 'required|integer',
+        'categoria_id' => 'required|exists:categorias,id',
+        'fecha_vencimiento' => 'nullable|date',
+        'imagen' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validación para la imagen
+    ]);
+
+    // Encontrar el producto del usuario autenticado
+    $producto = Producto::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+    // Actualizar los datos básicos del producto
+    $producto->update([
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion,
+        'precio' => $request->precio,
+        'stock' => $request->stock,
+        'categoria_id' => $request->categoria_id,
+        'fecha_vencimiento' => $request->fecha_vencimiento,
+    ]);
+
+    // Manejo de la imagen
+    if ($request->hasFile('imagen')) {
+        $file = $request->file('imagen');
+        $path = $file->store('imagenes_productos', 'public'); // Guardar la imagen en el almacenamiento público
+
+        // Buscar si ya existe una imagen para este producto en la tabla producto_imagenes
+        $imagen = ProductoImagen::where('producto_id', $producto->id)->first();
+
+        if ($imagen) {
+            // Si ya existe una imagen, eliminar la anterior y actualizar la nueva
+            Storage::disk('public')->delete($imagen->imagen); // Eliminar la imagen anterior del almacenamiento
+            $imagen->update([
+                'imagen' => $path,
+            ]);
+        } else {
+            // Si no existe, crear una nueva entrada en la tabla producto_imagenes
+            ProductoImagen::create([
+                'producto_id' => $producto->id,
+                'imagen' => $path,
+            ]);
+        }
     }
-    public function actualizarProducto(Request $request, $id)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'precio' => 'required|numeric',
-            'stock' => 'required|integer',
-            'categoria_id' => 'required|exists:categorias,id',
-            'fecha_vencimiento' => 'nullable|date',
-        ]);
 
-        // Encontrar el producto del usuario autenticado
-        $producto = Producto::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
-
-        $producto->update([
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'precio' => $request->precio,
-            'stock' => $request->stock,
-            'categoria_id' => $request->categoria_id,
-            'fecha_vencimiento' => $request->fecha_vencimiento,
-        ]);
-
-        return redirect('/agregar-producto')->with('success', 'Producto actualizado correctamente.');
-    }
+    return redirect('/agregar-producto')->with('success', 'Producto actualizado correctamente.');
+}
     public function buscarProductos(Request $request)
     {
         $query = $request->input('query');
@@ -160,7 +202,6 @@ class PaginaController extends Controller
         $categorias = Categoria::all(); // Obtiene las categorías disponibles
         return view('agregar-producto', compact('productos', 'categorias')); // Pasa las variables a la vista
     }
-
 
     public function obtenerDatosProducto(Request $request)
     {
@@ -200,4 +241,25 @@ class PaginaController extends Controller
             'raw_response' => $response->json() // Respuesta completa para pruebas
         ]);
     }
+
+    public function subirImagen(Request $request, $producto_id)
+{
+    $request->validate([
+        'imagen' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $producto = Producto::findOrFail($producto_id);
+
+    // Subir la imagen
+    $file = $request->file('imagen');
+    $path = $file->store('imagenes_productos', 'public');
+
+    // Guardar la imagen en la base de datos
+    $producto->imagenes()->create([
+        'imagen' => $path,
+    ]);
+
+    return back()->with('success', 'Imagen subida correctamente.');
+}
+
 }

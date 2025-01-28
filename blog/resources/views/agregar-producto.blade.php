@@ -88,29 +88,27 @@
                 <div id="error-messages" class="alert alert-danger d-none" role="alert"></div>
                 <div id="success-message" class="alert alert-success d-none" role="alert">Producto agregado
                     correctamente.</div>
-
-
+    
                 <!-- Formulario -->
-                <form id="producto-form" action="{{ route('guardarProductoUnico') }}" method="POST">
+                <form id="producto-form" action="{{ route('guardarProductoUnico') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
+    
                     <!-- Bloque principal -->
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="p-4 bg-light border border-success rounded" style="height: 100%;">
                                 <!-- Botones de escaneo -->
                                 <div class="d-flex justify-content-center gap-3 mb-4">
-                                    <button id="start-scan" type="button"
-                                        class="btn btn-outline-success fw-bold px-5 py-3" style="font-size: 1.2rem;">
+                                    <button id="start-scan" type="button" class="btn btn-outline-success fw-bold px-5 py-3"
+                                        style="font-size: 1.2rem;">
                                         <i class="bi bi-camera"></i> Activar Cámara
                                     </button>
                                     <button id="stop-scan" type="button"
-                                        class="btn btn-outline-danger fw-bold px-5 py-3 d-none"
-                                        style="font-size: 1.2rem;">
+                                        class="btn btn-outline-danger fw-bold px-5 py-3 d-none" style="font-size: 1.2rem;">
                                         <i class="bi bi-camera-off"></i> Detener Cámara
                                     </button>
                                 </div>
-
+    
                                 <!-- Video para mostrar la cámara -->
                                 <div class="video-container" style="height: calc(100% - 120px);">
                                     <!-- Ajuste dinámico para el cuadro -->
@@ -121,8 +119,7 @@
                                 </div>
                             </div>
                         </div>
-
-
+    
                         <!-- Campos del formulario -->
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -132,8 +129,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label fw-bold text-dark">Descripción:</label>
-                                <textarea name="descripcion" id="descripcion" class="form-control border border-success"
-                                    placeholder="Mínimo 10 caracteres" rows="4" required></textarea>
+                                <textarea name="descripcion" id="descripcion"
+                                    class="form-control border border-success" placeholder="Mínimo 10 caracteres" rows="4"
+                                    required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="precio" class="form-label fw-bold text-dark">Precio:</label>
@@ -148,8 +146,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="categoria" class="form-label fw-bold text-dark">Categoría:</label>
-                                <select name="categoria_id" id="categoria" class="form-select border border-success"
-                                    required>
+                                <select name="categoria_id" id="categoria"
+                                    class="form-select border border-success" required>
                                     <option value="" disabled selected>Seleccionar Categoría</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
@@ -157,65 +155,30 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="fecha_vencimiento" class="form-label fw-bold text-dark">Fecha de
-                                    Ingreso:</label>
+                                <label for="fecha_vencimiento" class="form-label fw-bold text-dark">Fecha de Ingreso:</label>
                                 <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
                                     class="form-control border border-success">
                             </div>
+                            <div class="mb-3">
+                                <label for="imagen" class="form-label fw-bold text-dark">Foto del Producto:</label>
+                                <input type="file" name="imagen" id="imagen"
+                                    class="form-control border border-success" accept="image/*">
+                            </div>
                         </div>
                     </div>
-
+    
                     <!-- Botones -->
-                    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-                        <button type="button" id="add-to-list"
-                            class="btn btn-outline-success fw-bold w-100 w-md-auto">
-                            <i class="bi bi-plus-circle"></i> Agregar a Lista
-                        </button>
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
                         <button type="submit" id="add-single" class="btn btn-success fw-bold w-100 w-md-auto">
-                            <i class="bi bi-save"></i> Agregar Solo Este Producto
+                            <i class="bi bi-save"></i> Agregar Producto
                         </button>
                     </div>
                 </form>
-
-
-
-
-                <!-- Productos en Lista -->
-                <div class="card mt-5 border-0">
-                    <div class="card-header bg-dark text-white text-center">
-                        <h5 class="fw-bold mb-0">Productos en Lista</h5>
-                    </div>
-                    <div class="card-body bg-white">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th class="fw-bold">Nombre</th>
-                                        <th class="fw-bold">Descripción</th>
-                                        <th class="fw-bold">Precio</th>
-                                        <th class="fw-bold">Stock</th>
-                                        <th class="fw-bold">Categoría</th>
-                                        <th class="fw-bold">Vencimiento</th>
-                                        <th class="fw-bold text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="productos-table">
-                                    <!-- Filas dinámicas aquí -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <form action="{{ route('guardarProducto') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="productos" id="productos-data">
-                            <button type="submit" class="btn btn-success fw-bold w-100">
-                                <i class="bi bi-save"></i> Guardar Todos
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+    
     <!-- Tabla de productos -->
     <div class="container mt-5">
         <h2 class="text-center text-success fw-bold mb-4">Gestión Completa de Productos</h2>

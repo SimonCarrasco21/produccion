@@ -25,6 +25,13 @@ class Producto extends Model
         return $this->belongsTo(Categoria::class);
     }
 
+    public function imagenes()
+    {
+        return $this->hasMany(ProductoImagen::class);
+    }
+    
+
+
     // Relación con el usuario
     public function user()
     {

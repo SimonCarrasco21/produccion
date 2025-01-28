@@ -77,148 +77,71 @@
         </div>
     </nav>
 
-
     <div class="container mt-5">
-        <h1 class="text-center">Carrito de compras</h1>
-
-        <!-- Mensajes de éxito y error -->
+        <h1 class="text-center">Carrito de Compras</h1>
+    
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
-        <!-- Productos y formulario en la misma fila -->
-       
-
-
-        <!-- Tabla de fiados registrados -->
-        <div class="card">
-            <div class="card-header">
-               Productos Registrados
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover shadow-sm">
-                        <thead class="table-dark">
+    
+        @if ($fiados->isEmpty())
+            <p class="text-center">Tu carrito está vacío.</p>
+        @else
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($fiados as $item)
+                        @php
+                            $productos = json_decode($item->productos, true);
+                        @endphp
+                        @foreach ($productos as $producto)
                             <tr>
-                                <th>ID Cliente</th>
-                                <th>Nombre del Cliente</th>
-                                <th>Productos</th>
-                                <th>Total Precio</th>
-                                <th>Fecha de Compra</th>
-                                <th>Acciones</th>
+                                <td>
+                                    @if ($item->imagenes->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $item->imagenes->first()->imagen) }}" alt="Imagen" width="50">
+                                    @else
+                                        <span>Sin Imagen</span>
+                                    @endif
+                                </td>
+                                <td>{{ $producto['nombre'] }}</td>
+                                <td>{{ $producto['cantidad'] }}</td>
+                                <td>${{ number_format($producto['precio_unitario'], 2) }}</td>
+                                <td>${{ number_format($producto['precio_total'], 2) }}</td>
+                                <td>
+                                    <form action="{{ route('fiados.eliminar', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($fiados as $fiado)
-                                <tr>
-                                    <td>{{ $fiado->id_cliente }}</td>
-                                    <td>{{ $fiado->nombre_cliente }}</td>
-                                    <td>
-                                        @php
-                                            $productos = json_decode($fiado->productos, true);
-                                        @endphp
-                                        @if (is_array($productos))
-                                            @foreach ($productos as $producto)
-                                                {{ $producto['nombre'] }} - ${{ $producto['precio_total'] }}
-                                                (x{{ $producto['cantidad'] }})
-                                                <br>
-                                            @endforeach
-                                        @else
-                                            Sin productos registrados.
-                                        @endif
-                                    </td>
-                                    <td>${{ $fiado->total_precio }}</td>
-                                    <td>{{ $fiado->fecha_compra }}</td>
-                                    <td>
-                                        <form method="POST" action="{{ route('fiados.destroy', $fiado->id) }}"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="bi bi-trash"></i> Eliminar
-                                            </button>
-                                        </form>
-                                        <a href="{{ route('pago.fiado', ['id' => $fiado->id]) }}"
-                                            class="btn btn-success">
-                                            <i class="bi bi-cash"></i> Pagar
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+    
+            <div class="d-flex justify-content-between mt-4">
+                <h4>Total: ${{ number_format($total, 2) }}</h4>
+                <form action="{{ route('fiados.pagar') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Proceder al Pago</button>
+                </form>
             </div>
-        </div>
-
+        @endif
     </div>
-
-    <script>
-        let productosSeleccionados = [];
-
-        function actualizarTablaProductosSeleccionados() {
-            const tabla = document.getElementById('tablaProductosSeleccionados').getElementsByTagName('tbody')[0];
-            tabla.innerHTML = '';
-            productosSeleccionados.forEach((producto, index) => {
-                const row = tabla.insertRow();
-                row.insertCell(0).textContent = producto.nombre;
-                row.insertCell(1).textContent = producto.cantidad;
-                row.insertCell(2).textContent = `$${producto.precio_total.toFixed(2)}`;
-
-                // Botón Eliminar
-                const accionCell = row.insertCell(3);
-                const eliminarButton = document.createElement('button');
-                eliminarButton.textContent = 'Eliminar';
-                eliminarButton.className = 'btn btn-danger btn-sm';
-                eliminarButton.addEventListener('click', () => eliminarProducto(index));
-                accionCell.appendChild(eliminarButton);
-            });
-            document.getElementById('productosSeleccionados').value = JSON.stringify(productosSeleccionados);
-        }
-
-        function eliminarProducto(index) {
-            productosSeleccionados.splice(index, 1); // Elimina el producto del arreglo
-            actualizarTablaProductosSeleccionados(); // Actualiza la tabla
-        }
-
-        document.getElementById('buscarProducto').addEventListener('keyup', function() {
-            const filtro = this.value.toLowerCase();
-            const filas = document.querySelectorAll('#tablaProductos tr');
-
-            filas.forEach(fila => {
-                const nombre = fila.cells[0].textContent.toLowerCase();
-                const descripcion = fila.cells[1].textContent.toLowerCase();
-                fila.style.display = nombre.includes(filtro) || descripcion.includes(filtro) ? '' : 'none';
-            });
-        });
-
-        document.querySelectorAll('.btn-agregar').forEach(button => {
-            button.addEventListener('click', () => {
-                const id = button.dataset.id;
-                const nombre = button.dataset.nombre;
-                const precio = parseFloat(button.dataset.precio);
-
-                const productoExistente = productosSeleccionados.find(p => p.id === id);
-                if (productoExistente) {
-                    productoExistente.cantidad++;
-                    productoExistente.precio_total += precio;
-                } else {
-                    productosSeleccionados.push({
-                        id,
-                        nombre,
-                        cantidad: 1,
-                        precio_unitario: precio,
-                        precio_total: precio
-                    });
-                }
-
-                actualizarTablaProductosSeleccionados();
-            });
-        });
-    </script>
+    
+    
+    
+    
 
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil y las funciones del navbar -->
     <script>

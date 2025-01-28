@@ -15,6 +15,7 @@ Route::get('/', fn() => redirect('/login'));
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'mostrarDashboard'])->name('dashboard');
 
+
     // Perfil del usuario
     Route::get('/perfil', [ProfileController::class, 'show'])->name('perfil');
     Route::post('/perfil', [ProfileController::class, 'updateProfile'])->name('perfil.update');
@@ -35,7 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/guardar-producto-unico', [PaginaController::class, 'guardarProductoUnico'])->name('guardarProductoUnico')->middleware('web');
     Route::post('/productos/api', [PaginaController::class, 'obtenerDatosProducto'])->name('productos.api');
     Route::post('/productos/guardar', [PaginaController::class, 'guardarProducto'])->name('productos.guardar');
-
+    Route::post('/productos/{id}/imagen', [PaginaController::class, 'subirImagen'])->name('productos.subir-imagen');
+    
+    
     // Alertas y reportes
     Route::get('/productos-por-categoria', [PaginaController::class, 'productosPorCategoria'])->name('productos.por.categoria');
     Route::get('/dashboard/productos-stock-bajo', [DashboardController::class, 'productosConStockBajo'])->name('dashboard.productos-stock-bajo');
@@ -43,9 +46,15 @@ Route::middleware(['auth'])->group(function () {
 
     // Fiados
     Route::get('/fiados', [FiadoController::class, 'index'])->name('fiados.index');
-    Route::post('/fiados', [FiadoController::class, 'store'])->name('fiados.store');
-    Route::delete('/fiados/{id}', [FiadoController::class, 'destroy'])->name('fiados.destroy');
-    Route::get('/pago/fiado/{id}', [PagoPosController::class, 'pagoFiado'])->name('pago.fiado');
+Route::post('/fiados/agregar', [FiadoController::class, 'agregar'])->name('fiados.agregar');
+Route::delete('/fiados/eliminar/{id}', [FiadoController::class, 'eliminar'])->name('fiados.eliminar');
+Route::post('/fiados/pagar', [FiadoController::class, 'pagar'])->name('fiados.pagar');
+
+    // carrito :
+
+    Route::post('/carrito/agregar', [FiadoController::class, 'agregar'])->name('carrito.agregar');
+
+
 
     // Pagos
     Route::get('/pago', [PagoPosController::class, 'mostrarVistaPago'])->name('pagina.pago');

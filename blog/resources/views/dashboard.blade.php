@@ -256,6 +256,43 @@
     </div>
 </div>
 
+
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Catálogo de Productos</h2>
+    <div class="row g-4">
+        @foreach ($productos as $producto)
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ $producto->imagenes->first() ? asset('storage/' . $producto->imagenes->first()->imagen) : asset('images/default-product.png') }}"
+                        class="card-img-top" alt="{{ $producto->nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $producto->nombre }}</h5>
+                        <p class="card-text">{{ $producto->descripcion }}</p>
+                        <p class="card-text"><strong>Precio:</strong> ${{ number_format($producto->precio, 2) }}</p>
+                        <p class="card-text"><strong>Stock:</strong> {{ $producto->stock }}</p>
+                        <form action="{{ route('carrito.agregar') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="producto_id" value="{{ $producto->id }}">
+                            <button type="submit" class="btn btn-success">Agregar al carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
     <!-- Sección de últimos registros de ventas -->
     <div class="container mt-4">
         <h2 class="text-center">Últimos Registros de Ventas</h2>
