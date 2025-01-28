@@ -60,7 +60,8 @@
         <div class="navbar-right">
             <ul class="nav-list">
                 <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
-                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-cart-fill"></i> Carrito de compra</a></li>
+
                 <li><a href="{{ route('agregar-producto') }}"><i class="bi bi-plus-circle"></i> Agregar Producto</a>
                 </li>
                 <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Historial Ventas</a>

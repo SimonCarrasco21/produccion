@@ -55,7 +55,8 @@
         <div class="navbar-right">
             <ul class="nav-list">
                 <li><a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Inicio</a></li>
-                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-wallet-fill"></i> Fiar</a></li>
+                <li><a href="{{ route('fiados.index') }}"><i class="bi bi-cart-fill"></i> Carrito de compra</a></li>
+
                 <li><a href="{{ route('registro-ventas') }}"><i class="bi bi-clock-history"></i> Historial Ventas</a>
                 </li>
                 <li><a href="{{ route('inventario') }}"><i class="bi bi-box"></i> Inventario</a></li>
@@ -75,9 +76,6 @@
             </ul>
         </div>
     </nav>
-
-
-
     <!-- Formulario de agregar producto -->
     <div class="container mt-5">
         <h1 class="text-center fw-bold text-dark mb-4">Gestión de Productos</h1>
@@ -130,7 +128,7 @@
                             <div class="mb-3">
                                 <label for="nombre" class="form-label fw-bold text-dark">Nombre:</label>
                                 <input type="text" name="nombre" id="nombre"
-                                    class="form-control border border-success" placeholder="Ej. Shampoo" required>
+                                    class="form-control border border-success" placeholder="Ej. Martillo" required>
                             </div>
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label fw-bold text-dark">Descripción:</label>
@@ -160,7 +158,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="fecha_vencimiento" class="form-label fw-bold text-dark">Fecha de
-                                    Vencimiento:</label>
+                                    Ingreso:</label>
                                 <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
                                     class="form-control border border-success">
                             </div>
@@ -218,7 +216,6 @@
             </div>
         </div>
     </div>
-
     <!-- Tabla de productos -->
     <div class="container mt-5">
         <h2 class="text-center text-success fw-bold mb-4">Gestión Completa de Productos</h2>
@@ -287,12 +284,7 @@
             </div>
         </div>
     </div>
-
-
-
-
     <!-- Script para confirmar la funcion de agregar un producto  -->
-
     <script>
         const productos = [];
         const productosTable = document.getElementById("productos-table");
@@ -393,7 +385,6 @@
             }
         });
     </script>
-
     <!-- Script  y diseño para camara y escaneo   -->
     <script src="https://unpkg.com/@zxing/library@latest"></script>
     <script>
@@ -485,7 +476,6 @@
             }
         }
     </style>
-
     <!-- Script para confirmar la acción de cerrar sesión y mostrar/ocultar el menú del perfil y las funciones del navbar -->
     <script>
         // Confirmar cierre de sesión
@@ -524,28 +514,31 @@
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
         });
     </script>
-    <!-- Estilos personalizados  navbar -->
-    <style>
+     <!-- Estilos personalizados  navbar -->
+     <style>
         .navbar {
-            background-color: #000;
+            background-color: #000000;
+            /* Fondo azul oscuro */
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
         }
-
+    
         .navbar-left {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 {
             margin: 0;
             font-size: 24px;
             font-weight: normal;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #ffffff;
+            /* Fondo blanco */
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px 20px;
             border-radius: 15px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
@@ -553,16 +546,16 @@
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-left h2 i {
             margin-right: 10px;
         }
-
+    
         .navbar-right {
             display: flex;
             align-items: center;
         }
-
+    
         .navbar-right ul {
             list-style-type: none;
             margin: 0;
@@ -570,29 +563,32 @@
             display: flex;
             gap: 15px;
         }
-
+    
         .navbar-right ul li a,
         .navbar-right ul li button {
             color: white;
             text-decoration: none;
             font-size: 18px;
             padding: 12px 25px;
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             border-radius: 12px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.3s ease;
             display: inline-block;
             border: none;
         }
-
+    
         .navbar-right ul li a:hover,
         .navbar-right ul li button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-btn {
-            background-color: #4CAF50;
+            background-color: #0074d9;
+            /* Azul brillante */
             color: white;
             padding: 12px 25px;
             font-size: 16px;
@@ -604,14 +600,16 @@
             align-items: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-
+    
         .dropdown-btn:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            /* Azul más oscuro */
             transform: translateY(-2px);
         }
-
+    
         .dropdown-menu {
-            background-color: #ffffff;
+            background-color: #f0f8ff;
+            /* Azul claro */
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             display: none;
@@ -621,21 +619,24 @@
             z-index: 1;
             margin-top: 5px;
         }
-
+    
         .dropdown-menu a,
         .dropdown-menu button {
-            color: #000;
+            color: #001f3f;
+            /* Texto azul oscuro */
             padding: 10px;
             text-decoration: none;
             border-radius: 5px;
             display: block;
         }
-
+    
         .dropdown-menu a:hover,
         .dropdown-menu button:hover {
-            background-color: #e9ecef;
+            background-color: #dceffe;
+            /* Azul más claro */
         }
     </style>
+    
 
 </body>
 

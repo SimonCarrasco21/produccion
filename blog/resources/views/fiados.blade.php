@@ -96,7 +96,7 @@
         <!-- Tabla de fiados registrados -->
         <div class="card">
             <div class="card-header">
-                Fiados Registrados
+               Productos Registrados
             </div>
             <div class="card-body">
                 <div class="table-responsive">
