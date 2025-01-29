@@ -88,22 +88,39 @@ class FiadoController extends Controller
 
     // Proceder al pago
     public function pagar()
-    {
-        // Obtener los registros del carrito del usuario
-        $carrito = Fiado::where('user_id', Auth::id())
-            ->whereNull('pagado')
-            ->get();
+{
+    // Obtener los registros del carrito del usuario
+    $carrito = Fiado::where('user_id', Auth::id())
+        ->whereNull('pagado')
+        ->get();
 
-        if ($carrito->isEmpty()) {
-            return back()->with('error', 'El carrito está vacío.');
-        }
-
-        // Marcar los productos como pagados
-        foreach ($carrito as $item) {
-            $item->pagado = true;
-            $item->save();
-        }
-
-        return back()->with('success', 'Compra realizada con éxito.');
+    if ($carrito->isEmpty()) {
+        return back()->with('error', 'El carrito está vacío.');
     }
+
+    $productos = [];
+    $total = 0;
+
+    foreach ($carrito as $item) {
+        $itemProductos = json_decode($item->productos, true);
+        foreach ($itemProductos as $producto) {
+            $productos[] = [
+                'id' => $producto['id'],
+                'nombre' => $producto['nombre'],
+                'cantidad' => $producto['cantidad'],
+                'precio_unitario' => $producto['precio_unitario'],
+                'precio_total' => $producto['precio_total'],
+            ];
+            $total += $producto['precio_total'];
+        }
+    }
+
+    // Redirigir a la vista de pago con los datos en la sesión flash
+    return redirect()->route('pagina.pago')
+        ->with([
+            'productos' => $productos,
+            'total' => $total,
+        ]);
+}
+
 }

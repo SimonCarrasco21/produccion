@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #A6E6A0, #19eb9a);
+            background: linear-gradient(135deg, #4A90E2, #1E3A8A);
             margin: 0;
             padding: 0;
             display: flex;
@@ -23,17 +23,16 @@
             height: 100vh;
             animation: fadeIn 1s ease-in-out;
         }
-
+    
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
         }
-
+    
         .container {
             background-color: #ffffff;
             padding: 60px;
@@ -43,51 +42,50 @@
             text-align: center;
             animation: slideIn 1s ease;
         }
-
+    
         @keyframes slideIn {
             from {
                 transform: translateY(-70px);
             }
-
             to {
                 transform: translateY(0);
             }
         }
-
+    
         .container h1 {
             font-size: 36px;
             font-weight: bold;
-            color: #2E3B55;
+            color: #1E3A8A;
             margin-bottom: 20px;
         }
-
+    
         .container p {
             font-size: 18px;
-            color: #495867;
+            color: #334E68;
             margin-bottom: 30px;
         }
-
+    
         .container input {
             width: 100%;
             padding: 15px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccd6f6;
             border-radius: 15px;
-            background-color: #f9f9f9;
+            background-color: #f0f4ff;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
             font-size: 16px;
             transition: all 0.3s ease;
         }
-
+    
         .container input:focus {
             outline: none;
-            border-color: #4CAF50;
-            background-color: #E8F8E0;
+            border-color: #2563EB;
+            background-color: #E0ECFF;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
-
+    
         .container button {
-            background-color: #4CAF50;
+            background-color: #2563EB;
             color: white;
             padding: 15px;
             border: none;
@@ -97,16 +95,17 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
             transition: background-color 0.3s, transform 0.3s;
         }
-
+    
         .container button:hover {
-            background-color: #45a049;
+            background-color: #1E40AF;
             transform: translateY(-2px);
         }
-
+    
         .container i {
             margin-right: 8px;
         }
     </style>
+    
 </head>
 
 <body>

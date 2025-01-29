@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #A6E6A0, #19eb9a);
+            background: linear-gradient(135deg, #4A90E2, #1E3A8A);
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,53 +22,50 @@
             height: 100vh;
             animation: fadeIn 1s ease-in-out;
         }
-
+    
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
         }
-
+    
         .container {
             background-color: #ffffff;
             padding: 60px;
             border-radius: 30px;
             box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.2);
             width: 550px;
-            /* Ancho mayor para coherencia */
             text-align: center;
             animation: slideIn 1s ease;
         }
-
+    
         @keyframes slideIn {
             from {
                 transform: translateY(-70px);
             }
-
             to {
                 transform: translateY(0);
             }
         }
-
+    
         h1 {
             font-size: 32px;
-            color: #2E3B55;
+            color: #1E3A8A;
             margin-bottom: 15px;
             font-weight: bold;
         }
-
+    
         .instruction {
             font-size: 18px;
             color: #495867;
             margin-bottom: 30px;
         }
-
+    
         .email-display {
-            background-color: #f9f9f9;
+            background-color: #f0f4ff;
             padding: 10px;
             border-radius: 10px;
             font-size: 16px;
@@ -78,62 +75,65 @@
             justify-content: center;
             align-items: center;
         }
-
+    
         .email-display i {
             margin-right: 10px;
-            color: #4CAF50;
+            color: #2563EB;
         }
-
+    
         .form-control {
             padding: 15px;
             font-size: 16px;
             margin-bottom: 20px;
             border-radius: 10px;
+            border: 1px solid #ccd6f6;
+            background-color: #f0f4ff;
         }
-
+    
         .btn {
             width: 100%;
             padding: 15px;
             border-radius: 10px;
             font-size: 18px;
-            background-color: #4CAF50;
+            background-color: #2563EB;
             color: white;
             border: none;
             cursor: pointer;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
             transition: background-color 0.3s, transform 0.3s;
         }
-
+    
         .btn:hover {
-            background-color: #45a049;
+            background-color: #1E40AF;
             transform: translateY(-2px);
         }
-
+    
         .form-icon {
             position: absolute;
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            color: #4CAF50;
+            color: #2563EB;
         }
-
+    
         .input-group {
             position: relative;
         }
-
+    
         .input-group i {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
             font-size: 20px;
-            color: #4CAF50;
+            color: #2563EB;
         }
-
+    
         .form-control::placeholder {
             color: #999;
         }
     </style>
+    
 </head>
 
 <body>

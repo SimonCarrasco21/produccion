@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #A6E6A0, #19eb9a);
+            background: linear-gradient(135deg, #4A90E2, #1E3A8A);
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,73 +22,70 @@
             height: 100vh;
             animation: fadeIn 1s ease-in-out;
         }
-
+    
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
         }
-
+    
         .login-container {
             background-color: #ffffff;
             padding: 80px;
             border-radius: 30px;
             box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
             width: 550px;
-            /* Cambiado a 550px */
             text-align: center;
             animation: zoomIn 0.7s ease;
             transition: transform 0.3s ease;
         }
-
+    
         @keyframes zoomIn {
             from {
                 transform: scale(0.8);
             }
-
             to {
                 transform: scale(1);
             }
         }
-
+    
         .login-container h1 {
             font-size: 48px;
             font-weight: 700;
-            color: #2E3B55;
+            color: #1E3A8A;
             margin-bottom: 20px;
         }
-
+    
         .login-container p {
             font-size: 20px;
-            color: #495867;
+            color: #334E68;
             margin-bottom: 30px;
         }
-
+    
         .login-container input {
             width: 100%;
             padding: 20px;
             margin-bottom: 25px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccd6f6;
             border-radius: 15px;
-            background-color: #f9f9f9;
+            background-color: #f0f4ff;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.05);
             font-size: 18px;
             transition: all 0.3s ease;
         }
-
+    
         .login-container input:focus {
             outline: none;
-            border-color: #4CAF50;
-            background-color: #E8F8E0;
+            border-color: #2563EB;
+            background-color: #E0ECFF;
             box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
-
+    
         .login-container button {
-            background-color: #4CAF50;
+            background-color: #2563EB;
             color: white;
             padding: 20px;
             border: none;
@@ -98,41 +95,42 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s, transform 0.3s;
         }
-
+    
         .login-container button:hover {
-            background-color: #45a049;
+            background-color: #1E40AF;
             transform: translateY(-2px);
         }
-
+    
         .login-container a {
             display: block;
             margin-top: 20px;
             font-size: 18px;
-            color: #4CAF50;
+            color: #2563EB;
             text-decoration: none;
             transition: color 0.3s;
         }
-
+    
         .login-container a:hover {
             text-decoration: underline;
-            color: #45a049;
+            color: #1E40AF;
         }
-
+    
         .error-message,
         .success-message {
             font-size: 18px;
             margin-bottom: 20px;
             display: none;
         }
-
+    
         .error-message {
             color: #ff4d4d;
         }
-
+    
         .success-message {
             color: #0b351c;
         }
     </style>
+    
 </head>
 
 <body>

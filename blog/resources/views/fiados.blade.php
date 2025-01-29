@@ -90,7 +90,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Imagen</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
                         <th>Precio Unitario</th>
@@ -105,13 +104,6 @@
                         @endphp
                         @foreach ($productos as $producto)
                             <tr>
-                                <td>
-                                    @if ($item->imagenes->isNotEmpty())
-                                        <img src="{{ asset('storage/' . $item->imagenes->first()->imagen) }}" alt="Imagen" width="50">
-                                    @else
-                                        <span>Sin Imagen</span>
-                                    @endif
-                                </td>
                                 <td>{{ $producto['nombre'] }}</td>
                                 <td>{{ $producto['cantidad'] }}</td>
                                 <td>${{ number_format($producto['precio_unitario'], 2) }}</td>
@@ -303,8 +295,6 @@
             /* Azul más claro */
         }
     </style>
-    
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

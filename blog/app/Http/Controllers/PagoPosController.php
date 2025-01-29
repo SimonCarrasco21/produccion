@@ -131,49 +131,71 @@ class PagoPosController extends Controller
 
 public function guardarVenta(Request $request)
 {
-    $validated = $request->validate([
-        'orderID' => 'required|string',
-        'details' => 'required|array',
-        'productos' => 'required|array',
-    ]);
+    try {
+        // Validación de los datos recibidos
+        $validated = $request->validate([
+            'orderID' => 'required|string',
+            'details' => 'required|array',
+            'productos' => 'required|array',
+        ]);
 
-    // Procesar los productos seleccionados
-    $productosParaGuardar = [];
-    foreach ($validated['productos'] as $producto) {
-        $productoModel = Producto::find($producto['id']);
+        // Procesar los productos seleccionados
+        $productosParaGuardar = [];
+        foreach ($validated['productos'] as $producto) {
+            $productoModel = Producto::find($producto['id']);
 
-        if (!$productoModel || $productoModel->stock < $producto['cantidad']) {
-            return response()->json(['success' => false, 'message' => 'Stock insuficiente para el producto ' . $producto['nombre']]);
+            if (!$productoModel) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El producto con ID ' . $producto['id'] . ' no existe.'
+                ], 400);
+            }
+
+            if ($productoModel->stock < $producto['cantidad']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stock insuficiente para el producto: ' . $producto['nombre']
+                ], 400);
+            }
+
+            // Reducir el stock del producto
+            $productoModel->stock -= $producto['cantidad'];
+            $productoModel->save();
+
+            // Agregar el producto al arreglo para guardar
+            $productosParaGuardar[] = [
+                'id' => $producto['id'],
+                'nombre' => $producto['nombre'],
+                'descripcion' => $producto['descripcion'] ?? '',
+                'precio' => $producto['precio'],
+                'cantidad' => $producto['cantidad'],
+            ];
         }
 
-        // Reducir el stock del producto
-        $productoModel->stock -= $producto['cantidad'];
-        $productoModel->save();
+        // Guardar la venta en la base de datos
+        DB::table('ventas')->insert([
+            'external_reference' => $validated['orderID'],
+            'status' => $validated['details']['status'] ?? 'approved', // Asegúrate de que exista 'status'
+            'amount' => $validated['details']['purchase_units'][0]['amount']['value'] ?? 0,
+            'productos' => json_encode($productosParaGuardar), // Guarda los productos incluyendo el nombre
+            'metodo_pago' => $validated['details']['payer']['payment_method'] ?? 'PayPal',
+            'user_id' => Auth::id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        // Agregar el producto al arreglo para guardar
-        $productosParaGuardar[] = [
-            'id' => $producto['id'],
-            'nombre' => $producto['nombre'],
-            'descripcion' => $producto['descripcion'],
-            'precio' => $producto['precio'],
-            'cantidad' => $producto['cantidad'],
-        ];
+        return response()->json(['success' => true, 'message' => 'Venta registrada con éxito.']);
+
+    } catch (\Exception $e) {
+        // Manejo de errores generales
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al guardar la venta.',
+            'error' => $e->getMessage()
+        ], 500);
     }
-
-    // Guardar la venta en la base de datos
-    DB::table('ventas')->insert([
-        'external_reference' => $validated['orderID'],
-        'status' => 'approved',
-        'amount' => $validated['details']['purchase_units'][0]['amount']['value'],
-        'productos' => json_encode($productosParaGuardar), // Guarda los productos incluyendo el nombre
-        'metodo_pago' => 'PayPal',
-        'user_id' => Auth::id(),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return response()->json(['success' => true]);
 }
+
 
 
 
